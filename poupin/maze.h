@@ -8,13 +8,15 @@ struct _tree {
 	tree *left_child_bottom;
 	tree *right_child_top;
 	tree *parent;
+	/* 1 means vertical,
+	 * 0 means horizontal */
 	int is_wall_vertical;
 };
 
 typedef struct _maze {
-	tree* room;
+	tree *first_room;
 } maze;
 
 maze *maze_random (int width, int height);
 void maze_svg (maze *maze, char *filename);
-
+void maze_free (maze *maze);

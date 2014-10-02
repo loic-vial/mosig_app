@@ -17,5 +17,7 @@ int main(int argc, char **argv) {
   /* And also this one, using the SVG drawing function provided in "svg.h" */
   maze_svg(m, "maze.svg");
 
+  maze_free(m);
+
   return 0;
 }
