@@ -1,0 +1,47 @@
+/**
+ * Each room is supposed to be centered on his father
+ */
+Room is:
+|	int width, height;
+|	int off_w, off_h; // offsets
+|	int wall_pos;
+|	int door_pos;
+|	int is_room_vertical;
+|	Room *left_son, *right_son;
+
+generate(room) is:
+|	if area(room) < 4:
+|	|	return
+|
+|	width_is_longest_edge = (room->width > room->height)
+|	if width_is_longest_edge:
+|	|	shortest_edge = room.height
+|	|	longest_edge = room.width
+|	else:
+|	|	shortest_edge = room.width
+|	|	longest_edge = room.height
+|
+|	wall_pos = random_int(1, longest_edge-1)
+|	door_pos = random_int(0, shortest_edge-1)
+|	
+|	room1, room2 = new rooms (left_son and right_son init to NULL)
+|	
+|	if width_is_longest_edge:
+|	|	room2.width = room.width - wall_pos
+|	|	room1.width = room.width - room2.width
+|	|	room2.height = room1.height = room.height
+|	else:
+|	|	// same with height <-> width
+|	room1.(off_w, off_h) = room.(off_w, off_h)
+|	room2.off_w = room.off_w + room.width - room2.width
+|	room2.off_h = room.off_h + room.height - room2.height
+|
+|	room.(left_son, right_son) = &room1, &room2
+|
+|	generate(room.left_son)
+|	generate(room.right_son)
+end
+
+Room initial_room = room(width_init, height_init, 0, 0)
+generate(initial_room)
+
