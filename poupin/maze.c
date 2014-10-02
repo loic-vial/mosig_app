@@ -9,7 +9,10 @@
 
 void print_room (tree *room) {
 	printf("Width, Height : %i, %i\n",room->width,room->height);
-	printf("Offset_w, offset_h : %i, %i\n\n",room->offset_w,room->offset_h);
+	printf("Offset_w, offset_h : %i, %i\n",room->offset_w,room->offset_h);
+	printf("Wall_position : %i\n",room->wall_position);
+	printf("Door_position : %i\n",room->door_position);
+	printf("Is vertical : %i\n\n",room->is_wall_vertical);
 }
 
 void maze_room_rec (tree *room) {
@@ -27,12 +30,9 @@ void maze_room_rec (tree *room) {
 	room->left_child_bottom = malloc(sizeof(tree));
 	room->right_child_top = malloc(sizeof(tree));
 
-	print_room(room);
-
 	if (room->is_wall_vertical) {
 		room->door_position = (rand() % (room->width - 1));
 		room->wall_position = (rand() % (room->height - 1)) + 1;
-		printf("Vertical wall position : %i\n",room->wall_position);
 
 		room->left_child_bottom->width = room->wall_position;
 		room->right_child_top->width = room->width - room->wall_position;
@@ -41,14 +41,13 @@ void maze_room_rec (tree *room) {
 		room->right_child_top->height = room->height;
 
 		room->left_child_bottom->offset_w = room->offset_w;
-		room->left_child_bottom->offset_h = room->offset_h + room->wall_position;
+		room->left_child_bottom->offset_h = room->offset_h;
 
-		room->right_child_top->offset_w = room->offset_w;
+		room->right_child_top->offset_w = room->offset_w + room->wall_position;
 		room->right_child_top->offset_h = room->offset_h;
 	} else {
 		room->door_position = (rand() % (room->height - 1));
 		room->wall_position = (rand() % (room->width - 1)) + 1;
-		printf("Horizontal wall position : %i\n",room->wall_position);
 
 		room->left_child_bottom->height = room->height - room->wall_position;
 		room->right_child_top->height = room->wall_position;
@@ -57,15 +56,16 @@ void maze_room_rec (tree *room) {
 		room->right_child_top->width = room->width;
 
 		room->left_child_bottom->offset_w = room->offset_w;
-		room->left_child_bottom->offset_h = room->offset_h;
+		room->left_child_bottom->offset_h = room->offset_h + room->wall_position;
 
-		room->right_child_top->offset_w = room->offset_w + room->wall_position;
+		room->right_child_top->offset_w = room->offset_w;
 		room->right_child_top->offset_h = room->offset_h;
 	}
+
+	print_room(room);
 		
 	maze_room_rec(room->left_child_bottom);
 	maze_room_rec(room->right_child_top);
-
 
 }
 

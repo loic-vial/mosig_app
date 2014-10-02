@@ -14,8 +14,8 @@ struct _tree {
 };
 
 typedef struct _maze {
-	tree *first_room;
 	int width, height;
+	tree *first_room;
 } maze;
 
 maze *maze_random (int width, int height);
