@@ -1,0 +1,31 @@
+My version works perfectly to make a maze. But I think the structure we
+have chosen is inadapted for searching a path.
+
+For example, let's say you have the entrance in a room divided in up and
+down rooms (who will be then divided recursively). Then, if you need to go
+from down to up, and if the entrance is somewhere in the room in the bottom,
+you'll have to go through the bottom room (let's suppose it's OK), but ALSO
+through the top room ; which means that in the tree, you'll have to read
+the right son - and not just the parent or whatever -.
+
+What it means is that, to calculate a path using our tree, we would have to
+read every left and right sons (and recursively) from the parents we go 
+through, and we would end up reading things that are not necessary to the
+path in the end (but we have no way to know it).
+
+I'll show you tomorrow with a small example the problem.
+
+En français : la structure est OK pour générer un labyrinthe, mais je pense
+que la structure est inadaptée pour calculer un chemin.
+
+En effet, si par exemple l'entrée est quelque part en bas d'une pièce, pour
+traverser la pièce, on doit donc passer du bas vers le haut, et traverser
+non seulement le fils gauche mais aussi le fils droit.
+
+Cela veut dire que lorsqu'on voudra parcourir l'arbre pour déterminer le
+chemin, au lieu de remonter de parent en parent puis de fils en fils
+jusqu'à trouver la sortie, il faudra en plus qu'on parcoure le frère et toute
+sa descendance récursivement. Au final, on va parcourir des choses inutiles,
+et c'est pour ça que je pense qu'il aurait fallu choisir une structure plus
+adaptée au stockage de chemin.
+
