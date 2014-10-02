@@ -16,11 +16,18 @@ void print_room (tree *room) {
 	printf("Is vertical : %i\n\n",room->is_wall_vertical);
 }
 
-void maze_room_rec (tree *room) {
+void maze_room_rec (tree *room, maze *maze) {
 	/* Stop condition */
 	if (room->height <= 1 || room->width <= 1) {
 		room->left_child_bottom = NULL;
 		room->right_child_top = NULL;
+
+		if (room->offset_w == 0 && (room->offset_h + room->height) == maze->height)
+			maze->entrance = room;
+
+		if (room->offset_h == 0 && (room->offset_w + room->width) == maze->width)
+			maze->exit = room;
+
 		return;
 	}
 
@@ -79,8 +86,8 @@ void maze_room_rec (tree *room) {
 /* 	print_room(room);
  */
 		
-	maze_room_rec(room->left_child_bottom);
-	maze_room_rec(room->right_child_top);
+	maze_room_rec(room->left_child_bottom,maze);
+	maze_room_rec(room->right_child_top,maze);
 
 }
 
@@ -100,14 +107,14 @@ maze *maze_random (int width, int height) {
 
 	srand(time(NULL));
 
-	maze_room_rec(my_maze->first_room);
+	maze_room_rec(my_maze->first_room,my_maze);
 
 	return my_maze;
 }
 
 
 
-void maze_svg_explore_tree (maze *maze, tree *room, FILE *f) {
+void maze_svg_explore_draw_tree (maze *maze, tree *room, FILE *f) {
 	if (!room || room->width <= 1 || room->height <= 1 || room->wall_position == 0)
 		return;
 
@@ -144,10 +151,21 @@ void maze_svg_explore_tree (maze *maze, tree *room, FILE *f) {
 				room->offset_w + room->width, offset_wall_h);
 	}
 
-	maze_svg_explore_tree(maze,room->left_child_bottom,f);
-	maze_svg_explore_tree(maze,room->right_child_top,f);
+	maze_svg_explore_draw_tree(maze,room->left_child_bottom,f);
+	maze_svg_explore_draw_tree(maze,room->right_child_top,f);
 }	
 
+
+void maze_svg_draw_entrance_exit (maze *maze, FILE *f) {
+	svg_rect(f,
+			maze->entrance->offset_w,maze->entrance->offset_h,
+			maze->entrance->offset_w + maze->entrance->width,maze->entrance->offset_h + maze->entrance->height);
+
+	svg_rect(f,
+			maze->exit->offset_w,maze->exit->offset_h,
+			maze->exit->offset_w+maze->exit->width,maze->exit->offset_h+maze->exit->height);
+
+}
 
 
 void maze_svg (maze *maze, char *filename) {
@@ -162,7 +180,8 @@ void maze_svg (maze *maze, char *filename) {
 
 	svg_header(my_file, maze->width, maze->height);
 
-	maze_svg_explore_tree(maze,maze->first_room,my_file);
+	maze_svg_draw_entrance_exit(maze,my_file);
+	maze_svg_explore_draw_tree(maze,maze->first_room,my_file);
 
 	svg_footer(my_file);
 
