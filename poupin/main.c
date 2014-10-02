@@ -4,7 +4,8 @@
 
 
 int main(int argc, char **argv) {
-  unsigned int len;
+/*   unsigned int len;
+ */
   if (argc < 3) {
     printf("Usage: %s <width> <height>\n", *argv);
     return 1;
