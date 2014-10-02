@@ -7,6 +7,7 @@
 #include <errno.h>
 
 
+/* Debugging Tool */
 void print_room (tree *room) {
 	printf("Width, Height : %i, %i\n",room->width,room->height);
 	printf("Offset_w, offset_h : %i, %i\n",room->offset_w,room->offset_h);
@@ -16,9 +17,14 @@ void print_room (tree *room) {
 }
 
 void maze_room_rec (tree *room) {
-	if (room->height <= 1 || room->width <= 1)
+	/* Stop condition */
+	if (room->height <= 1 || room->width <= 1) {
+		room->left_child_bottom = NULL;
+		room->right_child_top = NULL;
 		return;
+	}
 
+	/* Decide if wall will be horizontal or vertical */
 	if (room->height < room->width)
 		room->is_wall_vertical = 1;
 	else if (room->height > room->width)
@@ -27,22 +33,30 @@ void maze_room_rec (tree *room) {
 		room->is_wall_vertical = rand() % 2;
 	
 
+	/* Malloc the children */
 	room->left_child_bottom = malloc(sizeof(tree));
 	room->right_child_top = malloc(sizeof(tree));
 
+	/* Two cases : vertical or horizontal wall */
 	if (room->is_wall_vertical) {
+		/* Generate door and wall position
+		 * Wall_pos must be superior to 1 and inferior to width - 1 
+		 * Door_pos must be from 0 to height - 1*/
 		room->door_position = (rand() % (room->height - 1));
 		room->wall_position = (rand() % (room->width - 1)) + 1;
 
+		/* New width and height */
 		room->left_child_bottom->width = room->wall_position;
 		room->right_child_top->width = room->width - room->wall_position;
 
 		room->left_child_bottom->height = room->height;
 		room->right_child_top->height = room->height;
 
+		/* No different offset for left child */
 		room->left_child_bottom->offset_w = room->offset_w;
 		room->left_child_bottom->offset_h = room->offset_h;
 
+		/* Width offset for right child */
 		room->right_child_top->offset_w = room->offset_w + room->wall_position;
 		room->right_child_top->offset_h = room->offset_h;
 	} else {
@@ -62,7 +76,8 @@ void maze_room_rec (tree *room) {
 		room->right_child_top->offset_h = room->offset_h;
 	}
 
-	print_room(room);
+/* 	print_room(room);
+ */
 		
 	maze_room_rec(room->left_child_bottom);
 	maze_room_rec(room->right_child_top);
@@ -107,42 +122,26 @@ void maze_svg_explore_tree (maze *maze, tree *room, FILE *f) {
 		svg_line(f,0,maze->height,0,0);
 	}
 
+/* 	print_room(room);
+ */
 
-	printf("\n\nTracé pour la room suivante :\n");
-	print_room(room);
 	/* Draw the wall */
 	if (room->is_wall_vertical) {
-/* 		if (offset_wall_w > maze->width || room->offset_h + room->door_position > maze->height || room->offset_h + room->door_position + 1 > maze->height || room->offset_h + room->height > maze->height) {
- * 			printf("PROBLEM\n");
- * 		}
- */
 		svg_line(f,
-				offset_wall_w,room->offset_h,
-				offset_wall_w,room->offset_h + room->door_position);
-		printf("Tracé de (%i,%i) à (%i,%i)\n",
 				offset_wall_w,room->offset_h,
 				offset_wall_w,room->offset_h + room->door_position);
 
 		svg_line(f,
 				offset_wall_w,room->offset_h + room->door_position + 1, 
 				offset_wall_w,room->offset_h + room->height);
-		printf("Tracé de (%i,%i) à (%i,%i)\n",
-				offset_wall_w,room->offset_h + room->door_position + 1,
-				offset_wall_w,room->offset_h + room->height);
 	} else {
 		svg_line(f,
-				room->offset_w,offset_wall_h,
-				room->offset_w + room->door_position,offset_wall_h);
-		printf("Tracé de (%i,%i) à (%i,%i)\n",
 				room->offset_w,offset_wall_h,
 				room->offset_w + room->door_position,offset_wall_h);
 
 		svg_line(f,
 				room->offset_w + room->door_position + 1, offset_wall_h, 
 				room->offset_w + room->width, offset_wall_h);
-		printf("Tracé de (%i,%i) à (%i,%i)\n",
-				room->offset_w + room->door_position + 1, offset_wall_h,
-				room->offset_w + room->width,offset_wall_h);
 	}
 
 	maze_svg_explore_tree(maze,room->left_child_bottom,f);
@@ -165,7 +164,6 @@ void maze_svg (maze *maze, char *filename) {
 
 	maze_svg_explore_tree(maze,maze->first_room,my_file);
 
-
 	svg_footer(my_file);
 
 	if (fclose(my_file) == EOF) {
@@ -179,11 +177,16 @@ void tree_free (tree *tree) {
 	if (!tree)
 		return;
 	
-	tree_free(tree->left_child_bottom);
-	free(tree->left_child_bottom);
+/* 	tree_free(tree->left_child_bottom);
+ * 	free(tree->left_child_bottom);
+ * 
+ * 	tree_free(tree->right_child_top);
+ * 	free(tree->right_child_top);
+ */
 
+	tree_free(tree->left_child_bottom);
 	tree_free(tree->right_child_top);
-	free(tree->right_child_top);
+	free(tree);
 }
 
 void maze_free (maze *maze) {

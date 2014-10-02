@@ -5,7 +5,7 @@ struct _tree {
 	int offset_w, offset_h;
 	int door_position;
 	int wall_position;
-	tree *left_child_bottom;
+	tree *left_child_bottom; 
 	tree *right_child_top;
 	tree *parent;
 	/* 1 means vertical,
