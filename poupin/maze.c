@@ -2,10 +2,14 @@
 #include <time.h>
 #include <stdio.h>
 #include "maze.h"
+#include "svg.h"
+#include <string.h>
+#include <errno.h>
 
 
 void print_room (tree *room) {
 	printf("Width, Height : %i, %i\n",room->width,room->height);
+	printf("Offset_w, offset_h : %i, %i\n\n",room->offset_w,room->offset_h);
 }
 
 void maze_room_rec (tree *room) {
@@ -26,8 +30,9 @@ void maze_room_rec (tree *room) {
 	print_room(room);
 
 	if (room->is_wall_vertical) {
-		room->door_position = rand() % room->width;
-		room->wall_position = rand() % room->height;
+		room->door_position = (rand() % (room->width - 1));
+		room->wall_position = (rand() % (room->height - 1)) + 1;
+		printf("Wall position : %i\n",room->wall_position);
 
 		room->left_child_bottom->width = room->wall_position;
 		room->right_child_top->width = room->width - room->wall_position;
@@ -41,8 +46,8 @@ void maze_room_rec (tree *room) {
 		room->right_child_top->offset_w = room->offset_w;
 		room->right_child_top->offset_h = room->offset_h;
 	} else {
-		room->door_position = rand() % room->height;
-		room->wall_position = rand() % room->width;
+		room->door_position = (rand() % (room->height - 1));
+		room->wall_position = (rand() % (room->width - 1)) + 1;
 
 		room->left_child_bottom->height = room->height - room->wall_position;
 		room->right_child_top->height = room->wall_position;
@@ -70,6 +75,8 @@ maze *maze_random (int width, int height) {
 
 	my_maze->first_room->width = width;
 	my_maze->first_room->height = height;
+	my_maze->width = width;
+	my_maze->height = height;
 	my_maze->first_room->offset_w = 0;
 	my_maze->first_room->offset_h = 0;
 
@@ -82,8 +89,57 @@ maze *maze_random (int width, int height) {
 	return my_maze;
 }
 
+
+
+void maze_svg_explore_tree (maze *maze, tree *room, FILE *f) {
+	if (!room)
+		return;
+
+	/* If biggest room, we have to draw the 4 walls */
+	if (room->width == maze->width && room->height == maze->height) {
+		svg_line(f,0,0,maze->width,0);
+		svg_line(f,maze->width,0,maze->width,maze->height);
+		svg_line(f,maze->width,maze->height,0,maze->height);
+		svg_line(f,0,maze->height,0,0);
+	}
+
+	/* Draw the wall */
+	if (room->is_wall_vertical) {
+		svg_line(f,room->offset_w + room->wall_position,room->offset_h,room->offset_w + room->wall_position,room->offset_h + room->door_position);
+		svg_line(f,room->offset_w + room->wall_position,room->offset_h + room->door_position + 1, room->offset_w + room->wall_position, room->offset_h + room->offset_h);
+	} else {
+		svg_line(f,room->offset_w,room->offset_h + room->wall_position,room->offset_w + room->door_position,room->offset_h + room->wall_position);
+		svg_line(f,room->offset_w + room->door_position + 1, room->offset_h + room->wall_position, room->offset_w + room->width, room->offset_h + room->wall_position);
+	}
+
+	maze_svg_explore_tree(maze,room->left_child_bottom,f);
+	maze_svg_explore_tree(maze,room->right_child_top,f);
+}	
+
+
+
 void maze_svg (maze *maze, char *filename) {
 
+	FILE *my_file;
+	my_file	= fopen( filename, "w" );
+	if (!my_file) {
+		fprintf (stderr, "couldn't open file '%s'; %s\n",
+				filename, strerror(errno));
+		exit (EXIT_FAILURE);
+	}
+
+	svg_header(my_file, maze->width, maze->height);
+
+	maze_svg_explore_tree(maze,maze->first_room,my_file);
+
+
+	svg_footer(my_file);
+
+	if (fclose(my_file) == EOF) {
+		fprintf (stderr, "couldn't close file '%s'; %s\n",
+				filename, strerror(errno));
+		exit (EXIT_FAILURE);
+	}
 }
 
 void tree_free (tree *tree) {
