@@ -32,7 +32,7 @@ void maze_room_rec (tree *room) {
 	if (room->is_wall_vertical) {
 		room->door_position = (rand() % (room->width - 1));
 		room->wall_position = (rand() % (room->height - 1)) + 1;
-		printf("Wall position : %i\n",room->wall_position);
+		printf("Vertical wall position : %i\n",room->wall_position);
 
 		room->left_child_bottom->width = room->wall_position;
 		room->right_child_top->width = room->width - room->wall_position;
@@ -48,6 +48,7 @@ void maze_room_rec (tree *room) {
 	} else {
 		room->door_position = (rand() % (room->height - 1));
 		room->wall_position = (rand() % (room->width - 1)) + 1;
+		printf("Horizontal wall position : %i\n",room->wall_position);
 
 		room->left_child_bottom->height = room->height - room->wall_position;
 		room->right_child_top->height = room->wall_position;
@@ -95,6 +96,9 @@ void maze_svg_explore_tree (maze *maze, tree *room, FILE *f) {
 	if (!room)
 		return;
 
+	int offset_wall_w = room->offset_w + room->wall_position;
+	int offset_wall_h = room->offset_h + room->wall_position;
+
 	/* If biggest room, we have to draw the 4 walls */
 	if (room->width == maze->width && room->height == maze->height) {
 		svg_line(f,0,0,maze->width,0);
@@ -105,11 +109,20 @@ void maze_svg_explore_tree (maze *maze, tree *room, FILE *f) {
 
 	/* Draw the wall */
 	if (room->is_wall_vertical) {
-		svg_line(f,room->offset_w + room->wall_position,room->offset_h,room->offset_w + room->wall_position,room->offset_h + room->door_position);
-		svg_line(f,room->offset_w + room->wall_position,room->offset_h + room->door_position + 1, room->offset_w + room->wall_position, room->offset_h + room->offset_h);
+		svg_line(f,
+				offset_wall_w,room->offset_h,
+				offset_wall_w,room->offset_h + room->door_position);
+		svg_line(f,
+				offset_wall_w,room->offset_h + room->door_position + 1, 
+				offset_wall_w, room->offset_h + room->height);
 	} else {
-		svg_line(f,room->offset_w,room->offset_h + room->wall_position,room->offset_w + room->door_position,room->offset_h + room->wall_position);
-		svg_line(f,room->offset_w + room->door_position + 1, room->offset_h + room->wall_position, room->offset_w + room->width, room->offset_h + room->wall_position);
+		svg_line(f,
+				room->offset_w,offset_wall_h,
+				room->offset_w + room->door_position,offset_wall_h);
+
+		svg_line(f,
+				room->offset_w + room->door_position + 1, offset_wall_h, 
+				room->offset_w + room->width, offset_wall_h);
 	}
 
 	maze_svg_explore_tree(maze,room->left_child_bottom,f);
