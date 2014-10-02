@@ -31,8 +31,8 @@ void maze_room_rec (tree *room) {
 	room->right_child_top = malloc(sizeof(tree));
 
 	if (room->is_wall_vertical) {
-		room->door_position = (rand() % (room->width - 1));
-		room->wall_position = (rand() % (room->height - 1)) + 1;
+		room->door_position = (rand() % (room->height - 1));
+		room->wall_position = (rand() % (room->width - 1)) + 1;
 
 		room->left_child_bottom->width = room->wall_position;
 		room->right_child_top->width = room->width - room->wall_position;
@@ -46,8 +46,8 @@ void maze_room_rec (tree *room) {
 		room->right_child_top->offset_w = room->offset_w + room->wall_position;
 		room->right_child_top->offset_h = room->offset_h;
 	} else {
-		room->door_position = (rand() % (room->height - 1));
-		room->wall_position = (rand() % (room->width - 1)) + 1;
+		room->door_position = (rand() % (room->width - 1));
+		room->wall_position = (rand() % (room->height - 1)) + 1;
 
 		room->left_child_bottom->height = room->height - room->wall_position;
 		room->right_child_top->height = room->wall_position;
@@ -93,7 +93,7 @@ maze *maze_random (int width, int height) {
 
 
 void maze_svg_explore_tree (maze *maze, tree *room, FILE *f) {
-	if (!room)
+	if (!room || room->width <= 1 || room->height <= 1 || room->wall_position == 0)
 		return;
 
 	int offset_wall_w = room->offset_w + room->wall_position;
@@ -107,22 +107,42 @@ void maze_svg_explore_tree (maze *maze, tree *room, FILE *f) {
 		svg_line(f,0,maze->height,0,0);
 	}
 
+
+	printf("\n\nTracé pour la room suivante :\n");
+	print_room(room);
 	/* Draw the wall */
 	if (room->is_wall_vertical) {
+/* 		if (offset_wall_w > maze->width || room->offset_h + room->door_position > maze->height || room->offset_h + room->door_position + 1 > maze->height || room->offset_h + room->height > maze->height) {
+ * 			printf("PROBLEM\n");
+ * 		}
+ */
 		svg_line(f,
 				offset_wall_w,room->offset_h,
 				offset_wall_w,room->offset_h + room->door_position);
+		printf("Tracé de (%i,%i) à (%i,%i)\n",
+				offset_wall_w,room->offset_h,
+				offset_wall_w,room->offset_h + room->door_position);
+
 		svg_line(f,
 				offset_wall_w,room->offset_h + room->door_position + 1, 
-				offset_wall_w, room->offset_h + room->height);
+				offset_wall_w,room->offset_h + room->height);
+		printf("Tracé de (%i,%i) à (%i,%i)\n",
+				offset_wall_w,room->offset_h + room->door_position + 1,
+				offset_wall_w,room->offset_h + room->height);
 	} else {
 		svg_line(f,
+				room->offset_w,offset_wall_h,
+				room->offset_w + room->door_position,offset_wall_h);
+		printf("Tracé de (%i,%i) à (%i,%i)\n",
 				room->offset_w,offset_wall_h,
 				room->offset_w + room->door_position,offset_wall_h);
 
 		svg_line(f,
 				room->offset_w + room->door_position + 1, offset_wall_h, 
 				room->offset_w + room->width, offset_wall_h);
+		printf("Tracé de (%i,%i) à (%i,%i)\n",
+				room->offset_w + room->door_position + 1, offset_wall_h,
+				room->offset_w + room->width,offset_wall_h);
 	}
 
 	maze_svg_explore_tree(maze,room->left_child_bottom,f);
@@ -134,7 +154,7 @@ void maze_svg_explore_tree (maze *maze, tree *room, FILE *f) {
 void maze_svg (maze *maze, char *filename) {
 
 	FILE *my_file;
-	my_file	= fopen( filename, "w" );
+	my_file	= fopen(filename, "w");
 	if (!my_file) {
 		fprintf (stderr, "couldn't open file '%s'; %s\n",
 				filename, strerror(errno));
