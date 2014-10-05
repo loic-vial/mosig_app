@@ -18,16 +18,16 @@ struct _maze
 
 maze* maze_random(int width, int height)
 {
-    maze* chamber = malloc(sizeof(maze));
-    chamber->width = width;
-    chamber->height = height;
-
     if (width == 1 && height == 1)
     {
         return NULL;
     }
     else
     {
+        maze* chamber = malloc(sizeof(maze));
+        chamber->width = width;
+        chamber->height = height;
+
         if (width == height) chamber->wall_is_vertical = (rand() % 2 == 1);
         else chamber->wall_is_vertical = (width > height);
 
@@ -45,9 +45,9 @@ maze* maze_random(int width, int height)
             chamber->left_top_child = maze_random(width, chamber->wall_position);
             chamber->right_bottom_child = maze_random(width, height - chamber->wall_position);
         }
-    }
 
-    return chamber;
+        return chamber;
+    }
 }
 
 void plot_wall(FILE* fp, maze* chamber, int room_pos_x, int room_pos_y)
@@ -115,6 +115,9 @@ void maze_svg(maze* m, char* filename)
 
 void maze_free(maze* m)
 {
-
+    if (m == NULL) return;
+    maze_free(m->left_top_child);
+    maze_free(m->right_bottom_child);
+    free(m);
 }
 
