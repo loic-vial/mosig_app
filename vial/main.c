@@ -12,7 +12,7 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    maze* m = maze_random(atoi(argv[1]), atoi(argv[2]));
+    maze* m = maze_random(atoi(argv[1]), atoi(argv[2]), 0, 0);
     maze_resolve(m);
     maze_svg(m, "maze.svg");
     maze_free(m);
