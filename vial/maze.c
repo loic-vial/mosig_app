@@ -4,14 +4,16 @@
 #include "maze.h"
 #include "svg.h"
 
+maze*** maze_leaves;
+
 struct _maze
 {
     int width;
     int height;
-    int wall_position;
-    int door_position;
     int pos_x;
     int pos_y;
+    int wall_position;
+    int door_position;
     maze* top_left_child;
     maze* bottom_right_child;
     maze* parent;
@@ -19,7 +21,7 @@ struct _maze
     bool is_on_path;
 };
 
-maze* maze_random(int width, int height, int pos_x, int pos_y)
+maze* maze_random_2(int width, int height, int pos_x, int pos_y)
 {
     maze* chamber = malloc(sizeof(maze));
     chamber->width = width;
@@ -34,6 +36,7 @@ maze* maze_random(int width, int height, int pos_x, int pos_y)
         chamber->door_position = 0;
         chamber->top_left_child = NULL;
         chamber->bottom_right_child = NULL;
+        maze_leaves[pos_y][pos_x] = chamber;
     }
     else
     {
@@ -44,19 +47,19 @@ maze* maze_random(int width, int height, int pos_x, int pos_y)
         {
             chamber->wall_position = (rand() % (width-1)) + 1;
             chamber->door_position = rand() % height;
-            chamber->top_left_child = maze_random(chamber->wall_position, height,
-                                                  chamber->pos_x, chamber->pos_y);
-            chamber->bottom_right_child = maze_random(width - chamber->wall_position, height,
-                                                      chamber->pos_x + chamber->wall_position, chamber->pos_y);
+            chamber->top_left_child = maze_random_2(chamber->wall_position, height,
+                                                    pos_x, pos_y);
+            chamber->bottom_right_child = maze_random_2(width - chamber->wall_position, height,
+                                                        pos_x + chamber->wall_position, pos_y);
         }
         else
         {
             chamber->wall_position = (rand() % (height-1)) + 1;
             chamber->door_position = rand() % width;
-            chamber->top_left_child = maze_random(width, chamber->wall_position,
-                                                  chamber->pos_x, chamber->pos_y);
-            chamber->bottom_right_child = maze_random(width, height - chamber->wall_position,
-                                                      chamber->pos_x, chamber->pos_y + chamber->wall_position);
+            chamber->top_left_child = maze_random_2(width, chamber->wall_position,
+                                                    pos_x, pos_y);
+            chamber->bottom_right_child = maze_random_2(width, height - chamber->wall_position,
+                                                        pos_x, pos_y + chamber->wall_position);
         }
     }
 
@@ -64,6 +67,17 @@ maze* maze_random(int width, int height, int pos_x, int pos_y)
     if (chamber->bottom_right_child != NULL) chamber->bottom_right_child->parent = chamber;
 
     return chamber;
+}
+
+maze* maze_random(int width, int height)
+{
+    maze_leaves = malloc(sizeof(maze**) * height);
+    int i = 0;
+    for (i = 0 ; i < height ; i++)
+    {
+        maze_leaves[i] = malloc(sizeof(maze*) * width);
+    }
+    return maze_random_2(width, height, 0, 0);
 }
 
 void plot_wall(FILE* fp, maze* chamber, int room_pos_x, int room_pos_y)
@@ -152,35 +166,29 @@ bool is_child_of(maze* child, maze* parent)
 
 maze* find_common_ancestor(maze* child_1, maze* child_2)
 {
+    if (child_1 == NULL) return NULL;
+    if (child_2 == NULL) return NULL;
+    if (child_1 == child_2) return NULL;
     while (child_1 != NULL && !is_child_of(child_2, child_1)) child_1 = child_1->parent;
     return child_1;
 }
-/*
-maze* find_chamber_who_has_the_door(maze* parent)
-{
-    int x = (parent->wall_is_vertical) ? parent->wall_position : parent->door_position;
-    int y = (parent->wall_is_vertical) ? parent->door_position : parent->wall_position;
 
-    int cur_x = 0;
-    int cur_y = 0;
-    while (cur_x )
-
-}
-*/
-/*
-maze* killme(maze* chamber, int x, int y)
+void find_chambers_who_has_the_door(maze* parent, maze** child1, maze** child2)
 {
-    if (chamber->pos_x == x && chamber->pos_y == y) return chamber;
-    else if () return killme(chamber->top_left_child);
-    else return killme(chamber->bottom_right_child);
+    if (parent->wall_is_vertical)
+    {
+        *child1 = maze_leaves[parent->door_position][parent->wall_position];
+        if (parent->wall_position == 0) return;
+        *child2 = maze_leaves[parent->door_position][parent->wall_position - 1];
+    }
+    else
+    {
+        *child1 = maze_leaves[parent->wall_position][parent->door_position];
+        if (parent->wall_position == 0) return;
+        *child2 = maze_leaves[parent->wall_position - 1][parent->door_position];
+    }
 }
 
-void osef(maze* child_1, maze* child_2)
-{
-    maze* common_ancestor = find_common_ancestor(child_1, child_2);
-
-}
-*/
 void maze_resolve(maze* m)
 {
     maze* entrance = m;
@@ -190,8 +198,30 @@ void maze_resolve(maze* m)
     entrance->is_on_path = true;
     exit->is_on_path = true;
 
-    //maze* common_ancestor = find_common_ancestor(entrance, exit);
+    maze* common_ancestor = find_common_ancestor(entrance, exit);
+    maze* child1;
+    maze* child2;
+    find_chambers_who_has_the_door(common_ancestor, &child1, &child2);
+    child1->is_on_path = true;
+    child2->is_on_path = true;
 
+    int i = 0;
+    for (i = 0 ; i < 5 ; i++)
+    {
+        common_ancestor = find_common_ancestor(entrance, child1);
+        if (common_ancestor == NULL) common_ancestor = find_common_ancestor(exit, child1);
+        if (common_ancestor == NULL || (common_ancestor->width == 1 && common_ancestor->height == 1)) return;
+        find_chambers_who_has_the_door(common_ancestor, &child1, &child2);
+        child1->is_on_path = true;
+        child2->is_on_path = true;
+
+        common_ancestor = find_common_ancestor(entrance, child2);
+        if (common_ancestor == NULL) common_ancestor = find_common_ancestor(exit, child2);
+        if (common_ancestor == NULL || (common_ancestor->width == 1 && common_ancestor->height == 1)) return;
+        find_chambers_who_has_the_door(common_ancestor, &child1, &child2);
+        child1->is_on_path = true;
+        child2->is_on_path = true;
+    }
 }
 
 
