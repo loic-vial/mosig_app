@@ -1,0 +1,46 @@
+/**
+ * It uses the left_bottom/top_right convention
+ *
+ * The Loïc's grid is a spatial grid : in each square, you've got the adress
+ * of the leaf room (aka the smallest room containing the square).
+ *
+ * This grid has to be computed while generating the tree
+ */
+
+find_path(start, end) is :
+|
+|	if start is end :
+|	|	return
+|
+|	anc = common_ancestor(start, end)
+|	draw_some_path(anc.door)
+|
+|	/**
+|	 * I didn't write adjacent_leaf_rooms, but it has to use Loïc's grid to
+|	 * search for the adjacent leaf rooms, and it shouldn't be hard 
+|	 */
+|	before = adjacent_left_leaf_room(anc, LEFT_BOTTOM)
+|	after = adjacent_leaf_room(anc, TOP_RIGHT)
+|
+|	if (before is start) and (after is end) :
+|	|	return
+|
+|	find_path(start, before)
+|	find_path(after, end)
+end
+
+common_ancestor(room_1, room_2) is :
+|	ancestors_1 = [room_1]
+|	ancestors_2 = [room_2]
+|
+|	while(inter(ancestors_1, ancestors_2) == empty) do :
+|	|	append(ancestors_1, latest(ancestors_1).parent)
+|	|	append(ancestors_2, latest(ancestors_2).parent)
+|
+|	return inter(ancestors_1, ancestors_2)
+end
+
+
+main is:
+|	find_path(entrance, exit)
+end
