@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
   }
 
   /* You need to define this function in "maze.c" */
-  maze *m = maze_random(atoi(argv[1]), atoi(argv[2]));
+  maze *m = maze_random(NULL, atoi(argv[1]), atoi(argv[2]), false);
 
   /* And also this one, using the SVG drawing function provided in "svg.h" */
   maze_svg(m, "maze.svg");

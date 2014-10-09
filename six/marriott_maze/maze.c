@@ -4,30 +4,53 @@
 #include "maze.h"
 #include "svg.h"
 
+/* TODO : implement offset, parent, and the grid */
+
 struct _maze {
 	int width;
 	int height;
-	//int offset_w, offset_h; // Not needed as implementing relative coords
+	int offset_w, offset_h;
 	int door_position;
 	int wall_position;
 	maze *left_top_child;
 	maze *right_bottom_child;
-	//maze *parent;           // Not needed just yet
+	maze *parent;
 	bool wall_is_vertical;    // Needed for square rooms
+	/* It's allocated only for the root room ; it contains a map of all
+	 * room adresses, to compute the solution faster */
+	maze **maze_map;
 };
 
-maze *maze_random (int width, int height) {
+maze *maze_random (maze *parent, int width, int height, 
+		bool is_right_bottom_child){
 
 	maze *chamber = malloc(sizeof(maze));
 
 	/* Initialize chamber */
 	chamber->width  = width;
 	chamber->height = height;
-	//chamber->offset_w
-	//chamber->offset_w
-	//chamber->parent
+	chamber->parent = parent;
+	chamber->offset_w = parent->offset_w;
+	chamber->offset_h = parent->offset_h;
+
+	if (parent == NULL)
+		maze_map = malloc(width * height * sizeof(maze *));
+	else
+		maze_map = NULL;
+
+	if (is_bottom_right_child){
+		/* The parent->left_top_child should be already computed at this
+		 * time ; which is ensured by the order in which we call the
+		 * recursion, and the initial call of maze_random */
+		if (parent->wall_is_vertical)
+			chamber->offset_h += parent->left_top_child->height;
+		else
+			chamber->offset_w += parent->left_top_child->width;
+	}
+		
 
 	if(width == 1 && height == 1) {
+		/* TODO : in this case, complete the maze_map */
 		return NULL;
 	} else {
 		/* Divide chamber */
@@ -45,13 +68,13 @@ maze *maze_random (int width, int height) {
 		if(chamber->wall_is_vertical) {
 			chamber->wall_position = ( rand() % (width-1) ) + 1;
 			chamber->door_position = rand() % height;
-			chamber->left_top_child = maze_random(chamber->wall_position, height);
-			chamber->right_bottom_child = maze_random(width - chamber->wall_position, height);
+			chamber->left_top_child = maze_random(chamber, chamber->wall_position, height, true);
+			chamber->right_bottom_child = maze_random(chamber, width - chamber->wall_position, height, false);
 		} else { // horizontal wall
 			chamber->wall_position = ( rand() % (height-1) ) + 1;
 			chamber->door_position = rand() % width;
-			chamber->left_top_child = maze_random(width, chamber->wall_position);
-			chamber->right_bottom_child = maze_random(width, height - chamber->wall_position);
+			chamber->left_top_child = maze_random(chamber, width, chamber->wall_position, true);
+			chamber->right_bottom_child = maze_random(chamber, width, height - chamber->wall_position, false);
 		}
 	}
 
@@ -143,7 +166,8 @@ void maze_svg (maze *maze, char *filename) {
 
 	/*************************************/
 
-	/* Solving of the maze */
+	/* TODO Solving of the maze */
+	//solve_maze(fp, maze);
 
 	svg_footer(fp);
 

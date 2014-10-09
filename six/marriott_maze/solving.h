@@ -7,6 +7,6 @@
  * fp must have been already opened, and the header of the svg
  * file should be already written
  */
-void solve_maze(maze *maze, FILE *fp);
+void solve_maze(FILE *fp, maze *maze);
 
 #endif
