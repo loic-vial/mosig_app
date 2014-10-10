@@ -168,25 +168,43 @@ maze* find_common_ancestor(maze* child_1, maze* child_2)
 {
     if (child_1 == NULL) return NULL;
     if (child_2 == NULL) return NULL;
-    if (child_1 == child_2) return NULL;
+    if (child_1 == child_2) return child_1;
     while (child_1 != NULL && !is_child_of(child_2, child_1)) child_1 = child_1->parent;
     return child_1;
 }
 
-void find_chambers_who_has_the_door(maze* parent, maze** child1, maze** child2)
+void find_chambers_who_has_the_door(maze* parent, maze** child_top_left, maze** child_bottom_right)
 {
-    if (parent->wall_is_vertical)
+    if (parent != NULL && parent->width == 1 && parent->height == 1) parent->is_on_path = true;
+    if (parent == NULL || (parent->width == 1 && parent->height == 1))
     {
-        *child1 = maze_leaves[parent->door_position][parent->wall_position];
-        if (parent->wall_position == 0) return;
-        *child2 = maze_leaves[parent->door_position][parent->wall_position - 1];
+        *child_top_left = NULL;
+        *child_bottom_right = NULL;
+    }
+    else if (parent->wall_is_vertical)
+    {
+        *child_top_left = maze_leaves[parent->door_position][parent->wall_position - 1];
+        *child_bottom_right = maze_leaves[parent->door_position][parent->wall_position];
     }
     else
     {
-        *child1 = maze_leaves[parent->wall_position][parent->door_position];
-        if (parent->wall_position == 0) return;
-        *child2 = maze_leaves[parent->wall_position - 1][parent->door_position];
+        *child_top_left = maze_leaves[parent->wall_position - 1][parent->door_position];
+        *child_bottom_right = maze_leaves[parent->wall_position][parent->door_position];
     }
+}
+
+void recursive_solve(maze* left, maze* right)
+{
+    if (left == NULL || right == NULL) return;
+    if (left == right) { left->is_on_path = true; return; }
+    maze* common_ancestor = find_common_ancestor(left, right);
+    maze* child_top_left;
+    maze* child_bottom_right;
+    find_chambers_who_has_the_door(common_ancestor, &child_top_left, &child_bottom_right);
+    child_top_left->is_on_path = true;
+    child_bottom_right->is_on_path = true;
+    recursive_solve(left, child_top_left);
+    //recursive_solve(right, child_bottom_right);
 }
 
 void maze_resolve(maze* m)
@@ -198,30 +216,7 @@ void maze_resolve(maze* m)
     entrance->is_on_path = true;
     exit->is_on_path = true;
 
-    maze* common_ancestor = find_common_ancestor(entrance, exit);
-    maze* child1;
-    maze* child2;
-    find_chambers_who_has_the_door(common_ancestor, &child1, &child2);
-    child1->is_on_path = true;
-    child2->is_on_path = true;
-
-    int i = 0;
-    for (i = 0 ; i < 5 ; i++)
-    {
-        common_ancestor = find_common_ancestor(entrance, child1);
-        if (common_ancestor == NULL) common_ancestor = find_common_ancestor(exit, child1);
-        if (common_ancestor == NULL || (common_ancestor->width == 1 && common_ancestor->height == 1)) return;
-        find_chambers_who_has_the_door(common_ancestor, &child1, &child2);
-        child1->is_on_path = true;
-        child2->is_on_path = true;
-
-        common_ancestor = find_common_ancestor(entrance, child2);
-        if (common_ancestor == NULL) common_ancestor = find_common_ancestor(exit, child2);
-        if (common_ancestor == NULL || (common_ancestor->width == 1 && common_ancestor->height == 1)) return;
-        find_chambers_who_has_the_door(common_ancestor, &child1, &child2);
-        child1->is_on_path = true;
-        child2->is_on_path = true;
-    }
+    recursive_solve(entrance, exit);
 }
 
 
