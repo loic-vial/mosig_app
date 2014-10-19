@@ -1,0 +1,76 @@
+
+int left_index;
+int right_index;
+int sum_cards;
+
+array cards[nb_cards];
+left_index = cards.first;
+right_index = cards.last;
+
+struct tree{
+value_path;	
+left child, right_child;
+node_card;
+}
+
+sister_strategy()
+{
+	if cards(left_index) > cards(right_index)
+		then left_index +=1;
+	else right_index -=1;
+}
+
+init()
+{
+	tree sol_tree.init();
+	array cards.init();	
+	bool my_turn.init();
+	sum_cards = sum(cards);
+}
+
+play(tree)
+{
+
+		if(left_index == right_index)
+		{
+			if (value_path > 1/2(sum_cards))
+			{
+				return Solution_Found;
+				exit;
+			}
+			else
+			{
+				return Solution_not_Found;
+			}
+		}
+
+		if(my_turn)
+		{
+		   tree.addchild(left,cards(left));
+		   tree.addchild(right,cards(right));
+		   my_turn = !my_turn;
+		   play(tree.left);
+		   play(tree.right);
+
+
+		}
+		else
+		{
+			sister_strategy();
+			my_turn =!my_turn;
+		}
+}
+
+main()
+{
+	init();
+	play();
+
+	if play.return_value() == Solution_Found;
+	then Print_backward(Path_from_last_child_to_root);
+
+	
+
+
+}
+
