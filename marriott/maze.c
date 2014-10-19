@@ -173,11 +173,20 @@ maze *find_common_ancestor(maze *start, maze *end) {
   while(current->blood_line != start) {
     current = current-> parent;
 
+<<<<<<< HEAD
     if(current == NULL) {
       printf("ERROR: Blood-line not detected. (This shouldn't happen!)\n");
       return NULL;
     }
   }
+=======
+  /* Drawing a white rectangle */
+  set_svg_color("white");
+  svg_rect(fp, 0, 0, maze->width + 2, maze->height + 2);
+
+  /* Plot the main "hall" with fixed entrance and exit
+     positions in the bottom-left and top-right. */
+>>>>>>> 302e53ff24ac2be60cf86d8a0d11a520ccb21e10
 
   return current;
 }
@@ -254,6 +263,7 @@ void plot_path(FILE *fp, maze *start, maze *end) {
   }
 }
 
+<<<<<<< HEAD
 void find_path(FILE *fp, maze *m) {
 
   maze *current;
@@ -360,3 +370,5 @@ void maze_svg (maze *m, char *filename) {
 
 }
 
+=======
+>>>>>>> 302e53ff24ac2be60cf86d8a0d11a520ccb21e10
