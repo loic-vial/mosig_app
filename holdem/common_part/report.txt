@@ -1,0 +1,16 @@
+
+First Session :
+Richard wrote a skeleton for the game (found in main_richard.txt)
+
+We think about using a tree
+Each node is a decision in picking a card
+(each node has two sons)
+We build the whole tree with all possible decisions and we compute the maximum
+	=> big memory space (2^26 ~ 100MB)
+
+New method :
+We build each branch one by one
+Once we get a valid solution => we keep it
+	=> problem : not the BEST solution
+
+
