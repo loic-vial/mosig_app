@@ -1,0 +1,108 @@
+
+First Session :
+Richard wrote a skeleton for the game (found in main_richard.txt)
+
+We think about using a tree
+Each node is a decision in picking a card
+(each node has two sons)
+We build the whole tree with all possible decisions and we compute the maximum
+	=> big memory space (2^26 ~ 100MB)
+
+New method :
+We build each branch one by one
+Once we get a valid solution => we keep it
+	=> problem : not the BEST solution
+
+
+
+
+CYRIL'S ALGORITHM :
+L = [5,4,8,6,9]
+Choose one card
+Our choices will be enumerated as a binary number.
+0b0000 Always the left one
+0b0001 right left left left
+0b0010 left right left left
+0b0011 ...
+0b0100
+
+//We create a linked list every time (minus common ancestors) ?
+//We keep track of the score ... If new best, we delete the old one
+We iterate from 0b00..0 to 0b11..1, with n digits, n being the number of
+decisions to take.
+
+To each iteration, we generate a branch, with each nodes containing :
+• A list of remaining cards
+• The score of the current state
+• Left son, right son, parent
+
+If the current branch has a higher score than the "best branch", we take it
+as the new "best branch", and we delete the current branch (deleting it means
+only freeing the nodes along it that don't have children).
+
+struct Node is:
+	Node *left_son, *right_son
+	Node *parent
+	int val
+	List L
+
+struct Branch is:
+	Node start
+	Node leaf
+
+main(L) is :
+	decision_i_go_first, val_i_go_first = best_decision(L)
+	L2 = L - max(L.first_elem(), L.last_elem()) // L without the max element
+	decision_she_goes_first, val_she_goes_first = best_decision(L2)
+
+	if (val_i_go_first > val_she_goes_first)
+		return decision_i_go_first
+	else
+		return decision_she_goes_first
+	fi
+end
+
+/**
+ * Conventions :
+ *	0 means left, 1 means right
+ *	The sister is second to start
+ *
+ * Returns the best decision (and its value) given a list of card
+ */
+best_branch(L) is :
+	n = ceil(len(L)/2)
+	cur = 0b00..0 // n digits
+	best = 0b00..0
+
+	start = new Node_t(all->0 or NULL)
+	best_branch = generate_branch(start, cur) // from start to cur
+	best_val = best_branch.leaf.val
+
+	while cur != 0b11..1 do:
+		cur = cur + 1
+		cur_branch = generate_branch(cur, start)
+
+		if cur_branch.leaf.val > best_val:
+			delete_branch(best_branch)
+			best_branch = cur_branch
+			best = cur
+			best_val = best_branch.leaf.val
+		fi
+	done
+
+	delete_branch(best_branch)
+	return (best, cur_branch)
+
+generate_branch(decision, start) is:
+	for each binary digit in decision starting from least significant bit do:
+		if digit == 0:
+			if start->left_son == NULL:
+
+RICHARD'S :
+Same idea (without the bits) but recursively ...
+
+
+2 approaches : iterative or recursive
+
+
+
