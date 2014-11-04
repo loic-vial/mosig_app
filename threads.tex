@@ -151,8 +151,22 @@ The implementation might also be completely in a user-level process under the fo
 
 Another possibility is to use $n$ user threads mapped to $m$ kernel threads.
 
-user threads : \hspace{0.2cm} \vdots \hspace{0.2cm} \vdots \hspace{0.2cm}\vdots  \hspace{0.2cm}  $n$
- 
+\begin{tabular}{cccccc}
+	user threads & \vdots & \vdots & \vdots & n
+\end{tabular}
+
+\begin{flushright}
+	user level library that maps user
+	\\
+	level threads on kernel threads
+\end{flushright}
+
+\begin{tabular}{cccccc}
+	kernel threads & \vdots & \vdots & \vdots & m
+\end{tabular}
+
+
+
 Idea : Take advantage of any number of threads to express parallel work or to overlap computation with communications, limit the number of resources (Cores, CPUS) to limit the cost of context switches between them.
 
 The library is more diffucult to implement as it implies synchronization between kernel threads
