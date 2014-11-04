@@ -5,7 +5,6 @@
 
 %%%% POUR L'OPTION LABEL= %%%
 \usepackage{enumitem}
-\setlist[enumerate]{label=$\bullet$}
 
 \usepackage{graphicx}
 \usepackage{titling}
@@ -79,41 +78,35 @@ Sometimes called lightweight process.
 \end{minipage}
 \vspace{0.2cm}
 
-\subsubsection*{Advantages}
-\begin{enumerate}
+Advantages :
+\begin{enumerate}[label=-]
 	\item Lighter management (especially context switch)
 	\item Take advantage of concurrency within a process ( eg can perform a computation during a blocking system call in another thread).
 	\item Communication between threads is easier/more efficient than IPC( Inter Process Communication) between processes.
 \end{enumerate}
 
-\subsubsection*{Example : Webserver}
-
-The main thread can listen to connections while other threads handle requests
+Example : Webserver
+The main thread can listen to connextions while other threads handle requests
 Accesses to Webserver data can be performed concurrently and overlapped with computations
 
 \section{Thread Models}
 
-Threads might be :
+Threads might be :\\
 
-\begin{enumerate}
-	\item Preemptive : threads might be interrupted asynchronously to switch to another thread.
-	\item Cooperative : the thread itself release the PCU to let another thread be scheduled.
-\end{enumerate}
+Preemptive : threads might be interrupted asynchronously to switch to another thread. \\
+Cooperative : the thread itself release the PCU to let another thread be scheduled.\\
 
-\subsection*{Advantages / Drawbacks}
-\subsubsection*{For Preemptive}
-\begin{enumerate}
-	\item Insensitive to misbehaving threads.
-	\item Can take advantage of multiple CPUS.
-	\item higher cost (context switch)
-\end{enumerate}
+Advantages/Drawbacks :\\
 
-\subsubsection*{For Cooperative}
-\begin{enumerate}
-	\item easier to programm and debug  because not sensitive to data races ( will be explained later)
-	\item can only take advantage of a single CPU
-	\item more efficient
-\end{enumerate}
+For preemptive : \\
+Insensitive to misbehaving threads.\\
+Can take advantage of multiple CPUS.\\
+higher cost (context switch) \\
+
+For cooperative :\\
+easier to programm and debug  because not sensitive to data races ( will be explained later) \\
+can only take advantage of a single CPU \\
+more efficient
 
 
 \section{Implementation}
