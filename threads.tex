@@ -1,5 +1,11 @@
 \documentclass[a4paper,10pt]{article}
 
+%%%% PRATIQUE POUR LES ALINEAS CHIANTS
+\usepackage{indentfirst}
+
+%%%% POUR L'OPTION LABEL= %%%
+\usepackage{enumitem}
+
 \usepackage{graphicx}
 \usepackage{titling}
 \usepackage{listings}
@@ -39,36 +45,45 @@ A thread is an execution context that belong to a process.
 A process might contain several threads which share some resources : memory and file descriptors.
 
 Sometimes called lightweight process.
-Process with single thread : code, data, and files in common, single registers and stack. 
-\begin{center}
-\begin{tabular}{|ccc|}
-\hline
-	Code & Data & Files\\
-	\hline
-	Register & & Stack\\
-	\hline
-\end{tabular}
 
-\end{center}
-Process with multiple threads : code, data, and files in common, multiple registers and stacks.
-
-\begin{center}
-\begin{tabular}{|ccc|}
-\hline
-	Code & Data & Files\\
-	\hline
-	Register & & Stack\\
-	\hline
-\end{tabular}
-
-\end{center}
-Process with single thread : code, data, and files in common, single registers and stack.
-Process with multiple threads : code, data, and files in common, multiple registers and stacks.
+\vspace{0.2cm}
+\begin{minipage}{0.4\textwidth}
+    \begin{center}
+        process with single thread
+        \begin{tabular}{|c|c|c|}
+            \hline
+            code & data & files \\
+            \hline
+            register & & stack \\
+            & \vdots & \\
+            & \vdots & \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+    \begin{center}
+        process with multiple threads
+        \begin{tabular}{|c|c|c|}
+            \hline
+            code & data & files \\
+            \hline
+            registers & registers & registers \\
+            stack& stack & stack \\
+            \vdots & \vdots & \vdots \\
+            \vdots & \vdots & \vdots \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{minipage}
+\vspace{0.2cm}
 
 Advantages :
-lighter management (especially context switch)
-take advantage of concurrency within a process ( eg can perform a computation during a blocking system call in another thread).
-Communication between threads is easier/more efficient than IPC (Inter Process Communication) between processes.
+\begin{enumerate}[label=-]
+	\item Lighter management (especially context switch)
+	\item Take advantage of concurrency within a process ( eg can perform a computation during a blocking system call in another thread).
+	\item Communication between threads is easier/more efficient than IPC( Inter Process Communication) between processes.
+\end{enumerate}
 
 Example : Webserver
 The main thread can listen to connextions while other threads handle requests
