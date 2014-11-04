@@ -153,8 +153,40 @@ Another possibility is to use $n$ user threads mapped to $m$ kernel threads.
 
 user threads : \hspace{0.2cm} \vdots \hspace{0.2cm} \vdots \hspace{0.2cm}\vdots  \hspace{0.2cm}  $n$
  
+Idea : Take advantage of any number of threads to express parallel work or to overlap computation with communications, limit the number of resources (Cores, CPUS) to limit the cost of context switches between them.
 
+The library is more diffucult to implement as it implies synchronization between kernel threads
 
+\section{Memory \& Execution issues related to threads}
+
+Threads share the same memory space :
+\center shared variable
+\center count
+
+\begin{tabular}{c|c}
+\hline
+	Thread 1 & Thread 2\\
+
+	count++ & count- -\\
+\hline
+\end{tabular}
+
+\begin{verbatim}
+int count;
+void *t1 (void *ignored) {
+     count ++;
+}
+
+void *t2 (void *ignored) {
+     count --;
+}
+
+int main() {
+     thread_create(t1,0);
+     t2();
+}
+	
+\end{verbatim}
 
 
  \end{document}
