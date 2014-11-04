@@ -1,0 +1,86 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage{listings}
+\lstset{%
+  basicstyle=\scriptsize\sffamily,%
+  commentstyle=\footnotesize\ttfamily,%
+  frameround=trBL,
+  frame=single,
+  breaklines=true,
+  showstringspaces=false,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=10pt,
+  keywordstyle=\bf
+}
+\newcommand{\subtitle}[1]{%
+  \posttitle{%
+    \par\end{center}
+    \begin{center}\large#1\end{center}
+    \vskip0.5em}%
+}
+\title{Operating Systems}
+\subtitle{Threads}
+\author{}
+\date{04/11/2014}
+
+\begin{document}
+\maketitle
+%\begin{abstract}
+%This document is our report of the first practical session. It contains our design choices along with the results of our implementation.	
+%\end{abstract}
+
+
+\section{Introduction}
+
+A thread is an execution context that belong to a process.
+A process might contain several threads which share some resources : memory and file descriptors.
+
+Sometimes called lightweight process.
+
+Process with single thread : code, data, and files in common, single registers and stack.
+Process with multiple threads : code, data, and files in common, multiple registers and stacks.
+
+Advantages :
+lighter management (especially context switch)
+take advantage of concurrency within a process ( eg can perform a computation during a blocking system call in another thread).
+Communication between threads is easier/more efficient than IPC between processes.
+
+
+\section{Results}
+
+\subsection{First Tests}
+
+We successfully passed the 5 first tests, but not the leak\_test, since our implementation can't validate it : since we chose to not implement a minimum size for the allocation of blocks, we can't make the expected file to match our output (for example, at the beginning of the test, we allocate 5 and 10 bytes of memory, whereas we're supposed to allocate 12 and 12 bytes).
+
+\subsection{Strategies}
+
+We also successfully implemented the three different strategies to allocate the memory. We checked if the tests given were coherent with our expected results.
+
+For example, with the best fit strategy, the test 4 goes wrong as expected according to the README : it indeed allocates the two last blocks of 8 bytes at not the same places with the first fit strategy.However, our output is correct, since that we previously freed the block of 15 bytes allocated at 433, there is a free block which goes from (433-4)= 429 to 429 + 15 + 4 = 448. So, when we allocate a new block of size 8, the best fit strategy says that the perfect place to put the block is just after 429, and since we put the new block at the end of the free block, we create a block of size 8 at 448 - 8 = 440, which is the output of our implementation.
+
+Using the same methods, we checked if the worst fit strategy worked, and it did.
+
+\subsection{Fragmentation}
+
+We didn't have time to implement a real measure of the fragmentation, so we will only explain how we would have proceeded if we had more time :
+
+We would have take the memory asked by the user (with the calls to allocate)and the memory really used in our implementation (measured by the changes of adresses of our blocks, to see the real impact in the memory).
+
+We would obtain two values after getting all the data from each allocation and release (with taking the average of it for example)
+We would then have make  a percentage of those two values to measure fragmentation.
+
+Our latest implementation modified the main function and the specification of the malloc function : since we used Pid to simulate exits of programs, we had to modifie a few things in order to simulate it correctly.
+
+The "make test" can't suceed now, since we changed the specification.
+
+However, if you run the mem\_alloc\_test, you can see that upon closure of programs, we successfully collect the garbages, even with a thousand random malloc and free calls.
+
+W
+
+
+
+
+ \end{document}
