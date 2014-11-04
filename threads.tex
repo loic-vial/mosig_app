@@ -111,5 +111,33 @@ more efficient
 
 \section{Implementation}
 
+The implementation can be performed by using the kernel, in that case the implementation
+is similar to processes implementation :
+
+\begin{itemize}
+\item the kernel itself performs threads scheduling.
+\item threads management : creation, destruction and preemption managed by the kernel.
+\item can be implemented almost like processes, eg in Linux :
+\begin{itemize}
+\item processes and threads are tasks.
+\item they have different attributes, memory is shared for threeads
+\item scheduled using the same scheduler
+\end{itemize}
+\end{itemize}
+
+The implementation might also be completely in a user-level process under the form of a library :
+
+\begin{itemize}
+\item creation, destruction are just fonctions of the library (which manage an internal list of threads)
+\item context switch :
+\begin{itemize}
+\item preemptive model : rely of preemption mechanism provided by  the kernel such as signals (setitimer/sigalarm)
+\item cooperative model : rely on a function 'yield' provided by the library and called by the thread itself
+\item both cases : most blocking functions are redefined to put blocking thread in a waiting queue and let the scheduler decide on another thread to execute. This includes : read, write, accept, connect, ....
+\end{itemize}
+\end{itemize}
+
+% schéma bizarre là ! titre : "within the kernel "
+
 
  \end{document}
