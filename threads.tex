@@ -27,9 +27,9 @@
     \begin{center}\large#1\end{center}
     \vskip0.5em}%
 }
-\title{Operating Systems}
-\subtitle{Threads}
-\author{}
+\title{\textbf{Threads}}
+\subtitle{M1 MoSIG : Operating Systems}
+\author{Poupin Pierre \and Rouby Thomas}
 \date{04/11/2014}
 
 \begin{document}
@@ -42,7 +42,12 @@
 \section{Introduction}
 
 A thread is an execution context that belong to a process.
-A process might contain several threads which share some resources : memory and file descriptors.
+A process might contain several threads which share some resources : 
+
+\begin{itemize}
+\item memory
+\item file descriptors
+\end{itemize}
 
 Sometimes called lightweight process.
 
@@ -82,7 +87,7 @@ Sometimes called lightweight process.
 \begin{enumerate}[label=-]
 	\item Lighter management (especially context switch)
 	\item Take advantage of concurrency within a process ( eg can perform a computation during a blocking system call in another thread).
-	\item Communication between threads is easier/more efficient than IPC( Inter Process Communication) between processes.
+	\item Communication between threads is easier/more efficient than IPC (Inter Process Communication) between processes.
 \end{enumerate}
 
 \subsubsection*{Example : Webserver}
@@ -151,8 +156,8 @@ The implementation might also be completely in a user-level process under the fo
 
 Another possibility is to use $n$ user threads mapped to $m$ kernel threads.
 
-\begin{tabular}{cccccc}
-	user threads & \vdots & \vdots & \vdots & n
+\begin{tabular}{cccccccc}
+	user threads & \vdots & \vdots & \vdots & \vdots & \vdots & n
 \end{tabular}
 
 \begin{flushright}
