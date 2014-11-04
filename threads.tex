@@ -91,23 +91,30 @@ Accesses to Webserver data can be performed concurrently and overlapped with com
 
 \section{Thread Models}
 
-Threads might be :\\
+Threads might be :
+\begin{itemize}
+\item Preemptive : threads might be interrupted asynchronously to switch to another thread. 
+\item Cooperative : the thread itself release the PCU to let another thread be scheduled.
+\end{itemize}
 
-Preemptive : threads might be interrupted asynchronously to switch to another thread. \\
-Cooperative : the thread itself release the PCU to let another thread be scheduled.\\
+Advantages/Drawbacks :
 
-Advantages/Drawbacks :\\
+\begin{itemize}
+ \item For preemptive :
+\begin{itemize} 
+\item Insensitive to misbehaving threads.
+\item Can take advantage of multiple CPUS.
+\item higher cost (context switch) 
+\end{itemize}
 
-For preemptive : \\
-Insensitive to misbehaving threads.\\
-Can take advantage of multiple CPUS.\\
-higher cost (context switch) \\
-
-For cooperative :\\
-easier to programm and debug  because not sensitive to data races ( will be explained later) \\
-can only take advantage of a single CPU \\
-more efficient
-
+\item For cooperative :
+ \begin{itemize}
+ 
+\item easier to programm and debug  because not sensitive to data races ( will be explained later) 
+\item can only take advantage of a single CPU 
+\item more efficient
+\end{itemize}
+\end{itemize}
 
 \section{Implementation}
 
@@ -138,6 +145,13 @@ The implementation might also be completely in a user-level process under the fo
 \end{itemize}
 
 % schéma bizarre là ! titre : "within the kernel "
+
+
+\section{Mixed models}
+
+Another possibility is to use $n$ user threads mapped to $m$ kernel threads.
+
+user threads : \hspace{0.2cm} \vdots \hspace{0.2cm} \vdots \hspace{0.2cm}\vdots  \hspace{0.2cm}  $n$
 
 
  \end{document}
