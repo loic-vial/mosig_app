@@ -157,8 +157,7 @@ The implementation might also be completely in a user-level process under the fo
 \end{itemize}
 \end{itemize}
 
-% schéma bizarre là ! titre : "within the kernel "
-
+\vspace{3cm}
 
 \section{Mixed models}
 
@@ -180,15 +179,20 @@ Another possibility is to use $n$ user threads mapped to $m$ kernel threads.
 
 
 
-Idea : Take advantage of any number of threads to express parallel work or to overlap computation with communications, limit the number of resources (Cores, CPUS) to limit the cost of context switches between them.
+\textbf{Idea :} 
+
+Take advantage of any number of threads to express parallel work or to overlap computation with communications, limit the number of resources (Cores, CPUS) to limit the cost of context switches between them.
 
 The library is more diffucult to implement as it implies synchronization between kernel threads
 
 \section{Memory \& Execution issues related to threads}
 
 Threads share the same memory space :
-\center shared variable
-\center count
+ 
+\begin{centering}
+Shared variable
+
+Count 
 
 \begin{tabular}{c|c}
 \hline
@@ -197,6 +201,10 @@ Threads share the same memory space :
 	count++ & count- -\\
 \hline
 \end{tabular}
+ 
+\end{centering}
+
+\textbf{Example :}
 
 \begin{verbatim}
 int count;
@@ -216,4 +224,215 @@ int main() {
 \end{verbatim}
 
 
+\textbf{Example :}
+
+\begin{verbatim}
+int flag1 = 0, int flag2 =0;
+
+void *p1 (void *ignored){
+     flag1=1;
+     if (!flag2) { function_1(); }
+}
+
+void *p2 (void *ignored){
+     flag2=1;
+     if (!flag1) { function_2(); }
+}
+
+int main() {
+	. . . 
+	create_thread(p1,NULL);
+	p2();
+}
+
+\end{verbatim}
+
+Which function 1 and 2 are executed ?
+\begin{itemize}
+\item none ?
+\item one of them ?
+\item both ?
+\end{itemize}
+
+All these 3 choices are possible it depends on the hardware :
+\begin {itemize}
+\item CPUS can reorder operations especially memory operations.
+\begin{itemize}
+\item concurrent independant writes
+\item pre-fetching
+\item ...
+\end{itemize}
+\item compiler can reorder operations 
+\begin{itemize}
+\item register promotion
+\item common sub-expressions elimination
+\item loop blocking
+\item ...
+\end{itemize}
+\end{itemize}
+
+
+\textbf{Definition : Sequential consistency (SC)}
+
+The execution of the program has the same result at is if the execution has been performed according to some sequential order and the order of instructions on each processor will be the same as the order in the program.
+
+From the hardware point of view :
+\begin{itemize}
+\item atomic instructions and locked instructions
+\item memory barriers : special instruction to complete pending memory operations
+\end{itemize}
+
+The programmer can use them to avoid data races : the program will then have SC.
+
+\textbf{Definition : } There is a \textbf{data race} if :
+\begin{itemize}
+\item two threads are accessing the same memory location
+\item one of them is a write
+\item none are related to synchronization operations
+\end{itemize}
+
+\textbf{Example :}
+
+\begin{verbatim}
+
+int Money_Transfer(int amount, account from, account to) {
+	int  bol;
+	atomic {bol = from_balance}
+	if (bol < amount) return ERROR;
+	- - if there is another money transfer here, problems !
+	atomic {from_balance -= amount}
+	atomic {to_balance += amount}
+}
+
+\end{verbatim}
+
+Imagine that two threads perform transfers to/from the same account.
+Here atomic means: completely executed without the possibility for other threads to access the same memory locations.
+
+The fix is make everything atomic :
+
+\begin{verbatim}
+
+int Money_Transfer(int amount, account from, account to) {
+	int  bol;
+     atomic{
+            bol = from_balance;
+            if (bol < amount) return ERROR;
+            from_balance -= amount;
+            to_balance += amount;
+          }
+}
+
+\end{verbatim}
+
+
+\textbf{Race Condition :}
+
+A flaw in the program that makes the correctness of the result depends on the ordering of external events.
+
+External events :
+\begin{itemize}
+\item context switches
+\item signals
+\item interrupts
+\item memory writes from other processors
+\item ...
+\end{itemize}
+
+\section{Critical sections}
+
+A critical setion is a part of a program that might be the source of a race condition with critical sections in other threads.
+
+The critical section problem :
+\begin{itemize}
+\item ensure mutual exclusion between critical sections
+\item ensure progression : if some threads wait to enter their critical section and no thread is execution its critical section, one of them should be allowed to enter in a finite time.
+\item bounded waiting : if some thread wants to enter its critical section, the number of threads that enter before him should be bounded. 
+\end{itemize}
+
+\subsection{Software solution}
+
+Assuming :
+
+\begin{itemize}
+\item sequential consitancy
+\item threads loop over :
+\begin{itemize}
+\item critical section
+\item remaining of the program
+\end{itemize}
+\end{itemize}
+
+Here is the Petterson solution :
+
+\begin{centering}
+flag[1]= false ; flag[2] = false
+
+turn= 1 or 2
+
+\begin{tabular}{|cc|}
+\hline
+	flag[1] = true & flag[2] = true\\
+	Thread 1 & Thread 2 \\
+	turn =2 & turn =1 \\
+	while(turn !=1) \&\& flag[2]\{\} & while(turn!=2) \&\& flag[1]\{\}\\
+	critical section & critical section\\
+	flag[1] = false & flag[2] = false\\
+	remaining & remaining\\
+\hline
+\end{tabular}
+
+\end{centering}
+
+It can be extended to N threads but it is not efficient in practice (because of SC and the number of operations)
+
+\subsection{Hardware support}
+
+\begin{centering}
+
+lock = 0
+
+\begin{tabular}{|cc|}
+\hline
+	Thread 1 & Thread 2 \\
+	while(test\_and\_set(\&lock,1))\{\} & while(test\_and\_set(\&lock,1))\{\}\\
+	lock = 1; & lock = 1; \\
+	critical section & critical section\\
+	lock = 0; & lock = 0; \\
+	remaining & remaining\\
+\hline
+\end{tabular}
+
+Spinlock
+
+\end{centering}
+
+New Instruction :
+
+\begin{verbatim}
+int test_and_set(int *adress, int value) {
+     atomic {
+          int result;
+          result = *adress;
+          *adress = value;
+          return result;
+     }
+}
+\end{verbatim}
+
+Other possibilities : Compare\_and\_swap, or swap.
+ 
+Works with any number of threads.
+
+Costly :
+
+\begin{itemize}
+\item such an atomic instruction locks the memory bus for its duration
+\item active wait : a loop that does nothing while waiting for the lock
+\end{itemize}
+
+Is it used ?
+\begin{itemize}
+\item in the kernel, on multiprocessor systems, to synchronize accesses to shared memory
+\end{itemize}
  \end{document}
