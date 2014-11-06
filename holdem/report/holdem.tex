@@ -141,9 +141,13 @@ We will now present with more details those algorithms.
 
 
 \section{The greedy algorithm}
-\subsection{Explanation}
+\subsection{What is a greedy algorithm?}
 
-\subsection{Implementation of the game using greedy algorithm}
+A greedy algorithm is one that attempts to make the best decision it can based on a small amount of immediately available information..........
+
+(talk about selecting the maximum card, exemplified below.)
+
+\subsection{Implementation of the game using a greedy algorithm}
 Let's take a deeper look at the game and his basic algorithm :
 To prepare the game, we have to shuffle the cards, and display them in a one-dimension array.
 Then, we have to design two strategies : ours, and the one that the computer/IA/sister will use : The last one simply chooses the highest valued card between the two availables.
@@ -211,7 +215,11 @@ void play_game ()
 		sis_total = sis_total + cards[left]
 \end{lstlisting}
 
-\subsection{Discussion}
+\subsection{Assessment of the greedy algorithm}
+
+The sister's version of the greedy algorithm is very simple to implement - only requiring three of four lines of code - and is very cheap to execute, the decision being based on only a single comparison of cards. However, as both the primary player and the sister are employing the same strategy, the player that wins the game is essentially left to chance.
+
+An alternative (fairly) greedy strategy is to only select the highest card if it does not reveal a higher card to the sister............
 
 \section{Full solution-space algorithm}
 % Cyril's algorithm
@@ -285,10 +293,101 @@ second diagonal is therefore $Best(i-1, i) = MAX(cards[i-1], cards[i])$.
 			LET\_SISTER\_GO\_FIRST, is then set and the winning node returned by the function.
 \end{itemize}
 
+\subsection{Implementation}
+\begin{lstlisting}
+struct problem
+| int best // The best possible score for each problem
+| problem *subproblem // Used to create a linked-list of the optimal choices
+
+int cards[numcards] = {...}
+bool LET_SISTER_GO_FIRST
+
+problem *solve()
+| problem *table[numcards][numcards] // half wasted but it's only pointers
+|
+| // Do base cases (Case 0 is done separately as the
+| // other base cases are in done pairs)
+| table[0][0] = new(problem)
+| table[0][0].best = cards[0]
+| table[0][0].subproblem = NULL
+|
+| for (i = 1; i < numcards; i++)
+| | table[i][i] = new(problem)
+| | table[i][i].best = cards[i]
+| | table[i][i].subproblem = NULL
+| |
+| | table[i-1][i] = new(problem)
+| | table[i-1][i].subproblem = NULL
+| |
+| | // In the second base diagonal, "best" should be set to the
+| | // maximum value of the two cards represented by that cell.
+| | if (cards[i-1] > card[i])
+| | | table[i-1][i].best = cards[i-1]
+| | else
+| | | table[i-1][i].best = cards[i]
+| 
+| // Now solve the rest of the table by scanning through its diagonals
+| // (thus ensuring each cell's dependencies have already been calculated)
+| for (j = 2; j < numcards; j++)
+| | for (i = 0; i < numcards-j; i++)
+| | | table[i][i+j] = new(problem)
+| | |
+| | | // I choose left, sis chooses left
+| | | if (cards[i+1] > cards[i+j]
+| | | | left_best = cards[i] + table[i+2][i+j].best
+| | | | left_sub = &table[i+2][i+j]
+| | | else
+| | | | // I choose left, sis chooses right
+| | | | left_best = cards[j] + table[i+1][i+j-1].best
+| | | | left_sub = &table[i+1][i+j-1]
+| | |
+| | | // I choose right, sis chooses left
+| | | if (cards[i] > cards[i+j-1]
+| | | | right_best = cards[i+j] + table[i+1][i+j-1].best
+| | | | right_sub = &table[i+1][i+j-1]
+| | | else
+| | | | // I choose right, sis chooses right
+| | | | right_best = cards[i+j] + table[i][i+j-2].best
+| | | | right_sub = &table[i][i+j-2]
+| | |
+| | | // We have now found the two possible outcomes (taking
+| | | // account of the sister's move), but which is best?
+| | | // Set table[i][i+j] accordingly...
+| | | if (left_best > right_best)
+| | | | table[i][i+j].best = left_best
+| | | | table[i][i+j].subproblem = left_sub
+| | | else
+| | | | table[i][i+j].best = right_best
+
+| | | | table[i][i+j].subproblem = right_sub
+|
+| // We want to know, for this deck of cards, whether it is optimal
+| // to allow your sister to have the first move or not.
+| // (Both situations have been calculated.)
+| if (cards[0] > cards[numcards - 1])
+| | if (table[1][numcards - 1].best > table[0][numcards - 1].best)
+| | | LET_SISTER_GO_FIRST = TRUE
+| | | return table[1][numcards - 1]
+| else
+| | if (table[0][50] > table[0][numcards - 1])
+| | | LET_SISTER_GO_FIRST = TRUE
+| | | return table[0][50]
+|
+| LET_SISTER_GO_FIRST = FALSE
+| return table[0][numcards - 1]
+\end{lstlisting}
 
 \section{Conclusion}
 
+We have seen that there is more than one strategy that can be applied in order to beat your greedy sister at this simple game of cards. However, there is only one optimal strategy. It was observed that matching the sister's greedy strategy of selecting the highest available card would only lead to a victory in about 50\% of cases. While this is not an ideal result, the simple strategy benefits from being very simple to implement and being very cheap to execute, in terms of system resources; and at least it wouldn't lead to a net loss of money and of pride.
 
+There are other greedy strategies that could be implemented - for example, only selecting the highest card if does not reveal a higher one. However, it cannot be guaranteed that such a strategy will always result in a win. One sure way to win the game is to play optimally, i.e. to make the decisions necessary to achieve the highest score possible given that particular configuration of cards, and given the opponent's strategy. To discover this optimal sequence of decisions, the entire solution-space must be explored, returning the path through it resulting in the highest score.
+
+The initial algorithm presented here, that explores the entire solution-space, is an iterative one.\\
+*** Cyril - can you explain your algorithm here?? ***\\
+We identified that this algorithm was of complexity $O(n^3)$.
+
+In an attempt to reduce the complexity of the initial full-solution-space algorithm, dynamic programming techniques were employed. i.e. we assumed that the optimal solution could be represented as the optimal solution to the current problem given that all sub-problems had been solved optimally. This lead to the recursive "Best" function given in section 4, which represents the solution space as a "triangular lattice" rather than a binary tree. A naive implementation of the "Best" function would also lead to an algorithm of complexity $O(n^3)$. However, the fact that the graph of nodes is now represented as a lattice of shared sub-problems, rather than a tree, reveals the fact that optimisations can easily be made. Rather than allowing the algorithm to visit each node multiple times, a "cache" of visited nodes was added so that calculations for already visited nodes would noit have to be re-performed. This optimisation lead to a more complicated-looking but more efficient algorithm of complexity $O(n^2)$.
 
 
 
