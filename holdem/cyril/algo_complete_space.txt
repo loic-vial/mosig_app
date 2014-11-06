@@ -1,0 +1,90 @@
+/**
+ * Compute a best solution, using a complete space exploration algorithm
+ *
+ * The algorithm used is iterative, and stores intermediate values in branches
+ * All possible sequence of decisions are computed, each of them being
+ * referenced as a list of boolean (the list can be stored in an integer)
+ *
+ * For example : 0b1101 means take the right card, then the right, and finally
+ * the left card.
+ *
+ * Given a list of card, a strategy is then an integer (every integers can be
+ * decomposed into a list of booleans).
+ *
+ * Notation : L \ L[i] should return the list 
+ * [L[0], ..., L[i-1], L[i+1], ..., L[n-1]]
+ *
+ * Side note : for the implementation, instead of storing the entire lists in
+ * every nodes, we can just store the value of starting and finishing indexes
+ * For example, instead of having [L[3], L[4], L[5]] we can just store 3 and 5
+ * in the node
+ */
+
+struct Node is :
+|	List L // list of remaining card values
+|	int val // the current score when we reach the node
+|	Node *node[2] // the sons, enum{LEFT=0, RIGHT=1}
+end
+
+/* Returns the best decision, and the value obtained with this decision */
+best_strategy(L) return (int, int) is :
+|	N = len(L)
+|	
+|	start = new Node(L, 0, NULL, NULL)
+|	best_val = -1
+|
+|	for decision from 0 to 2^N - 1 do:
+|	|	current = start
+|	|	for i from N-1 to 0 by -1 do:
+|	|	|	cur_L = current->L
+|	|	|	cur_N = len(cur_L)
+|	|	|	cur_val = current->val
+|	|	|	take_right = (decision >> i) // shifted
+|	|	|	
+|	|	|	if (current->node[take_right] == NULL):
+|	|	|	|	if take_right:
+|	|	|	|	|	new_L = L \ L[cur_N - 1] \ max(L[0], L[cur_N - 2])
+|	|	|	|	|	new_val = cur_val + L[cur_N - 1]
+|	|	|	|	else:
+|	|	|	|	|	new_L = L \ L[0] \ max(L[1], L[cur_N - 1])
+|	|	|	|	|	new_val = cur_val + L[0]
+|	|	|	|	current->node[take_right] = new Node(new_L, new_val, NULL, NULL)
+|	|	|	end
+|	|	|
+|	|	|	current = current->node[take_right]
+|	|	done
+|	|
+|	|	decision_val = current->val
+|	|	if decision_val > best_val:
+|	|	|	best_val = decision_val
+|	|	|	best_decision = decision
+|	|	end
+|	done
+|
+|	free_rec(start)
+|	return (best_val, best_decision)
+end
+
+free_rec(node) is:
+|	for i in {LEFT, RIGHT} do:
+|	|	if node->node[i] != NULL:
+|	|	|	free_rec(node->node[i])
+|	|	fi
+|	done
+|	free(node)
+end
+
+main is :
+|	L = list of card values
+|	N = len(L)
+|
+|	val_i_start, strategy_i_start = best_strategy(L)
+|	L_she_starts = L \ (max(L[0], L[N-1]))
+|	val_she_starts, strategy_she_starts = best_strategy(L_she_starts)
+|
+|	if val_i_start >= val_she_starts:
+|	|	echo "The best strategy is $strategy_i_start, and i have to start"
+|	else:
+|	|	echo "The best strategy is $strategy_she_starts, and she has to start"
+|	end
+end
