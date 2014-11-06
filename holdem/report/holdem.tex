@@ -103,6 +103,18 @@
 \section{Introduction}
 Talk about the game and dynamic programming.
 
+The game we are playing is quite simple : It is a turn based two-player game, using a line of cards : Each player can take either the left-most card or the right-most card.
+The winner is the one who gets the highest value calculated by the sum of cards.
+We assume that we play with a basic artificial intelligence, which always pick the highest valued card.
+
+We will present several types of algorithms to win in most cases : a greedy one, a full-exploration one, and a dynamic one.
+
+The greedy algorithm is simply what the IA does, we hope to win at the end, but we are not sure if we will succeed, whereas the full-exploration of space's method checks every combination of cards' picking, to find a solution in advance, and then we can apply it.
+The dynamic programming algorithm is basically optimizations we made on the full exploration algorithm, to enhance the performances and lessen the costs in memory and time.
+
+We will now present with more details those algorithms.
+
+
 \section{The game algorithm}
 % Describe the game, show an example
 
