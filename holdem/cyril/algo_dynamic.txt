@@ -1,0 +1,82 @@
+/**
+ * Dynamic programming version
+ *
+ * We have a list of cards L1..Ln
+ * We use an array of best possible score between the two indexes:
+ *		best[i,j] is the best possible score 
+ *		that can be obtained with the cards Li..Lj
+ *		supposing that you start
+ *
+ * Note : 	best[i, j] is the value of the array "best" at indexes (i, j)
+ *			best(i, j) is the value of function "best" with arguments i and j
+ */
+
+structure indexes_s is:
+|	int left, right
+
+structure best_s is:
+|	int val
+|	indexes_s next_indexes // next indexes if best strategy is followed
+|	bool take_left // true if left card must be taken for best strategy
+
+card_val = array of N elements, initialized with each card value
+best = array of N x N elements, each element init to (-1, NONE, NONE)
+
+function best(i, j):
+|	if best[i,j].val != -1:
+|	|	return best[i,j]
+|	
+|	/* Particular cases */
+|	if |i-j| == 0:
+|	|	return card_val[i]
+|	else if |i-j| == 1:
+|	|	return max(card_val[i], card_val[j])
+|	end if
+|
+|	/* If I take left */
+|	sister_takes_left = (card_val[i+1] > card_val[j])
+|	if sister_takes_left:
+|	|	next_indexes_i_take_left = (i+2, j)
+|	else:
+|	|	next_indexes_i_take_left = (i+1, j-1)
+|
+|	/* If I take right */
+|	sister_takes_left = (card_val[i] > card_val[j-1])
+|	if sister_takes_left:
+|	|	next_indexes_i_take_right = (i+1, j-1)
+|	else:
+|	|	next_indexes_i_take_right = (i, j-2)
+|
+|	best_if_left = card_val[i] + best(next_indexes_i_take_left).val
+|	best_if_right = card_val[j] + best(next_indexes_i_take_right).val
+|	best[i,j].val = max(best_if_left, best_if_right) // best_if_left if equality
+|	best[i,j].next_indexes = (best_if_left >= best_if_right) ?\
+|						next_indexes_i_take_left : next_indexes_i_take_right
+|	best[i,j].take_left = (best_if_left >= best_if_right)
+|
+|	return best[i,j]
+end
+
+procedure find_best_solution:
+|	best_solution = []
+|	i_start_indexes = (1, N)
+|	if card_val[1] > card_val[N]:
+|	|	she_starts_indexes = (2, N)
+|	else
+|	|	she_starts_indexes = (2, N-1)
+|
+|	i_go_first = (best(i_start_indexes).val >= best(she_starts_indexes).val)
+|
+|	cur_indexes = i_go_first ? i_start_indexes : she_starts_indexes
+|
+|	while (cur_indexes.right - cur_indexes.left) >= 0 do:
+|	|	if best(cur_indexes).take_left:
+|	|	|	append(best_solution, card[cur_indexes.left])
+|	|	else:
+|	|	|	append(best_solution, card[cur_indexes.right])
+|	|
+|	|	cur_indexes = best(cur_indexes).next_indexes
+|	done
+|
+|	return best_solution
+end
