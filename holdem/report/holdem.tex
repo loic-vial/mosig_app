@@ -130,10 +130,10 @@
 \section{Introduction}
 Talk about the game and dynamic programming.
 
-\section{The game algorithm}
-\subsection{Description and example}
+\section{The greedy algorithm}
+\subsection{Explanation}
 
-\subsection{Implementation}
+\subsection{Implementation of the game using greedy algorithm}
 \begin{lstlisting}
 int cards[52];
 
@@ -193,9 +193,7 @@ void play_game ()
 		sis_total = sis_total + cards[left]
 \end{lstlisting}
 
-\section{The greedy algorithm}
-\subsection{Explanation}
-\subsection{Limitations and advantages}
+\subsection{Discussion}
 
 \section{Full solution-space algorithm}
 % Cyril's algorithm
@@ -203,7 +201,52 @@ void play_game ()
 \subsection{Complexity, optimization}
 
 \section{Dynamic implementation}
+Starting with a full pack of cards, unless the final two cards are the left-most pair or the right-most pair, there is always more than one sequence of card selections that will lead to us having that final remaining pair. The recursive formula above therefore describes the problem as a ``linked tree'' (i.e. a triangular lattice where where the right and the left children of any two horizontally adjacent nodes are the same node) of subproblems where each subproblem is not unique. We argue that this recursive function will calculate the optimal score when provided with the appropriate base cases.
 
+\footnotesize
+\begin{align*}
+	Best(i, j) = Max\left( 
+	\left[C[i] +
+	\begin{cases}
+		Best(i+2,j) & \text{if $C[i+1] > C[j]$} \\
+		Best(i+1,j-1) & \text{otherwise}
+	\end{cases}
+	\right]
+	,
+	\left[
+	C[j] +
+	\begin{cases}
+		Best(i+1,j-1) & \text{if $C[i] > C[j-1]$} \\
+		Best(i,j-2) & \text{otherwise}
+	\end{cases}
+\right]
+	\right)
+\end{align*}
+\normalsize
+\subsection{Top-down}
+
+\subsection{Bottom-up}
+As each subproblem is not unique, a recursive algorithm is at risk of performing the same calculations multiple times. The recursive, top-down version of the solution described in this paper performs a check before calculating the values for a node to ensure they haven't been calculated before. In the bottom-up version of the solution, described here, we instead start with the base cases (along the primary diagonal and the adjacent diagonal of the array pictured above) and then cycle through each of the remaining cells only a single time.
+
+From the recursive formula you can see that $Best(i, j)$ is always dependent on a cell two steps away, towards the top-right of the pictured
+array: either $(i+2), (j-2)$ or $(i+1, j-1)$. i.e. To calculate the value of ``Best'' for any cell, the next diagonal is skipped and the 
+dependencies are found in the following diagonal. If we were to assume that the primary player always goes first then these diagonals 
+(corresponding to the problems with which the second player is faced) would not need to be calculated - 
+they could be left blank. However, the optimal solution for a player does not necessarily require them to go first. It is 
+then necessary to treat them as a game with one less card, where the second player has already taken one of the cards. 
+In this case, the primary player is always left with a subproblem with an odd number of cards. He/she will then 
+be left with the final card - the base case along the main diagonal. If the primary player goes first then he will always 
+be left with the final two cards, of which he/she would want to take the largest. The base case for the 
+second diagonal is therefore $Best(i-1, i) = MAX(cards[i-1], cards[i])$.
+
+\subsubsection*{Algorithm Details}
+\begin{itemize}
+		\item The structure used for the nodes (the ``problem'' structure) contains the value of ``best'' as well as a pointer to the node that is the optimal ``subproblem'', therefore forming a linked list of optimal decisions.
+		\item Despite the problem being a triangular array of nodes, for simplicity we represent is as a square 2D array. As this is just an array of pointers to ``problem'' structures, it wouldn't take up as much space as it could.
+		\item Once the values of the nodes of the array have been calculated, the optimal scores for the cases where you go 
+			first and when your sister goes first (and selects the maximum initial card) are compared. The global boolean variable, 	
+			LET\_SISTER\_GO\_FIRST, is then set and the winning node returned by the function.
+\end{itemize}
 
 
 \section{Conclusion}
