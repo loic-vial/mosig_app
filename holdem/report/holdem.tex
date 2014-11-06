@@ -221,6 +221,7 @@ void play_game ()
 \section{Dynamic implementation}
 Starting with a full pack of cards, unless the final two cards are the left-most pair or the right-most pair, there is always more than one sequence of card selections that will lead to us having that final remaining pair. The recursive formula above therefore describes the problem as a ``linked tree'' (i.e. a triangular lattice where where the right and the left children of any two horizontally adjacent nodes are the same node) of subproblems where each subproblem is not unique. We argue that this recursive function will calculate the optimal score when provided with the appropriate base cases.
 
+
 \footnotesize
 \begin{align*}
 	Best(i, j) = Max\left( 
@@ -241,6 +242,24 @@ Starting with a full pack of cards, unless the final two cards are the left-most
 	\right)
 \end{align*}
 \normalsize
+
+\subsubsection*{Example}
+	$\text{Cards } = \{5,7,9,1,4,2\}$
+
+	\begin{tabular}[c]{cc|cccccc}
+		& $i$ $\rightarrow$\\
+
+		$j$          &   & 1 & 2 & 3 & 4 & 5 & 6 \\
+		             \cline{2-8}
+		$\downarrow$ & 1 & 5 & X & X & X & X & X \\
+		             & 2 & 7 & 7 & X & X & X & X \\
+		             & 3 &   & 9 & 9 & X & X & X \\
+		             & 4 &   &   & 9 & 1 & X & X \\
+		             & 5 & ? &   &   & 4 & 4 & X \\
+		             & 6 & ? & ? &   &   & 4 & 2
+		
+	\end{tabular}
+
 \subsection{Top-down}
 
 \subsection{Bottom-up}
