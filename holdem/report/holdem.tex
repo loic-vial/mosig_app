@@ -1,0 +1,143 @@
+\documentclass[11pt]{article}
+
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+\usepackage{graphvizzz}
+
+%\usepackage[usenames,dvipsnames]{pstricks}
+%\usepackage{epsfig}
+%\usepackage{pst-grad} % For gradients
+%\usepackage{pst-plot} % For axes
+
+\usepackage{enumitem}
+
+\usepackage{framed}
+
+%%%%%%
+% Pour mise-en-forme des fichiers Ada
+%
+% voir exemple en fin de ce fichier.
+%
+% ATTENTION, requiert encoding utf-8 (voir 2ième "\lstset" ci-dessous)
+ 
+\usepackage{listings}
+\lstset{
+  morekeywords={abort,abs,accept,access,all,and,array,at,begin,body,
+      case,constant,declare,delay,delta,digits,do,else,elsif,end,entry,
+      exception,exit,for,function,generic,goto,if,in,is,limited,loop,
+      mod,new,not,null,of,or,others,out,package,pragma,private,
+      procedure,raise,range,record,rem,renames,return,reverse,select,
+      separate,subtype,task,terminate,then,type,use,when,while,with,
+      xor,abstract,aliased,protected,requeue,tagged,until,printf},
+  sensitive=f,
+  morecomment=[l]--,
+  morestring=[d]",
+  showstringspaces=false,
+  basicstyle=\small\ttfamily,
+  keywordstyle=\bf\small,
+  commentstyle=\itshape,
+  stringstyle=\sf,
+  extendedchars=true,
+  columns=[c]fixed
+}
+
+% CI-DESSOUS: conversion des caractères accentués UTF-8 
+% en caractères TeX dans les listings...
+\lstset{
+  literate=%
+  {À}{{\`A}}1 {Â}{{\^A}}1 {Ç}{{\c{C}}}1%
+  {à}{{\`a}}1 {â}{{\^a}}1 {ç}{{\c{c}}}1%
+  {É}{{\'E}}1 {È}{{\`E}}1 {Ê}{{\^E}}1 {Ë}{{\"E}}1% 
+  {é}{{\'e}}1 {è}{{\`e}}1 {ê}{{\^e}}1 {ë}{{\"e}}1%
+  {Ï}{{\"I}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1%
+  {ï}{{\"i}}1 {î}{{\^i}}1 {ô}{{\^o}}1%
+  {Ù}{{\`U}}1 {Û}{{\^U}}1 {Ü}{{\"U}}1%
+  {ù}{{\`u}}1 {û}{{\^u}}1 {ü}{{\"u}}1%
+}
+
+%%%%%%%%%%
+% TAILLE DES PAGES (A4 serré)
+
+\setlength{\parindent}{20pt}
+\setlength{\parskip}{1ex}
+\setlength{\textwidth}{17cm}
+%\setlength{\textwidth}{16cm}
+\setlength{\textheight}{23cm}
+\setlength{\oddsidemargin}{-.7cm}
+\setlength{\evensidemargin}{-.7cm}
+\setlength{\topmargin}{-.5in}
+
+%%%%%%%%%%
+% EN-TÊTES ET PIED DE PAGES
+
+\pagestyle{fancyplain}
+\renewcommand{\headrulewidth}{0pt}
+\addtolength{\headheight}{1.6pt}
+\addtolength{\headheight}{2.6pt}
+\lfoot{}
+\cfoot{}
+
+
+%%%%%%%%%%
+% titre du document
+
+\title{Algorithms \\
+	\textbf{``Hold'em for n00bs''}}
+
+\author{Thanh Luan, Six Cyril, Vial Loïc \\
+			Rouby Thomas, Marriott Richard\\
+			Poupin Pierre} 
+
+\date{7\up{th} of November 2014}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+Talk about the game and dynamic programming.
+
+\section{The game algorithm}
+% Describe the game, show an example
+
+\section{The greedy algorithm}
+\subsubsection{Explanation}
+\subsubsection{Limitations and advantages}
+
+\section{Full solution-space algorithm}
+% Cyril's algorithm
+\subsubsection{Explanation}
+\subsubsection{Complexity, optimization}
+
+\section{Dynamic implementation}
+
+
+
+\section{Conclusion}
+
+
+
+
+
+%	\digraph a {
+%		size="3.5,3.5";
+%		a->b;
+%		a->c;
+%		b->d;
+%		b->e;
+%		c->h;
+%		c->i;
+%		d->k;
+%		e->k;
+%		h->l;
+%		i->l;
+%		l->m;
+%		k->m;
+%	}
+\end{document}
