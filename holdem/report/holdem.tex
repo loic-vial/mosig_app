@@ -26,7 +26,32 @@
 % ATTENTION, requiert encoding utf-8 (voir 2ième "\lstset" ci-dessous)
  
 \usepackage{listings}
-\lstset{
+%\lstset{
+%  morekeywords={abort,abs,accept,access,all,and,array,at,begin,body,
+%      case,constant,declare,delay,delta,digits,do,else,elsif,end,entry,
+%      exception,exit,for,function,generic,goto,if,in,is,limited,loop,
+%      mod,new,not,null,of,or,others,out,package,pragma,private,
+%      procedure,raise,range,record,rem,renames,return,reverse,select,
+%      separate,subtype,task,terminate,then,type,use,when,while,with,
+%      xor,abstract,aliased,protected,requeue,tagged,until,printf},
+%  sensitive=f,
+%  morecomment=[l]--,
+%  morestring=[d]",
+%  showstringspaces=false,
+%  basicstyle=\tiny\ttfamily,
+%  keywordstyle=\bf\tiny,
+%  commentstyle=\itshape\tiny,
+%  stringstyle=\sf\tiny,
+%  extendedchars=true,
+%  columns=[c]fixed
+%}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{myblue}{rgb}{0,0,0.82}
+
+\lstset{%
   morekeywords={abort,abs,accept,access,all,and,array,at,begin,body,
       case,constant,declare,delay,delta,digits,do,else,elsif,end,entry,
       exception,exit,for,function,generic,goto,if,in,is,limited,loop,
@@ -34,16 +59,18 @@
       procedure,raise,range,record,rem,renames,return,reverse,select,
       separate,subtype,task,terminate,then,type,use,when,while,with,
       xor,abstract,aliased,protected,requeue,tagged,until,printf},
-  sensitive=f,
-  morecomment=[l]--,
-  morestring=[d]",
+  basicstyle=\scriptsize\ttfamily,%
+  commentstyle=\color{mygreen}\footnotesize\ttfamily,%
+  frameround=trBL,
+  frame=single,
+  breaklines=true,
   showstringspaces=false,
-  basicstyle=\small\ttfamily,
-  keywordstyle=\bf\small,
-  commentstyle=\itshape,
-  stringstyle=\sf,
-  extendedchars=true,
-  columns=[c]fixed
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=10pt,
+  language=Java,
+  morekeywords={Math},
+  keywordstyle=\color{myblue}\bf
 }
 
 % CI-DESSOUS: conversion des caractères accentués UTF-8 
@@ -104,16 +131,76 @@
 Talk about the game and dynamic programming.
 
 \section{The game algorithm}
-% Describe the game, show an example
+\subsection{Description and example}
+
+\subsection{Implementation}
+\begin{lstlisting}
+int cards[52];
+
+shuffle_deck()
+	for i = 1 to 4
+		for j = 1 to 13
+			cards[(i-1)*13+j] = j + 1
+	// Now shuffle cards
+	for i = 1 to 52
+		one = rand(0,51)
+		two = rand(0,51)
+
+		temp = cards[one]
+		cards[one] = cards[two] // Swap cards at two randoom positions
+		cards[two] = temp
+
+int sister(int left, int right)
+	if cards[left] > cards[right]
+		return left
+	
+	return right
+
+
+int strategy (int left, int right)
+	if cards[left] > cards[right]
+		return left
+
+	return right
+
+
+void play_game ()
+	int left = 0
+	int right = 51
+	int my_total = 0
+	int sis_total = 0
+	bool my_turn = true
+
+	while (left != right)
+		if my_turn
+			choice = strategy(left,right)
+			my_total = my_total + cards[choice]
+		else
+			choice = sister(left,right)
+			sis_total = sis_total + cards[choice]
+
+		if choice == left
+			left++
+		else
+			right--
+
+		my_turn = !my_turn
+
+	// Final Card
+	if my_turn
+		my_total = my_total + cards[left]
+	else
+		sis_total = sis_total + cards[left]
+\end{lstlisting}
 
 \section{The greedy algorithm}
-\subsubsection{Explanation}
-\subsubsection{Limitations and advantages}
+\subsection{Explanation}
+\subsection{Limitations and advantages}
 
 \section{Full solution-space algorithm}
 % Cyril's algorithm
-\subsubsection{Explanation}
-\subsubsection{Complexity, optimization}
+\subsection{Explanation}
+\subsection{Complexity, optimization}
 
 \section{Dynamic implementation}
 
