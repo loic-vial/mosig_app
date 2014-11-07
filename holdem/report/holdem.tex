@@ -150,9 +150,10 @@ A greedy algorithm is one that attempts to make the best decision it can based o
 In our case, the greedy algorithm consists in  choosing the highest-valued card between the two immediate available ones, the left-most card or the right-most card.
 
 \subsection{Implementation of the game using a greedy algorithm}
-Let's take a deeper look at the game and his basic algorithm:
+Let's take a deeper look at the game and his basic algorithm.
+
 To prepare the game, we have to shuffle the cards, and display them in a one-dimension array.
-Then, we have to design two strategies: ours, and the one that the computer/IA/sister will use: the last one simply chooses the highest valued card between the two availables.
+Then, we have to design two strategies: ours, and the one that the computer/AI/sister will use: the last one simply chooses the highest valued card between the two availables.
 Our strategy will be the algorithms we talked previously in the introduction.
 Finally, the game consists only in the alternance of the two strategies of the player.
 To simulate the fact that we pick a card, we use two indexes that represents the limits of the array of cards: upon picking a card, we increment (decrement) the left (right) index if we chose the left (right) card. The game is finished when the last card is picked, that is to say when the indexes are equal.
