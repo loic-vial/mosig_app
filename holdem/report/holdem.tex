@@ -131,13 +131,13 @@
 \maketitle
 
 \section{Introduction}
-The game we are playing is quite simple: It is a turn based two-player game, using a line of cards: Each player can take either the left-most card or the right-most card.
+The game we are playing is quite simple. It is a turn based two-player game, using a line of cards: each player can take either the left-most card or the right-most card.
 The winner is the one who gets the highest value calculated by the sum of cards.
 We assume that we play with a basic artificial intelligence, which always pick the highest valued card.
 
 We will present several types of algorithms to win in most cases: a greedy one, a full-exploration one, and a dynamic one.
 
-The greedy algorithm is simply what the IA does, we hope to win at the end, but we are not sure if we will succeed, whereas the full-exploration of space's method checks every combination of cards' picking, to find a solution in advance, and then we can apply it.
+The greedy algorithm is simply what the AI does, we hope to win at the end, but we are not sure if we will succeed, whereas the full-exploration of space's method checks every combination of cards' picking, to find a solution in advance, and then we can apply it.
 The dynamic programming algorithm is basically optimizations we made on the full exploration algorithm, to enhance the performances and lessen the costs in memory and time.
 
 We will now present with more details those algorithms.
@@ -154,10 +154,10 @@ A greedy algorithm is one that attempts to make the best decision it can based o
 \subsection{Implementation of the game using a greedy algorithm}
 Let's take a deeper look at the game and his basic algorithm:
 To prepare the game, we have to shuffle the cards, and display them in a one-dimension array.
-Then, we have to design two strategies: ours, and the one that the computer/IA/sister will use: The last one simply chooses the highest valued card between the two availables.
+Then, we have to design two strategies: ours, and the one that the computer/IA/sister will use: the last one simply chooses the highest valued card between the two availables.
 Our strategy will be the algorithms we talked previously in the introduction.
 Finally, the game consists only in the alternance of the two strategies of the player.
-To simulate the fact that we pick a card, we use two indexes that represents the limits of the array of cards: Upon picking a card, we increment (decrement) the left (right) index if we chose the left (right) card. The game is finished when the last card is picked, that is to say when the indexes are equal.
+To simulate the fact that we pick a card, we use two indexes that represents the limits of the array of cards: upon picking a card, we increment (decrement) the left (right) index if we chose the left (right) card. The game is finished when the last card is picked, that is to say when the indexes are equal.
 
 \subsection{Implementation}
 \begin{lstlisting}
