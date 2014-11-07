@@ -9,6 +9,14 @@
 % Pour colorer une cellule de tableau
 \usepackage[table]{xcolor}
 
+% TOC
+\addto\captionsfrench{% Replace "english" with the language you use
+  \renewcommand{\contentsname}%
+    {Table of Contents}%
+}
+
+\usepackage{hyperref}
+
 %\usepackage{graphvizzz}
 
 %\usepackage[usenames,dvipsnames]{pstricks}
@@ -129,6 +137,7 @@
 \begin{document}
 
 \maketitle
+\tableofcontents
 
 \section{Introduction}
 The game we are playing is quite simple. It is a turn based two-player game, using a line of cards: each player can take either the left-most card or the right-most card.
@@ -158,7 +167,6 @@ Our strategy will be the algorithms we talked previously in the introduction.
 Finally, the game consists only in the alternance of the two strategies of the player.
 To simulate the fact that we pick a card, we use two indexes that represents the limits of the array of cards: upon picking a card, we increment (decrement) the left (right) index if we chose the left (right) card. The game is finished when the last card is picked, that is to say when the indexes are equal.
 
-\subsection{Implementation}
 \begin{lstlisting}
 int cards[52];
 
@@ -231,11 +239,11 @@ We are now going to find one.
 \section{Full solution-space algorithm}
 \subsection{Explanation}
 This algorithm explores every sequences of possible decisions. Each decision can
-be either "take the right card" or "take the left card", so a decision can be
+be either ``take the right card'' or ``take the left card'', so a decision can be
 represented by a boolean.
 
 Thus, a sequence of decisions is a sequence of booleans ; and to each sequence 
-of booleans an integer can be associated: for example, if we have the sequence
+of booleans an integer can be associated. For example, if we have the sequence
 $(b_n)$, we associate the binary number $b_nb_{n-1}..b_0$.
 
 As a consequence, a strategy is represented by an integer ; and
@@ -247,11 +255,11 @@ the one that grants the highest score is kept.
 
 In this algorithm, in order to avoid recomputing already-computed values,
 a tree is built along each iteration. Each node represents a step in the game,
-and contains: a list of remaining cards and the score obtained so far.
+and contains a list of remaining cards and the score obtained so far.
 
 Below (figure \ref{tree}) is an example of a tree drawn 
 for the list of cards $[5, 2, 6]$.
-\begin{figure}[ht]
+\begin{figure}[!h]
 	\center
 	\label{tree}
 	\includegraphics[width=0.32\linewidth]{complete_space.pdf}
@@ -397,6 +405,12 @@ the right and the left children of any two horizontally adjacent nodes are the s
 	\begin{minipage}{5cm}
 	% explain array
 	\end{minipage}
+
+
+
+\subsection{Argument that the $best$ function gives the optimal solution}
+
+The optimal solution is that which gives the highest overall score. It does not matter whether the current card 
 
 \subsection{Top-down}
 \subsubsection{Explanation}
@@ -614,8 +628,8 @@ We have seen that there is more than one strategy that can be applied in order t
 There are other greedy strategies that could be implemented - for example, only selecting the highest card if does not reveal a higher one. However, it cannot be guaranteed that such a strategy will always result in a win. One sure way to win the game is to play optimally, i.e. to make the decisions necessary to achieve the highest score possible given that particular configuration of cards, and given the opponent's strategy. To discover this optimal sequence of decisions, the entire solution-space must be explored, returning the path through it resulting in the highest score.
 
 The initial algorithm presented here, that explores the entire solution-space, is an iterative one.\\
-*** Cyril - can you explain your algorithm here?? ***\\
-We identified that this algorithm was of complexity  $O(2^{N/2})$ : .
+%*** Cyril - can you explain your algorithm here?? ***\\
+We identified that this algorithm was of complexity  $O(2^{N/2})$.
 
 In an attempt to reduce the complexity of the initial full-solution-space algorithm, dynamic programming techniques were employed. i.e. we assumed that the optimal solution could be represented as the optimal solution to the current problem given that all sub-problems had been solved optimally. This lead to the recursive "Best" function given in section 4, which represents the solution space as a "triangular lattice" rather than a binary tree. A naive implementation of the "Best" function would also lead to an algorithm of complexity $O(n^3)$. However, the fact that the graph of nodes is now represented as a lattice of shared sub-problems, rather than a tree, reveals the fact that optimisations can easily be made. Rather than allowing the algorithm to visit each node multiple times, a "cache" of visited nodes was added so that calculations for already visited nodes would not have to be re-performed. This optimisation lead to a more complicated-looking but more efficient algorithm of complexity $O(n^2)$.
 
