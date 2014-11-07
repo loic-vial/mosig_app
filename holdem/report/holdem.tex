@@ -222,10 +222,126 @@ The sister's version of the greedy algorithm is very simple to implement - only 
 An alternative (fairly) greedy strategy is to only select the highest card if it does not reveal a higher card to the sister............
 
 \section{Full solution-space algorithm}
-% Cyril's algorithm
 \subsection{Explanation}
-\subsection{Complexity, optimization}
+This algorithm explores every sequences of possible decisions. Each decision can
+be either "take the right card" or "take the left card", so a decision can be
+represented by a boolean.
 
+Thus, a sequence of decisions is a sequence of booleans ; and to each sequence 
+of booleans an integer can be associated : for example, if we have the sequence
+$(b_n)$, we associate the binary number $b_nb_{n-1}..b_0$.
+
+As a consequence, a strategy is represented by an integer ; and
+exploring each possible strategies is done by iterating from strategy 0 to the
+strategy $2^{\lceil{N/2}\rceil} - 1$, and keeping the best one.
+
+To decide whether the sister starts or not, both cases are computed, and
+the one that grants the highest score is kept.
+
+In this algorithm, in order to avoid recomputing already-computed values,
+a tree is built along each iteration. Each node represents a step in the game,
+and contains : a list of remaining cards and the score obtained so far.
+
+Below (figure \ref{tree}) is an example of a tree drawn 
+for the list of cards $[5, 2, 6]$.
+\begin{figure}[ht]
+	\center
+	\label{tree}
+	\includegraphics[width=0.32\linewidth]{complete_space.pdf}
+	\caption{Tree of all possible decisions for [5, 2, 6]}
+\end{figure}
+
+\subsection{Algorithm}
+\begin{lstlisting}
+/**
+ * Side note : for the implementation, instead of storing the entire lists in
+ * every nodes, we can just store the value of starting and finishing indexes
+ * For example, instead of having [L[3], L[4], L[5]] we can just store 3 and 5
+ * in the node
+ */
+struct Node is :
+|	List L // list of remaining card values
+|	int val // the current score when we reach the node
+|	Node *node[2] // the sons, enum{LEFT=0, RIGHT=1}
+end
+
+/* Returns the best decision, and the value obtained with this decision */
+best_strategy(L) return (int, int) is :
+|	N = len(L)
+|	
+|	start = new Node(L, 0, NULL, NULL)
+|	best_val = -1
+|
+|	for decision from 0 to 2^(ceil(N/2)) - 1 do:
+|	|	current = start
+|	|	for i from N-1 to 0 by -1 do:
+|	|	|	cur_L = current->L
+|	|	|	cur_N = len(cur_L)
+|	|	|	cur_val = current->val
+|	|	|	take_right = (decision >> i) // shifted
+|	|	|	
+|	|	|	if (current->node[take_right] == NULL):
+|	|	|	|	if take_right:
+|	|	|	|	|	new_L = L \ L[cur_N - 1] \ max(L[0], L[cur_N - 2])
+|	|	|	|	|	new_val = cur_val + L[cur_N - 1]
+|	|	|	|	else:
+|	|	|	|	|	new_L = L \ L[0] \ max(L[1], L[cur_N - 1])
+|	|	|	|	|	new_val = cur_val + L[0]
+|	|	|	|	current->node[take_right] = new Node(new_L, new_val, NULL, NULL)
+|	|	|	end
+|	|	|
+|	|	|	current = current->node[take_right]
+|	|	done
+|	|
+|	|	decision_val = current->val
+|	|	if decision_val > best_val:
+|	|	|	best_val = decision_val
+|	|	|	best_decision = decision
+|	|	end
+|	done
+|
+|	free_rec(start)
+|	return (best_val, best_decision)
+end
+
+free_rec(node) is:
+|	for i in {LEFT, RIGHT} do:
+|	|	if node->node[i] != NULL:
+|	|	|	free_rec(node->node[i])
+|	|	fi
+|	done
+|	free(node)
+end
+
+main is :
+|	L = list of card values
+|	N = len(L)
+|
+|	val_i_start, strategy_i_start = best_strategy(L)
+|	L_she_starts = L \ (max(L[0], L[N-1]))
+|	val_she_starts, strategy_she_starts = best_strategy(L_she_starts)
+|
+|	if val_i_start >= val_she_starts:
+|	|	echo "The best strategy is $strategy_i_start, and i have to start"
+|	else:
+|	|	echo "The best strategy is $strategy_she_starts, and she has to start"
+|	end
+end
+
+\end{lstlisting}
+
+\subsection{Complexity}
+In the end, $2^{\lceil{N/2}\rceil} - 1$ decisions have been computed, which
+requires $2^{\lceil{N/2}\rceil+1} - 1$ nodes to be created.
+
+If we consider that the access times are negligeable, then we have a
+complexity of $O(2^{N/2})$ : both in terms of memory and time, the
+complexity is exponential.
+
+We can get rid of the exponential complexity for the memory if we delete
+nodes that we do not need anymore along the creation of the tree (keeping only
+the current and best branches, that would make a memory complexity of $O(N)$), 
+but the exponential complexity for computation time remains.
 \section{Dynamic implementation}
 Starting with a full pack of cards, unless the final two cards are the left-most pair or the right-most pair, there is always more than one sequence of card selections that will lead to us having that final remaining pair. The recursive formula above therefore describes the problem as a ``linked tree'' (i.e. a triangular lattice where where the right and the left children of any two horizontally adjacent nodes are the same node) of subproblems where each subproblem is not unique. We argue that this recursive function will calculate the optimal score when provided with the appropriate base cases.
 

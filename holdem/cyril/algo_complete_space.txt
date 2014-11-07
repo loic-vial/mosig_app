@@ -33,7 +33,7 @@ best_strategy(L) return (int, int) is :
 |	start = new Node(L, 0, NULL, NULL)
 |	best_val = -1
 |
-|	for decision from 0 to 2^N - 1 do:
+|	for decision from 0 to 2^(N/2) - 1 do:
 |	|	current = start
 |	|	for i from N-1 to 0 by -1 do:
 |	|	|	cur_L = current->L
