@@ -385,6 +385,108 @@ Starting with a full pack of cards, unless the final two cards are the left-most
 	\end{tabular}
 
 \subsection{Top-down}
+\subsubsection{Explanation}
+The top-down algorithm consists in computing $best(i, j)$ recursively.
+A first call to $best(0, N-1)$ is made to know the best value we can get
+if we start ; a second call is also done in the case where the sister begins
+(as we know which of the two cards are the greatest, we already know what the
+sister takes for the first step).
+
+Each call calls the computation of the needed values of $best$ recursively, and
+in the end we get two final results : the one if we start,
+and the one if she starts.
+
+Both are then compared, and only the best result between the two is kept.
+
+To keep track of the optimal solution, in this algorithm, $best(i, j)$ does not
+only contain the best possible value, but also which card to take
+, as well as the next arguments of $best(i, j)$ to call, 
+in order to follow the best strategy without having to recompute it.
+
+\subsubsection{Algorithm}
+\begin{lstlisting}
+/**
+ * Note : 	best[i, j] is the value of the array "best" at indexes (i, j)
+ *		best(i, j) is the value of function "best" with arguments i and j
+ */
+
+structure indexes_s is:
+|	int left, right
+
+structure best_s is:
+|	int val
+|	indexes_s next_indexes // next indexes if best strategy is followed
+|	bool take_left // true if left card must be taken for best strategy
+
+card_val = array of N elements, initialized with each card value
+best = array of N x N elements, each element init to (-1, NONE, NONE)
+
+function best(i, j):
+|	if best[i,j].val != -1:
+|	|	return best[i,j]
+|	
+|	/* Particular cases */
+|	if |i-j| == 0:
+|	|	return card_val[i]
+|	else if |i-j| == 1:
+|	|	return max(card_val[i], card_val[j])
+|	end if
+|
+|	/* If I take left */
+|	sister_takes_left = (card_val[i+1] > card_val[j])
+|	if sister_takes_left:
+|	|	next_indexes_i_take_left = (i+2, j)
+|	else:
+|	|	next_indexes_i_take_left = (i+1, j-1)
+|
+|	/* If I take right */
+|	sister_takes_left = (card_val[i] > card_val[j-1])
+|	if sister_takes_left:
+|	|	next_indexes_i_take_right = (i+1, j-1)
+|	else:
+|	|	next_indexes_i_take_right = (i, j-2)
+|
+|	best_if_left = card_val[i] + best(next_indexes_i_take_left).val
+|	best_if_right = card_val[j] + best(next_indexes_i_take_right).val
+|	best[i,j].val = max(best_if_left, best_if_right) // best_if_left if equality
+|	best[i,j].next_indexes = (best_if_left >= best_if_right) ?\
+|						next_indexes_i_take_left : next_indexes_i_take_right
+|	best[i,j].take_left = (best_if_left >= best_if_right)
+|
+|	return best[i,j]
+end
+
+procedure find_best_solution:
+|	best_solution = []
+|	i_start_indexes = (1, N)
+|	if card_val[1] > card_val[N]:
+|	|	she_starts_indexes = (2, N)
+|	else
+|	|	she_starts_indexes = (2, N-1)
+|
+|	i_go_first = (best(i_start_indexes).val >= best(she_starts_indexes).val)
+|
+|	cur_indexes = i_go_first ? i_start_indexes : she_starts_indexes
+|
+|	while (cur_indexes.right - cur_indexes.left) >= 0 do:
+|	|	if best(cur_indexes).take_left:
+|	|	|	append(best_solution, card[cur_indexes.left])
+|	|	else:
+|	|	|	append(best_solution, card[cur_indexes.right])
+|	|
+|	|	cur_indexes = best(cur_indexes).next_indexes
+|	done
+|
+|	return best_solution
+end
+\end{lstlisting}
+
+\subsubsection{Complexity}
+In the worst case, we fill less than half of the array $best$, so that
+makes a complexity of $O(N^2)$.
+
+This complexity is both in terms of space and time, since the computation
+of an array is $O(1)$, and $O(N^2)$ arrays have to be computed.
 
 \subsection{Bottom-up}
 As each subproblem is not unique, a recursive algorithm is at risk of performing the same calculations multiple times. The recursive, top-down version of the solution described in this paper performs a check before calculating the values for a node to ensure they haven't been calculated before. In the bottom-up version of the solution, described here, we instead start with the base cases (along the primary diagonal and the adjacent diagonal of the array pictured above) and then cycle through each of the remaining cells only a single time.
