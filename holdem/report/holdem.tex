@@ -6,6 +6,8 @@
 \usepackage{lastpage}
 \usepackage{graphicx}
 \usepackage{amsmath}
+% Pour colorer une cellule de tableau
+\usepackage[table]{xcolor}
 
 %\usepackage{graphvizzz}
 
@@ -50,6 +52,7 @@
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 \definecolor{myblue}{rgb}{0,0,0.82}
+\definecolor{myred}{rgb}{1,0,0}
 
 \lstset{%
   morekeywords={abort,abs,accept,access,all,and,array,at,begin,body,
@@ -260,72 +263,72 @@ for the list of cards $[5, 2, 6]$.
  * in the node
  */
 struct Node is :
-|	List L // list of remaining card values
-|	int val // the current score when we reach the node
-|	Node *node[2] // the sons, enum{LEFT=0, RIGHT=1}
+	List L // list of remaining card values
+	int val // the current score when we reach the node
+	Node *node[2] // the sons, enum{LEFT=0, RIGHT=1}
 end
 
 /* Returns the best decision, and the value obtained with this decision */
 best_strategy(L) return (int, int) is :
-|	N = len(L)
-|	
-|	start = new Node(L, 0, NULL, NULL)
-|	best_val = -1
-|
-|	for decision from 0 to 2^(ceil(N/2)) - 1 do:
-|	|	current = start
-|	|	for i from N-1 to 0 by -1 do:
-|	|	|	cur_L = current->L
-|	|	|	cur_N = len(cur_L)
-|	|	|	cur_val = current->val
-|	|	|	take_right = (decision >> i) // shifted
-|	|	|	
-|	|	|	if (current->node[take_right] == NULL):
-|	|	|	|	if take_right:
-|	|	|	|	|	new_L = L \ L[cur_N - 1] \ max(L[0], L[cur_N - 2])
-|	|	|	|	|	new_val = cur_val + L[cur_N - 1]
-|	|	|	|	else:
-|	|	|	|	|	new_L = L \ L[0] \ max(L[1], L[cur_N - 1])
-|	|	|	|	|	new_val = cur_val + L[0]
-|	|	|	|	current->node[take_right] = new Node(new_L, new_val, NULL, NULL)
-|	|	|	end
-|	|	|
-|	|	|	current = current->node[take_right]
-|	|	done
-|	|
-|	|	decision_val = current->val
-|	|	if decision_val > best_val:
-|	|	|	best_val = decision_val
-|	|	|	best_decision = decision
-|	|	end
-|	done
-|
-|	free_rec(start)
-|	return (best_val, best_decision)
+	N = len(L)
+	
+	start = new Node(L, 0, NULL, NULL)
+	best_val = -1
+
+	for decision from 0 to 2^(ceil(N/2)) - 1 do:
+		current = start
+		for i from N-1 to 0 by -1 do:
+			cur_L = current->L
+			cur_N = len(cur_L)
+			cur_val = current->val
+			take_right = (decision >> i) // shifted
+			
+			if (current->node[take_right] == NULL):
+				if take_right:
+					new_L = L \ L[cur_N - 1] \ max(L[0], L[cur_N - 2])
+					new_val = cur_val + L[cur_N - 1]
+				else:
+					new_L = L \ L[0] \ max(L[1], L[cur_N - 1])
+					new_val = cur_val + L[0]
+				current->node[take_right] = new Node(new_L, new_val, NULL, NULL)
+			end
+		
+			current = current->node[take_right]
+		done
+	
+		decision_val = current->val
+		if decision_val > best_val:
+			best_val = decision_val
+			best_decision = decision
+		end
+	done
+
+	free_rec(start)
+	return (best_val, best_decision)
 end
 
 free_rec(node) is:
-|	for i in {LEFT, RIGHT} do:
-|	|	if node->node[i] != NULL:
-|	|	|	free_rec(node->node[i])
-|	|	fi
-|	done
-|	free(node)
+	for i in {LEFT, RIGHT} do:
+		if node->node[i] != NULL:
+			free_rec(node->node[i])
+		fi
+	done
+	free(node)
 end
 
 main is :
-|	L = list of card values
-|	N = len(L)
-|
-|	val_i_start, strategy_i_start = best_strategy(L)
-|	L_she_starts = L \ (max(L[0], L[N-1]))
-|	val_she_starts, strategy_she_starts = best_strategy(L_she_starts)
-|
-|	if val_i_start >= val_she_starts:
-|	|	echo "The best strategy is $strategy_i_start, and i have to start"
-|	else:
-|	|	echo "The best strategy is $strategy_she_starts, and she has to start"
-|	end
+	L = list of card values
+	N = len(L)
+
+	val_i_start, strategy_i_start = best_strategy(L)
+	L_she_starts = L \ (max(L[0], L[N-1]))
+	val_she_starts, strategy_she_starts = best_strategy(L_she_starts)
+
+	if val_i_start >= val_she_starts:
+		echo "The best strategy is $strategy_i_start, and i have to start"
+	else:
+		echo "The best strategy is $strategy_she_starts, and she has to start"
+	end
 end
 
 \end{lstlisting}
@@ -378,14 +381,18 @@ the right and the left children of any two horizontally adjacent nodes are the s
 
 		$j$          &   & 1 & 2 & 3 & 4 & 5 & 6 \\
 		             \cline{2-8}
-		$\downarrow$ & 1 & 5 & X & X & X & X & X \\
-		             & 2 & 7 & 7 & X & X & X & X \\
-		             & 3 &   & 9 & 9 & X & X & X \\
-		             & 4 &   &   & 9 & 1 & X & X \\
-		             & 5 & ? &   &   & 4 & 4 & X \\
-		             & 6 & ? & ? &   &   & 4 & 2
+					 $\downarrow$ & 1 & 5 & \cellcolor{black!10} & \cellcolor{black!10} & \cellcolor{black!10} & \cellcolor{black!10} & \cellcolor{black!10} \\
+		             & 2 & 7 & 7 & \cellcolor{black!10} & \cellcolor{black!10} & \cellcolor{black!10} & \cellcolor{black!10} \\
+		             & 3 & ? & 9 & 9 & \cellcolor{black!10} & \cellcolor{black!10} & \cellcolor{black!10} \\
+		             & 4 & ? & ? & 9 & 1 & \cellcolor{black!10} & \cellcolor{black!10} \\
+					 & 5 & \color{myred}{\textbf{?}} & ? & ? & 4 & 4 & \cellcolor{black!10} \\
+					 & 6 & \color{myred}{\textbf{?}} & \color{myred}{\textbf{?}} & ? & ? & 4 & 2
 		
 	\end{tabular}
+	\hspace{2cm}
+	\begin{minipage}{5cm}
+	% explain array
+	\end{minipage}
 
 \subsection{Top-down}
 \subsubsection{Explanation}
@@ -414,73 +421,73 @@ in order to follow the best strategy without having to recompute it.
  */
 
 structure indexes_s is:
-|	int left, right
+	int left, right
 
 structure best_s is:
-|	int val
-|	indexes_s next_indexes // next indexes if best strategy is followed
-|	bool take_left // true if left card must be taken for best strategy
+	int val
+	indexes_s next_indexes // next indexes if best strategy is followed
+	bool take_left // true if left card must be taken for best strategy
 
 card_val = array of N elements, initialized with each card value
 best = array of N x N elements, each element init to (-1, NONE, NONE)
 
 function best(i, j):
-|	if best[i,j].val != -1:
-|	|	return best[i,j]
-|	
-|	/* Particular cases */
-|	if |i-j| == 0:
-|	|	return card_val[i]
-|	else if |i-j| == 1:
-|	|	return max(card_val[i], card_val[j])
-|	end if
-|
-|	/* If I take left */
-|	sister_takes_left = (card_val[i+1] > card_val[j])
-|	if sister_takes_left:
-|	|	next_indexes_i_take_left = (i+2, j)
-|	else:
-|	|	next_indexes_i_take_left = (i+1, j-1)
-|
-|	/* If I take right */
-|	sister_takes_left = (card_val[i] > card_val[j-1])
-|	if sister_takes_left:
-|	|	next_indexes_i_take_right = (i+1, j-1)
-|	else:
-|	|	next_indexes_i_take_right = (i, j-2)
-|
-|	best_if_left = card_val[i] + best(next_indexes_i_take_left).val
-|	best_if_right = card_val[j] + best(next_indexes_i_take_right).val
-|	best[i,j].val = max(best_if_left, best_if_right) // best_if_left if equality
-|	best[i,j].next_indexes = (best_if_left >= best_if_right) ?\
-|						next_indexes_i_take_left : next_indexes_i_take_right
-|	best[i,j].take_left = (best_if_left >= best_if_right)
-|
-|	return best[i,j]
+	if best[i,j].val != -1:
+		return best[i,j]
+	
+	/* Particular cases */
+	if |i-j| == 0:
+		return card_val[i]
+	else if |i-j| == 1:
+		return max(card_val[i], card_val[j])
+	end if
+
+	/* If I take left */
+	sister_takes_left = (card_val[i+1] > card_val[j])
+	if sister_takes_left:
+		next_indexes_i_take_left = (i+2, j)
+	else:
+		next_indexes_i_take_left = (i+1, j-1)
+
+	/* If I take right */
+	sister_takes_left = (card_val[i] > card_val[j-1])
+	if sister_takes_left:
+		next_indexes_i_take_right = (i+1, j-1)
+	else:
+		next_indexes_i_take_right = (i, j-2)
+
+	best_if_left = card_val[i] + best(next_indexes_i_take_left).val
+	best_if_right = card_val[j] + best(next_indexes_i_take_right).val
+	best[i,j].val = max(best_if_left, best_if_right) // best_if_left if equality
+	best[i,j].next_indexes = (best_if_left >= best_if_right) ?\
+						next_indexes_i_take_left : next_indexes_i_take_right
+	best[i,j].take_left = (best_if_left >= best_if_right)
+
+	return best[i,j]
 end
 
 procedure find_best_solution:
-|	best_solution = []
-|	i_start_indexes = (1, N)
-|	if card_val[1] > card_val[N]:
-|	|	she_starts_indexes = (2, N)
-|	else
-|	|	she_starts_indexes = (2, N-1)
-|
-|	i_go_first = (best(i_start_indexes).val >= best(she_starts_indexes).val)
-|
-|	cur_indexes = i_go_first ? i_start_indexes : she_starts_indexes
-|
-|	while (cur_indexes.right - cur_indexes.left) >= 0 do:
-|	|	if best(cur_indexes).take_left:
-|	|	|	append(best_solution, card[cur_indexes.left])
-|	|	else:
-|	|	|	append(best_solution, card[cur_indexes.right])
-|	|
-|	|	cur_indexes = best(cur_indexes).next_indexes
-|	done
-|
-|	return best_solution
+	best_solution = []
+	i_start_indexes = (1, N)
+	if card_val[1] > card_val[N]:
+		she_starts_indexes = (2, N)
+	else
+		she_starts_indexes = (2, N-1)
+
+	i_go_first = (best(i_start_indexes).val >= best(she_starts_indexes).val)
+
+	cur_indexes = i_go_first ? i_start_indexes : she_starts_indexes
+
+	while (cur_indexes.right - cur_indexes.left) >= 0 do:
+		if best(cur_indexes).take_left:
+			append(best_solution, card[cur_indexes.left])
+		else:
+			append(best_solution, card[cur_indexes.right])
+	
+		cur_indexes = best(cur_indexes).next_indexes
+	done
+
+	return best_solution
 end
 \end{lstlisting}
 
@@ -517,85 +524,83 @@ second diagonal is therefore $Best(i-1, i) = MAX(cards[i-1], cards[i])$.
 \subsection{Implementation}
 \begin{lstlisting}
 struct problem
-| int best // The best possible score for each problem
-| problem *subproblem // Used to create a linked-list of the optimal choices
+	int best // The best possible score for each problem
+	problem *subproblem // Used to create a linked-list of the optimal choices
 
 int cards[numcards] = {...}
 bool LET_SISTER_GO_FIRST
 
 problem *solve()
-| problem *table[numcards][numcards] // half wasted but it's only pointers
-|
-| // Do base cases (Case 0 is done separately as the
-| // other base cases are in done pairs)
-| table[0][0] = new(problem)
-| table[0][0].best = cards[0]
-| table[0][0].subproblem = NULL
-|
-| for (i = 1; i < numcards; i++)
-| | table[i][i] = new(problem)
-| | table[i][i].best = cards[i]
-| | table[i][i].subproblem = NULL
-| |
-| | table[i-1][i] = new(problem)
-| | table[i-1][i].subproblem = NULL
-| |
-| | // In the second base diagonal, "best" should be set to the
-| | // maximum value of the two cards represented by that cell.
-| | if (cards[i-1] > card[i])
-| | | table[i-1][i].best = cards[i-1]
-| | else
-| | | table[i-1][i].best = cards[i]
-| 
-| // Now solve the rest of the table by scanning through its diagonals
-| // (thus ensuring each cell's dependencies have already been calculated)
-| for (j = 2; j < numcards; j++)
-| | for (i = 0; i < numcards-j; i++)
-| | | table[i][i+j] = new(problem)
-| | |
-| | | // I choose left, sis chooses left
-| | | if (cards[i+1] > cards[i+j]
-| | | | left_best = cards[i] + table[i+2][i+j].best
-| | | | left_sub = &table[i+2][i+j]
-| | | else
-| | | | // I choose left, sis chooses right
-| | | | left_best = cards[j] + table[i+1][i+j-1].best
-| | | | left_sub = &table[i+1][i+j-1]
-| | |
-| | | // I choose right, sis chooses left
-| | | if (cards[i] > cards[i+j-1]
-| | | | right_best = cards[i+j] + table[i+1][i+j-1].best
-| | | | right_sub = &table[i+1][i+j-1]
-| | | else
-| | | | // I choose right, sis chooses right
-| | | | right_best = cards[i+j] + table[i][i+j-2].best
-| | | | right_sub = &table[i][i+j-2]
-| | |
-| | | // We have now found the two possible outcomes (taking
-| | | // account of the sister's move), but which is best?
-| | | // Set table[i][i+j] accordingly...
-| | | if (left_best > right_best)
-| | | | table[i][i+j].best = left_best
-| | | | table[i][i+j].subproblem = left_sub
-| | | else
-| | | | table[i][i+j].best = right_best
+	problem *table[numcards][numcards] // half wasted but it's only pointers
+	
+	// Do base cases (Case 0 is done separately as the
+	// other base cases are in done pairs)
+	table[0][0] = new(problem)
+	table[0][0].best = cards[0]
+	table[0][0].subproblem = NULL
+	
+	for (i = 1; i < numcards; i++)
+		table[i][i] = new(problem)
+		table[i][i].best = cards[i]
+		table[i][i].subproblem = NULL
+	 
+		table[i-1][i] = new(problem)
+		table[i-1][i].subproblem = NULL
+ 
+	// In the second base diagonal, "best" should be set to the
+	// maximum value of the two cards represented by that cell.
+	if (cards[i-1] > card[i])
+		table[i-1][i].best = cards[i-1]
+	else
+		table[i-1][i].best = cards[i]
+ 
+	// Now solve the rest of the table by scanning through its diagonals
+	// (thus ensuring each cell's dependencies have already been calculated)
+	for (j = 2; j < numcards; j++)
+		for (i = 0; i < numcards-j; i++)
+			table[i][i+j] = new(problem)
+  
+	// I choose left, sis chooses left
+	if (cards[i+1] > cards[i+j]
+		left_best = cards[i] + table[i+2][i+j].best
+		left_sub = &table[i+2][i+j]
+	else
+		// I choose left, sis chooses right
+		left_best = cards[j] + table[i+1][i+j-1].best
+		left_sub = &table[i+1][i+j-1]
+  
+	// I choose right, sis chooses left
+	if (cards[i] > cards[i+j-1]
+		right_best = cards[i+j] + table[i+1][i+j-1].best
+		right_sub = &table[i+1][i+j-1]
+	else
+		// I choose right, sis chooses right
+		right_best = cards[i+j] + table[i][i+j-2].best
+		right_sub = &table[i][i+j-2]
+  
+	// We have now found the two possible outcomes (taking
+	// account of the sister's move), but which is best?
+	// Set table[i][i+j] accordingly...
+	if (left_best > right_best)
+		table[i][i+j].best = left_best
+		table[i][i+j].subproblem = left_sub
+	else
+		table[i][i+j].best = right_best
+		table[i][i+j].subproblem = right_sub
 
-| | | | table[i][i+j].subproblem = right_sub
-|
-| // We want to know, for this deck of cards, whether it is optimal
-| // to allow your sister to have the first move or not.
-| // (Both situations have been calculated.)
-| if (cards[0] > cards[numcards - 1])
-| | if (table[1][numcards - 1].best > table[0][numcards - 1].best)
-| | | LET_SISTER_GO_FIRST = TRUE
-| | | return table[1][numcards - 1]
-| else
-| | if (table[0][50] > table[0][numcards - 1])
-| | | LET_SISTER_GO_FIRST = TRUE
-| | | return table[0][50]
-|
-| LET_SISTER_GO_FIRST = FALSE
-| return table[0][numcards - 1]
+	// We want to know, for this deck of cards, whether it is optimal
+	// to allow your sister to have the first move or not.
+	// (Both situations have been calculated.)
+	if (cards[0] > cards[numcards - 1])
+		if (table[1][numcards - 1].best > table[0][numcards - 1].best)
+		LET_SISTER_GO_FIRST = TRUE
+		return table[1][numcards - 1]
+	else if (table[0][50] > table[0][numcards - 1])
+		LET_SISTER_GO_FIRST = TRUE
+		return table[0][50]
+
+	LET_SISTER_GO_FIRST = FALSE
+	return table[0][numcards - 1]
 \end{lstlisting}
 
 \section{Conclusion}
