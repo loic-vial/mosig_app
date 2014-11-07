@@ -410,7 +410,42 @@ the right and the left children of any two horizontally adjacent nodes are the s
 
 \subsection{Argument that the $best$ function gives the optimal solution}
 
-The optimal solution is that which gives the highest overall score. It does not matter whether the current card 
+The optimal solution is that which gives the highest overall score. It does not matter whether the current card we have selected
+is the larger one; only that the combination of that value with the optimal solution of the sub-problem is greater than the
+alternative.
+
+The $best$ function is inductively defined as depending on the optimal sub-problems so, provided the best cases are optimal,
+$best$ gives the optimal solution.
+
+The following shows that this is the case.
+
+If $i = j$ or if $j-i = 1$, it's obviously optimal.
+
+If $j-i > 1$, we have to choose between two decisions :
+\begin{itemize}
+	\item If we take the left card:
+		the new score is $C[i] + Value(i+1, j-1)$
+		or $C[i] + Value(i, j-2)$ 
+		depending on the choice of the sister
+		where $Value(i, j)$ is the score that we will get thanks to our decision
+
+		In the algorithm, we take $Value=Best$, and we know that $best(i+1, j-1)$ and $best(i, j-2)$ are both optimal
+
+		As a consequence, assuming that we take the left card, we will get an optimal score
+
+	\item If we take the right card:
+		same reasoning with $C[i] + Value(i+1, j-1)$
+		or $C[i] + Value(i+2, j)$
+
+		So assuming that we take the right card, we get an optimal score
+	
+		In the algorithm, we take the maximum of the 2 optimal scores we got.
+
+		As it's the maximum, we get the optimal score independently of the
+		fact that we take the right or left card, which means it's optimal.
+\end{itemize}
+
+
 
 \subsection{Top-down}
 \subsubsection{Explanation}
