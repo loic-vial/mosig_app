@@ -147,9 +147,7 @@ We will now present with more details those algorithms.
 \subsection{What is a greedy algorithm?}
 
 A greedy algorithm is one that attempts to make the best decision it can based on a small amount of immediately available information.
-
-
-(talk about selecting the maximum card, exemplified below.)
+In our case, the greedy algorithm consists in  choosing the highest-valued card between the two immediate available ones, the left-most card or the right-most card.
 
 \subsection{Implementation of the game using a greedy algorithm}
 Let's take a deeper look at the game and his basic algorithm:
@@ -221,7 +219,7 @@ void play_game ()
 
 \subsection{Assessment of the greedy algorithm}
 
-The sister's version of the greedy algorithm is very simple to implement - only requiring three of four lines of code - and is very cheap to execute, the decision being based on only a single comparison of cards. However, as both the primary player and the sister are employing the same strategy, the player that wins the game is essentially left to chance.
+The sister's version of the greedy algorithm is very simple to implement - only requiring three or four lines of code - and is very cheap to execute, the decision being based on only a single comparison of cards. However, as both the primary player and the sister are employing the same strategy, the player that wins the game is essentially left to chance.
 
 An alternative (fairly) greedy strategy is to only select the highest card if it does not reveal a higher card to the sister. This method
 remains very cheap (both in memory and complexity), but it could increase our chances to win to more than 50\%.
@@ -349,9 +347,12 @@ complexity is exponential.
 We can get rid of the exponential complexity for the memory if we delete
 nodes that we do not need anymore along the creation of the tree (keeping only
 the current and best branches, that would make a memory complexity of $O(N)$), 
-but the exponential complexity for computation time remains.
+but the exponential complexity for computation time remains. 
+We cannot afford keeping such a solution, because it is too costly for a whole pack of cards. It would only work for a few cards.
+
 \section{Dynamic implementation}
-Starting with a full pack of cards, unless the final two cards are the left-most pair or the right-most pair, there is always more than one sequence of card selections that will lead to us having that final remaining pair. The recursive formula above therefore describes the problem as a ``linked tree'' (i.e. a triangular lattice where where the right and the left children of any two horizontally adjacent nodes are the same node) of subproblems where each subproblem is not unique. We argue that this recursive function will calculate the optimal score when provided with the appropriate base cases.
+Starting with a full pack of cards, unless the final two cards are the left-most pair or the right-most pair, there is always more than one sequence of card selections that will lead to us having that final remaining pair. The recursive formula above therefore describes the problem as a ``linked tree'' (i.e. a triangular lattice where 
+the right and the left children of any two horizontally adjacent nodes are the same node) of subproblems where each subproblem is not unique. We argue that this recursive function will calculate the optimal score when provided with the appropriate base cases.
 
 
 \footnotesize
@@ -498,7 +499,7 @@ In the worst case, we fill less than half of the array $best$, so that
 makes a complexity of $O(N^2)$.
 
 This complexity is both in terms of space and time, since the computation
-of an array is $O(1)$, and $O(N^2)$ arrays have to be computed.
+of a cell is $O(1)$, and $O(N^2)$ cells have to be computed.
 
 \subsection{Bottom-up}
 As each subproblem is not unique, a recursive algorithm is at risk of performing the same calculations multiple times. The recursive, top-down version of the solution described in this paper performs a check before calculating the values for a node to ensure they haven't been calculated before. In the bottom-up version of the solution, described here, we instead start with the base cases (along the primary diagonal and the adjacent diagonal of the array pictured above) and then cycle through each of the remaining cells only a single time.
@@ -613,9 +614,9 @@ There are other greedy strategies that could be implemented - for example, only 
 
 The initial algorithm presented here, that explores the entire solution-space, is an iterative one.\\
 *** Cyril - can you explain your algorithm here?? ***\\
-We identified that this algorithm was of complexity $O(n^3)$.
+We identified that this algorithm was of complexity  $O(2^{N/2})$ : .
 
-In an attempt to reduce the complexity of the initial full-solution-space algorithm, dynamic programming techniques were employed. i.e. we assumed that the optimal solution could be represented as the optimal solution to the current problem given that all sub-problems had been solved optimally. This lead to the recursive "Best" function given in section 4, which represents the solution space as a "triangular lattice" rather than a binary tree. A naive implementation of the "Best" function would also lead to an algorithm of complexity $O(n^3)$. However, the fact that the graph of nodes is now represented as a lattice of shared sub-problems, rather than a tree, reveals the fact that optimisations can easily be made. Rather than allowing the algorithm to visit each node multiple times, a "cache" of visited nodes was added so that calculations for already visited nodes would noit have to be re-performed. This optimisation lead to a more complicated-looking but more efficient algorithm of complexity $O(n^2)$.
+In an attempt to reduce the complexity of the initial full-solution-space algorithm, dynamic programming techniques were employed. i.e. we assumed that the optimal solution could be represented as the optimal solution to the current problem given that all sub-problems had been solved optimally. This lead to the recursive "Best" function given in section 4, which represents the solution space as a "triangular lattice" rather than a binary tree. A naive implementation of the "Best" function would also lead to an algorithm of complexity $O(n^3)$. However, the fact that the graph of nodes is now represented as a lattice of shared sub-problems, rather than a tree, reveals the fact that optimisations can easily be made. Rather than allowing the algorithm to visit each node multiple times, a "cache" of visited nodes was added so that calculations for already visited nodes would not have to be re-performed. This optimisation lead to a more complicated-looking but more efficient algorithm of complexity $O(n^2)$.
 
 
 
