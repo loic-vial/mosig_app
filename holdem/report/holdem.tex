@@ -131,11 +131,11 @@
 \maketitle
 
 \section{Introduction}
-The game we are playing is quite simple : It is a turn based two-player game, using a line of cards : Each player can take either the left-most card or the right-most card.
+The game we are playing is quite simple: It is a turn based two-player game, using a line of cards: Each player can take either the left-most card or the right-most card.
 The winner is the one who gets the highest value calculated by the sum of cards.
 We assume that we play with a basic artificial intelligence, which always pick the highest valued card.
 
-We will present several types of algorithms to win in most cases : a greedy one, a full-exploration one, and a dynamic one.
+We will present several types of algorithms to win in most cases: a greedy one, a full-exploration one, and a dynamic one.
 
 The greedy algorithm is simply what the IA does, we hope to win at the end, but we are not sure if we will succeed, whereas the full-exploration of space's method checks every combination of cards' picking, to find a solution in advance, and then we can apply it.
 The dynamic programming algorithm is basically optimizations we made on the full exploration algorithm, to enhance the performances and lessen the costs in memory and time.
@@ -146,17 +146,18 @@ We will now present with more details those algorithms.
 \section{The greedy algorithm}
 \subsection{What is a greedy algorithm?}
 
-A greedy algorithm is one that attempts to make the best decision it can based on a small amount of immediately available information..........
+A greedy algorithm is one that attempts to make the best decision it can based on a small amount of immediately available information.
+
 
 (talk about selecting the maximum card, exemplified below.)
 
 \subsection{Implementation of the game using a greedy algorithm}
-Let's take a deeper look at the game and his basic algorithm :
+Let's take a deeper look at the game and his basic algorithm:
 To prepare the game, we have to shuffle the cards, and display them in a one-dimension array.
-Then, we have to design two strategies : ours, and the one that the computer/IA/sister will use : The last one simply chooses the highest valued card between the two availables.
+Then, we have to design two strategies: ours, and the one that the computer/IA/sister will use: The last one simply chooses the highest valued card between the two availables.
 Our strategy will be the algorithms we talked previously in the introduction.
 Finally, the game consists only in the alternance of the two strategies of the player.
-To simulate the fact that we pick a card, we use two indexes that represents the limits of the array of cards : Upon picking a card, we increment (decrement) the left (right) index if we chose the left (right) card. The game is finished when the last card is picked, that is to say when the indexes are equal.
+To simulate the fact that we pick a card, we use two indexes that represents the limits of the array of cards: Upon picking a card, we increment (decrement) the left (right) index if we chose the left (right) card. The game is finished when the last card is picked, that is to say when the indexes are equal.
 
 \subsection{Implementation}
 \begin{lstlisting}
@@ -222,7 +223,11 @@ void play_game ()
 
 The sister's version of the greedy algorithm is very simple to implement - only requiring three of four lines of code - and is very cheap to execute, the decision being based on only a single comparison of cards. However, as both the primary player and the sister are employing the same strategy, the player that wins the game is essentially left to chance.
 
-An alternative (fairly) greedy strategy is to only select the highest card if it does not reveal a higher card to the sister............
+An alternative (fairly) greedy strategy is to only select the highest card if it does not reveal a higher card to the sister. This method
+remains very cheap (both in memory and complexity), but it could increase our chances to win to more than 50\%.
+However, this solution is still not optimal.
+
+We are now going to find one.
 
 \section{Full solution-space algorithm}
 \subsection{Explanation}
@@ -231,7 +236,7 @@ be either "take the right card" or "take the left card", so a decision can be
 represented by a boolean.
 
 Thus, a sequence of decisions is a sequence of booleans ; and to each sequence 
-of booleans an integer can be associated : for example, if we have the sequence
+of booleans an integer can be associated: for example, if we have the sequence
 $(b_n)$, we associate the binary number $b_nb_{n-1}..b_0$.
 
 As a consequence, a strategy is represented by an integer ; and
@@ -243,7 +248,7 @@ the one that grants the highest score is kept.
 
 In this algorithm, in order to avoid recomputing already-computed values,
 a tree is built along each iteration. Each node represents a step in the game,
-and contains : a list of remaining cards and the score obtained so far.
+and contains: a list of remaining cards and the score obtained so far.
 
 Below (figure \ref{tree}) is an example of a tree drawn 
 for the list of cards $[5, 2, 6]$.
@@ -257,19 +262,19 @@ for the list of cards $[5, 2, 6]$.
 \subsection{Algorithm}
 \begin{lstlisting}
 /**
- * Side note : for the implementation, instead of storing the entire lists in
+ * Side note: for the implementation, instead of storing the entire lists in
  * every nodes, we can just store the value of starting and finishing indexes
  * For example, instead of having [L[3], L[4], L[5]] we can just store 3 and 5
  * in the node
  */
-struct Node is :
+struct Node is:
 	List L // list of remaining card values
 	int val // the current score when we reach the node
 	Node *node[2] // the sons, enum{LEFT=0, RIGHT=1}
 end
 
 /* Returns the best decision, and the value obtained with this decision */
-best_strategy(L) return (int, int) is :
+best_strategy(L) return (int, int) is:
 	N = len(L)
 	
 	start = new Node(L, 0, NULL, NULL)
@@ -316,7 +321,7 @@ free_rec(node) is:
 	free(node)
 end
 
-main is :
+main is:
 	L = list of card values
 	N = len(L)
 
@@ -338,7 +343,7 @@ In the end, $2^{\lceil{N/2}\rceil} - 1$ decisions have been computed, which
 requires $2^{\lceil{N/2}\rceil+1} - 1$ nodes to be created.
 
 If we consider that the access times are negligeable, then we have a
-complexity of $O(2^{N/2})$ : both in terms of memory and time, the
+complexity of $O(2^{N/2})$: both in terms of memory and time, the
 complexity is exponential.
 
 We can get rid of the exponential complexity for the memory if we delete
@@ -400,7 +405,7 @@ if we start ; a second call is also done in the case where the sister begins
 sister takes for the first step).
 
 Each call calls the computation of the needed values of $best$ recursively, and
-in the end we get two final results : the one if we start,
+in the end we get two final results: the one if we start,
 and the one if she starts.
 
 Both are then compared, and only the best result between the two is kept.
@@ -413,7 +418,7 @@ in order to follow the best strategy without having to recompute it.
 \subsubsection{Algorithm}
 \begin{lstlisting}
 /**
- * Note : 	best[i, j] is the value of the array "best" at indexes (i, j)
+ * Note: 	best[i, j] is the value of the array "best" at indexes (i, j)
  *		best(i, j) is the value of function "best" with arguments i and j
  */
 
@@ -457,7 +462,7 @@ function best(i, j):
 	best_if_right = card_val[j] + best(next_indexes_i_take_right).val
 	best[i,j].val = max(best_if_left, best_if_right) // best_if_left if equality
 	best[i,j].next_indexes = (best_if_left >= best_if_right) ?\
-						next_indexes_i_take_left : next_indexes_i_take_right
+						next_indexes_i_take_left: next_indexes_i_take_right
 	best[i,j].take_left = (best_if_left >= best_if_right)
 
 	return best[i,j]
@@ -473,7 +478,7 @@ procedure find_best_solution:
 
 	i_go_first = (best(i_start_indexes).val >= best(she_starts_indexes).val)
 
-	cur_indexes = i_go_first ? i_start_indexes : she_starts_indexes
+	cur_indexes = i_go_first ? i_start_indexes: she_starts_indexes
 
 	while (cur_indexes.right - cur_indexes.left) >= 0 do:
 		if best(cur_indexes).take_left:
