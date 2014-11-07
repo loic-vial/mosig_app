@@ -6,6 +6,8 @@
 \usepackage{lastpage}
 \usepackage{graphicx}
 \usepackage{amsmath}
+% Pour colorer une cellule de tableau
+\usepackage[table]{xcolor}
 
 %\usepackage{graphvizzz}
 
@@ -50,6 +52,7 @@
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 \definecolor{myblue}{rgb}{0,0,0.82}
+\definecolor{myred}{rgb}{1,0,0}
 
 \lstset{%
   morekeywords={abort,abs,accept,access,all,and,array,at,begin,body,
@@ -375,14 +378,18 @@ Starting with a full pack of cards, unless the final two cards are the left-most
 
 		$j$          &   & 1 & 2 & 3 & 4 & 5 & 6 \\
 		             \cline{2-8}
-		$\downarrow$ & 1 & 5 & X & X & X & X & X \\
-		             & 2 & 7 & 7 & X & X & X & X \\
-		             & 3 &   & 9 & 9 & X & X & X \\
-		             & 4 &   &   & 9 & 1 & X & X \\
-		             & 5 & ? &   &   & 4 & 4 & X \\
-		             & 6 & ? & ? &   &   & 4 & 2
+					 $\downarrow$ & 1 & 5 & \cellcolor{black!10} & \cellcolor{black!10} & \cellcolor{black!10} & \cellcolor{black!10} & \cellcolor{black!10} \\
+		             & 2 & 7 & 7 & \cellcolor{black!10} & \cellcolor{black!10} & \cellcolor{black!10} & \cellcolor{black!10} \\
+		             & 3 & ? & 9 & 9 & \cellcolor{black!10} & \cellcolor{black!10} & \cellcolor{black!10} \\
+		             & 4 & ? & ? & 9 & 1 & \cellcolor{black!10} & \cellcolor{black!10} \\
+					 & 5 & \color{myred}{\textbf{?}} & ? & ? & 4 & 4 & \cellcolor{black!10} \\
+					 & 6 & \color{myred}{\textbf{?}} & \color{myred}{\textbf{?}} & ? & ? & 4 & 2
 		
 	\end{tabular}
+	\hspace{2cm}
+	\begin{minipage}{5cm}
+	% explain array
+	\end{minipage}
 
 \subsection{Top-down}
 \subsubsection{Explanation}
