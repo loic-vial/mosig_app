@@ -1,0 +1,26 @@
+Let's prove that best[i, j] gives the optimal value.
+
+If i == j or if j-i == 1, it's obviously optimal
+
+If j-i > 1 :
+	We have to choose between two decisions :
+	1) If we take the left card:
+		The new score is C[i] + Value(i+1, j-1)
+						or C[i] + Value(i, j-2) 
+			depending on the choice of the sister
+			where Value(i, j) is the score that we will get thanks to our decision
+
+		In the algorithm, we take Value=Best, and we know that best(i+1, j-1) and best(i, j-2) are both optimal
+
+		As a consequence, assuming that we take the left card, will get an optimal score
+	
+	2) If we take the right card:
+		Same reasoning with C[i] + Value(i+1, j-1)
+						or C[i] + Value(i+2, j)
+
+		So assuming that we take the right card, we get an optimal score
+	
+	In the algorithm, we take the maximum of the 2 optimal scores we got.
+
+	As it's the maximum, we get the optimal score independently of the
+	fact that we take the right or left card => It's optimal
