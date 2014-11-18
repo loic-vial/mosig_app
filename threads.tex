@@ -95,11 +95,11 @@ Sometimes called lightweight process.
 \begin{enumerate}[label=-]
 	\item Lighter management (especially context switch)
 	\item Take advantage of concurrency within a process ( eg can perform a computation during a blocking system call in another thread).
-	\item Communication between threads is easier/more efficient than IPC (Inter Process Communication) between processes.
+	\item Communication between threads is easier/more efficient than IPC (Inter-Process Communication).
 \end{enumerate}
 
 \subsubsection*{Example : Webserver}
-The main thread can listen to connextions while other threads handle requests
+The main thread can listen for connexions while other threads handle requests.
 Accesses to Webserver data can be performed concurrently and overlapped with computations
 
 \section{Thread Models}
@@ -107,7 +107,7 @@ Accesses to Webserver data can be performed concurrently and overlapped with com
 Threads might be :
 \begin{itemize}
 \item Preemptive : threads might be interrupted asynchronously to switch to another thread. 
-\item Cooperative : the thread itself release the PCU to let another thread be scheduled.
+\item Cooperative : the thread itself release the CPU to let another thread be scheduled.
 \end{itemize}
 
 \subsubsection*{Advantages / Drawbacks}
@@ -116,14 +116,14 @@ Threads might be :
  \item For preemptive :
 \begin{itemize} 
 \item Insensitive to misbehaving threads.
-\item Can take advantage of multiple CPUS.
+\item Can take advantage of multiple CPUs.
 \item higher cost (context switch) 
 \end{itemize}
 
 \item For cooperative :
  \begin{itemize}
  
-\item easier to programm and debug  because not sensitive to data races ( will be explained later) 
+\item easier to program and debug  because not sensitive to data races ( will be explained later) 
 \item can only take advantage of a single CPU 
 \item more efficient
 \end{itemize}
@@ -140,7 +140,7 @@ is similar to processes implementation :
 \item can be implemented almost like processes, eg in Linux :
 \begin{itemize}
 \item processes and threads are tasks.
-\item they have different attributes, memory is shared for threeads
+\item they have different attributes, memory is shared between threads.
 \item scheduled using the same scheduler
 \end{itemize}
 \end{itemize}
@@ -148,10 +148,10 @@ is similar to processes implementation :
 The implementation might also be completely in a user-level process under the form of a library :
 
 \begin{itemize}
-\item creation, destruction are just fonctions of the library (which manage an internal list of threads)
+\item creation, destruction are just functions of the library (which manages an internal list of threads)
 \item context switch :
 \begin{itemize}
-\item preemptive model : rely of preemption mechanism provided by  the kernel such as signals (setitimer/sigalarm)
+\item preemptive model : rely on preemption mechanism provided by  the kernel such as signals (setitimer/sigalarm)
 \item cooperative model : rely on a function 'yield' provided by the library and called by the thread itself
 \item both cases : most blocking functions are redefined to put blocking thread in a waiting queue and let the scheduler decide on another thread to execute. This includes : read, write, accept, connect, ....
 \end{itemize}
@@ -181,7 +181,7 @@ Another possibility is to use $n$ user threads mapped to $m$ kernel threads.
 
 \textbf{Idea :} 
 
-Take advantage of any number of threads to express parallel work or to overlap computation with communications, limit the number of resources (Cores, CPUS) to limit the cost of context switches between them.
+Take advantage of any number of threads to express parallel work or to overlap computation with communications, limit the number of resources (Cores, CPUs) to limit the cost of context switches between them.
 
 The library is more diffucult to implement as it implies synchronization between kernel threads
 
@@ -254,9 +254,9 @@ Which function 1 and 2 are executed ?
 \item both ?
 \end{itemize}
 
-All these 3 choices are possible it depends on the hardware :
+All these 3 choices are possible, it depends on the hardware :
 \begin {itemize}
-\item CPUS can reorder operations especially memory operations.
+\item CPUs can reorder operations especially memory operations.
 \begin{itemize}
 \item concurrent independant writes
 \item pre-fetching
@@ -282,7 +282,7 @@ From the hardware point of view :
 \item memory barriers : special instruction to complete pending memory operations
 \end{itemize}
 
-The programmer can use them to avoid data races : the program will then have SC.
+The programmer can use them to avoid data races : the program will then have SC.\\
 
 \textbf{Definition : } There is a \textbf{data race} if :
 \begin{itemize}
@@ -290,6 +290,8 @@ The programmer can use them to avoid data races : the program will then have SC.
 \item one of them is a write
 \item none are related to synchronization operations
 \end{itemize}
+
+\vspace{5cm}
 
 \textbf{Example :}
 
@@ -306,7 +308,8 @@ int Money_Transfer(int amount, account from, account to) {
 
 \end{verbatim}
 
-Imagine that two threads perform transfers to/from the same account.
+Imagine that two threads perform transfers to/from the same account : A problem could happen in the balance variable if we transfer from and to the account at the same time.
+
 Here atomic means: completely executed without the possibility for other threads to access the same memory locations.
 
 The fix is make everything atomic :
