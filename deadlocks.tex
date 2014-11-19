@@ -122,6 +122,8 @@ In this model, the presence of a cycle doesn't necessarily means that there is a
 
 \section{Allocation matrices and banker algorithm}
 
+\subsection{Hypothesis}
+
 At first we assume that we know :
 
 \begin{itemize}
@@ -208,6 +210,69 @@ So now we get :
 
 \item Finished is filled with "true" $=>$ the request can be granted.
 \end{enumerate}
+
+Assume that thread 4 requests 1A resource and 1C resource (1,0,1).
+
+\begin{enumerate}
+  \item if the request is $>$ Need(thread), or $>$ Available, deny it.
+  \item Pretend the request is accepted.
+  \item run the algorithm to know if the state is safe : Work =(0,0,1)
+  
+Thread 2 has needs $\leq$ Work  : Work = (0,2,1).
+
+Thread 0 has needs $\leq$ Work : Work = (1,2,2).
+
+Thread 3 has needs $\leq$ Work : Work = (4,2,3).
+
+Thread 4 has needs $\leq$ Work : Work = (5,2,3).
+
+Thread 1 has needs $\leq$ Work : Work = (5,2,4).
+
+So now we get again :
+
+\begin{center}
+    \begin{tabular}{cc}
+      Thread & Finished\\
+      0 & t\\
+      1 & t\\
+      2 & t\\
+      3 & t\\
+      4 & t\\
+    \end{tabular}
+  \end{center}
+  
+  \item the request is granted
+\end{enumerate}
+
+Running time of the safe state algorithm is $n^2*m$ where n is the number of threads and m the number of resource types $=>$ Costly, repeated for each allocation request.
+
+\section{Detecting Deadlocks vs Preventing them}
+
+Let run the system without doing anything and look for a deadlock periodically.
+Using the resource allocation graph, it's the same algorithm to prevent or detect : find a cycle in the graph.
+using Allocation matrix : we take an optimistic approach, we assume that thread don't need any more resources $=>$ we replace the "Need" Matrix with pending requests, then use the safe state detection to find out if there is a deadlock
+
+If a deadlock is detected :
+\begin{itemize}
+  \item preempt resources $->$ not always possible.
+  \item kill some of the threads :
+  \begin{itemize}
+    \item the minimal number of threads that restores a safe state ?
+
+$=>$ risk of killing important threads ( ex : Window manager, command interpreter...)
+    \item killing threads that are not related to the system.
+    \item let the user decide.
+    \item choose at random...
+  \end{itemize}
+\end{itemize}
+
+In most systems, deadlocks are not handled at all.
+One canf find them in :
+\begin{itemize}
+  \item some experimental OS
+  \item some debugging environments
+\end{itemize}
+
 
 
 \end{document}
