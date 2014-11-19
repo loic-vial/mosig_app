@@ -159,18 +159,29 @@ For deadlock prevention, we use the banker algorithm : when an allocation reques
   Threads
     \begin{tabular}{ccccccc}
        Allocation& A B C & &Available & & Need & A B C\\
-       0 & 1 0 1 & &1 0 2 & & 0 & 0 2 0 \\
+       0 & 1 0 1 & & (\textbf{0})1 0 2 & & 0 & 0 2 0 \\
        1 & 0 0 1 & &  & & 1 & 2 1 0\\
        2 & 0 2 0 & &  & & 2 & 0 0 1\\
-       3 & 1 0 0 & &  & & 3 & 2 2 0\\
+       3 & (\textbf{2})1 0 0 & &  & & 3 & (\textbf{1})2 2 0\\
        4 & 2 0 0 & &  & & 4 & 2 2 3\\
     \end{tabular}
   \end{center}
 
-Assume that thread 3 requests 1 A resource (1,0,0)
+Assume that thread 3 requests 1 A resource (1,0,0) (represented in the example with the new numbers between paranthesis)
 \begin{enumerate}
   \item Pretend the request is accepted
   \item Run the algorithm to know if the state is safe : Work = (0,0,2). 
+
+  \begin{center}
+    \begin{tabular}{cc}
+      Thread & Finished\\
+      0 & f\\
+      1 & f\\
+      2 & f\\
+      3 & f\\
+      4 & f\\
+    \end{tabular}
+  \end{center}
 
 Thread 2 has needs $\leq$ Work  : Work = (0,2,2).
 
@@ -181,10 +192,22 @@ Thread 3 has needs $\leq$ Work : Work = (3,2,3).
 Thread 4 has needs $\leq$ Work : Work = (5,2,3).
 
 Thread 1 has needs $\leq$ Work : Work = (5,2,4).
+
+So now we get :
+
+\begin{center}
+    \begin{tabular}{cc}
+      Thread & Finished\\
+      0 & t\\
+      1 & t\\
+      2 & t\\
+      3 & t\\
+      4 & t\\
+    \end{tabular}
+  \end{center}
+
+\item Finished is filled with "true" $=>$ the request can be granted.
 \end{enumerate}
-
-
-
 
 
 \end{document}
