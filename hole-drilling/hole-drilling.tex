@@ -9,6 +9,23 @@
 % Pour colorer une cellule de tableau
 \usepackage[table]{xcolor}
 
+% Pour les dessins 
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.markings}
+\tikzset{middlearrow/.style={
+        decoration={markings,
+            mark= at position 0.5 with {\arrow{#1}} ,
+        },
+        postaction={decorate}
+    }
+}
+
+% Pour les subfig
+\usepackage{caption}
+\usepackage{subcaption}
+
+
 % TOC
 \addto\captionsfrench{% Replace "english" with the language you use
   \renewcommand{\contentsname}%
@@ -125,7 +142,7 @@
 % titre du document
 
 \title{Algorithms \\
-	\textbf{``Hold'em for n00bs''}}
+	\textbf{``Hole Drilling''}}
 
 \author{Thanh Luan, Six Cyril, Vial Loïc \\
 			Rouby Thomas, Marriott Richard\\
@@ -145,4 +162,109 @@
 
 \section{blablabllablabla}
 
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\begin{tikzpicture}
+			\draw [red] (0,5) -- (5,5) -- (0,4) -- (5,4) -- (0,3) -- (5,3) -- (0,2) -- (5,2) -- (0,1) -- (5,1) -- (0,0) -- (5,0) -- cycle;
+			\draw [red,middlearrow={latex}] (0,5) -- (5,5);
+			\draw [red,middlearrow={latex}] (5,5) -- (0,4);
+			\draw [red,middlearrow={latex}] (0,4) -- (5,4);
+			\draw [red,middlearrow={latex}] (5,4) -- (0,3);
+			\draw [red,middlearrow={latex}] (0,3) -- (5,3);
+			\draw [red,middlearrow={latex}] (0,2) -- (5,2);
+			\draw [red,middlearrow={latex}] (5,2) -- (0,1);
+			\draw [red,middlearrow={latex}] (5,1) -- (0,0);
+			\draw [red,middlearrow={latex}] (0,0) -- (5,0);
+			\draw [red,middlearrow={latex}] (5,0) -- (0,5);
+			\draw [fill] (0,0) circle [radius=0.1];
+			\draw [fill] (5,0) circle [radius=0.1];
+			\draw [fill] (0,1) circle [radius=0.1];
+			\draw [fill] (5,1) circle [radius=0.1];
+			\draw [fill] (0,2) circle [radius=0.1];
+			\draw [fill] (5,2) circle [radius=0.1];
+			\draw [fill] (0,3) circle [radius=0.1];
+			\draw [fill] (5,3) circle [radius=0.1];
+			\draw [fill] (0,4) circle [radius=0.1];
+			\draw [fill] (5,4) circle [radius=0.1];
+			\draw [fill] (0,5) circle [radius=0.1];
+			\draw [fill] (5,5) circle [radius=0.1];
+		\end{tikzpicture}
+		\caption{Base algorithm}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\begin{tikzpicture}
+			\draw [blue] (0,5) -- (0,0) -- (5,0) -- (5,5) -- cycle;
+			\draw [blue,middlearrow={latex}] (0,5) -- (0,0);
+			\draw [blue,middlearrow={latex}] (0,0) -- (5,0);
+			\draw [blue,middlearrow={latex}] (5,0) -- (5,5);
+			\draw [blue,middlearrow={latex}] (5,5) -- (0,5);
+			\draw [fill] (0,0) circle [radius=0.1];
+			\draw [fill] (5,0) circle [radius=0.1];
+			\draw [fill] (0,1) circle [radius=0.1];
+			\draw [fill] (5,1) circle [radius=0.1];
+			\draw [fill] (0,2) circle [radius=0.1];
+			\draw [fill] (5,2) circle [radius=0.1];
+			\draw [fill] (0,3) circle [radius=0.1];
+			\draw [fill] (5,3) circle [radius=0.1];
+			\draw [fill] (0,4) circle [radius=0.1];
+			\draw [fill] (5,4) circle [radius=0.1];
+			\draw [fill] (0,5) circle [radius=0.1];
+			\draw [fill] (5,5) circle [radius=0.1];
+		\end{tikzpicture}
+		\caption{Optimal solution}
+	\end{subfigure}
+\end{figure}
+
+
+
+\begin{figure}[ht]
+	\centering
+		\begin{tikzpicture}
+			\draw [red] (0,5) -- (5,5) -- (0,4) -- (5,4) -- (0,3) -- (5,3) -- (0,2) -- (5,2) -- (0,1) -- (5,1) -- (0,0) -- (5,0) ;
+			\draw [red,middlearrow={latex}] (0,5) -- (5,5);
+			\draw [red,middlearrow={latex}] (5,5) -- (0,4);
+			\draw [red,middlearrow={latex}] (0,4) -- (5,4);
+			\draw [red,middlearrow={latex}] (5,4) -- (0,3);
+			\draw [red,middlearrow={latex}] (0,3) -- (5,3);
+			\draw [red,middlearrow={latex}] (0,2) -- (5,2);
+			\draw [red,middlearrow={latex}] (5,2) -- (0,1);
+			\draw [red,middlearrow={latex}] (5,1) -- (0,0);
+			\draw [red,middlearrow={latex}] (0,0) -- (5,0);
+			\draw [blue] (0,5) -- (0,0) -- (5,0);
+			\draw [blue,middlearrow={latex}] (0,5) -- (0,0);
+			\draw [blue,middlearrow={latex}] (0,0) -- (5,0);
+			\draw [blue,middlearrow={latex}] (5,0) -- (5,5);
+			\draw [fill] (0,0) circle [radius=0.1];
+			\draw [fill] (5,0) circle [radius=0.1];
+			\draw [fill] (0,1) circle [radius=0.1];
+			\draw [fill] (5,1) circle [radius=0.1];
+			\draw [fill] (0,2) circle [radius=0.1];
+			\draw [fill] (5,2) circle [radius=0.1];
+			\draw [fill] (0,3) circle [radius=0.1];
+			\draw [fill] (5,3) circle [radius=0.1];
+			\draw [fill] (0,4) circle [radius=0.1];
+			\draw [fill] (5,4) circle [radius=0.1];
+			\draw [fill] (0,5) circle [radius=0.1];
+			\draw [fill] (5,5) circle [radius=0.1];
+		\end{tikzpicture}
+	\caption{sdqdsf}
+\end{figure}
+
+\def\n{5}
+\begin{figure}[ht]
+	\centering
+	\begin{tikzpicture}
+		\foreach \x in {0,\n} {
+			\foreach \y in {0,...,\n} {
+				\draw [fill] (\x,$\y$) circle [radius=0.1];
+			}
+		}
+	\end{tikzpicture}
+	\caption{sdqdsf}
+\end{figure}
 \end{document}
+
