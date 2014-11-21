@@ -20,6 +20,7 @@
         postaction={decorate}
     }
 }
+\usetikzlibrary{calc}
 
 % Pour les subfig
 \usepackage{caption}
@@ -254,17 +255,52 @@
 	\caption{sdqdsf}
 \end{figure}
 
-\def\n{5}
 \begin{figure}[ht]
+	\def\n{3}
+	\def\height{5}
+	\def\width{5}
 	\centering
-	\begin{tikzpicture}
-		\foreach \x in {0,\n} {
-			\foreach \y in {0,...,\n} {
-				\draw [fill] (\x,\y) circle [radius=0.1];
+
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+		\begin{tikzpicture}
+			\foreach \x in {0,\width} {
+				\foreach \y in {0,...,\n} {
+					\draw [fill] ($(\x,\y*\height/\n)$) circle [radius=0.1];
+					\draw [red,middlearrow={latex}] ($(0,\y*\height/\n)$) -- ($(\width,\y*\height/\n)$);
+					\ifnum \y > 0 {
+						\draw [red,middlearrow={latex}] ($(\width,\y*\height/\n)$) -- ($(0,\y*\height/\n - \height/\n)$);
+					} \else
+					\fi
+				}
 			}
-		}
-	\end{tikzpicture}
-	\caption{sdqdsf}
+			\draw [blue,middlearrow={latex}] (0,\height) -- (0,0);
+			\draw [blue,middlearrow={latex}] (0,0) -- (\width,0);
+			\draw [blue,middlearrow={latex}] (\width,0) -- (\width,\height);
+		\end{tikzpicture}
+		\caption{qsdfjn}
+	\end{subfigure}
+
+	\def\n{10}
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+		\begin{tikzpicture}
+			\foreach \x in {0,\width} {
+				\foreach \y in {0,...,\n} {
+					\draw [fill] ($(\x,\y*\height/\n)$) circle [radius=0.1];
+					\draw [red,middlearrow={latex}] ($(0,\y*\height/\n)$) -- ($(\width,\y*\height/\n)$);
+					\ifnum \y > 0 {
+						\draw [red,middlearrow={latex}] ($(\width,\y*\height/\n)$) -- ($(0,\y*\height/\n - \height/\n)$);
+					} \else
+					\fi
+				}
+			}
+			\draw [blue,middlearrow={latex}] (0,\height) -- (0,0);
+			\draw [blue,middlearrow={latex}] (0,0) -- (\width,0);
+			\draw [blue,middlearrow={latex}] (\width,0) -- (\width,\height);
+		\end{tikzpicture}
+		\caption{sdqdsf}
+	\end{subfigure}
 \end{figure}
 \end{document}
 
