@@ -1,0 +1,69 @@
+/**
+ * An algorith of minimum spanning tree
+ * Inspired by Luan
+ *
+ * Let's suppose :
+ *	the starting point is (x0, y0)
+ *	there are N holes to drill, their positions denoted by (xi, yi) 
+ *	<em>There is no need to go back to the starting point.</em>
+ */
+
+struct Way is:
+	list of Node
+
+struct Node is:
+	int x, y
+	int index
+	Node **connected_nodes  // Only used by tree
+	int nb_connections		// same
+
+/* Main problem with this algorithm : if there's a decision to take 
+ * right at the beginning */
+compute_way() is :
+|	nodes = array of Node(0..N) /* The initial point is counted as a node */
+|	M = compute_M(nodes) // O(N^2)
+|
+|	ignored_nodes = []
+|	way = [Node[0]]
+|	cur = 0
+|	prev = 0
+|	prev_prev = 0
+|	has_to_compute_spanning_tree = False
+|	while len(way) < N+1 do:
+|	|	cur_index = nodes[cur].index
+|	|	prev_index = nodes[prev].index
+|	|	prev_prev_index = nodes[prev_prev].index
+|	|	if has_to_compute_spanning_tree:
+|	|	|	tree = min_spanning_tree(nodes \ ignored_nodes) // O(N^2)
+|	|	|	has_to_compute_spanning_tree = False
+|	|
+|	|	nb_connections = tree[cur_index].nb_connections
+|	|
+|	|	/* If there's a decision to take */
+|	|	if nb_connections > 2:
+|	|	|	ignored_nodes.append(nodes[cur])
+|	|	|	/* Going one step backward */
+|	|	|	cur = prev
+|	|	|	prev = prev_prev
+|	|	|	has_to_compute_spanning_tree = True
+|	|	/* If it's the beginning */
+|	|	elif nb_connections == 1:
+|	|	|	next_node = tree[cur_index].connected_nodes[0]
+|	|	|	way.append(next_node)
+|	|	|	prev_prev = prev
+|	|	|	prev = cur
+|	|	|	cur = index of next_node in nodes
+|	|	/* If it's in the middle */
+|	|	elif nb_connections == 2:
+|	|	|	/* Determine where to head to go forward */
+|	|	|	direction = (tree[cur_index].connected_nodes[0] == \
+|	|	|					way[prev_index])
+|	|	|	next_node = tree[cur_index].connected_nodes[direction]
+|	|	|	way.append(next_node)
+|	|	|	prev_prev = prev
+|	|	|	prev = cur
+|	|	|	cur = index of next_node in nodes
+|	done
+|
+|	return way
+end
