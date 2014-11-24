@@ -16,10 +16,38 @@ struct Node is:
 
 follow_min_spanning_tree(way, nodes):
 	cur = way.last()
-	
 	do
-	|	/* TODO */
+	 	used_node.append(cur)
+	 	min_next = cur->mst_connected[0]
+	 	min = M[cur][min_next]
+	 	for j in 2..nb_mst_connected do
+	 	 	if M[cur][cur->mst_connected[j]] < min:
+	 	 	 	min_next = cur->mst_connected[j]
+	 	 	 	min = M[cur][min_next]
+	 	done
+	 	cur = min_next
+	 	way.append(cur)
 	while (cur->nb_mst_connected != 1)
+	/* At this point we reached the end of the path */
+
+compute_min_spanning_tree(nodes, M) is :
+	nodes_taken = [nodes[0]]
+	spanning_tree = []
+	while len(nodes_taken) != len(nodes) do:
+		min = infinite
+		for vi in nodes_taken do:
+			for vj in nodes \ nodes_taken do:
+				if M[vi][vj] < min:
+					min = M[vi][vj]
+					vi_chosen = vi
+					vj_chosen = vj
+			done
+		done
+		nodes_taken.append(min_edge[1])
+		vi_chosen.mst_connected[nb_mst_connected++] = vj_chosen
+		vj_chosen.mst_connected[nb_mst_connected++] = vi_chosen
+	done
+end
 
 compute_way() is :
 	nodes = array of Node(0..N) /* The initial point is counted as a node */
@@ -28,7 +56,7 @@ compute_way() is :
 	used_nodes = []
 	way = [Node[0]]
 	while len(way) < N+1 do:
-		compute_min_spanning_tree(nodes, used_nodes) // O(N^2)
+		compute_min_spanning_tree(nodes \ used_nodes, M) // O(N^2)
 		follow_min_spanning_tree(way, nodes)
 	done
 
