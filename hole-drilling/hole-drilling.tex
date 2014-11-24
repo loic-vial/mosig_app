@@ -21,6 +21,7 @@
     }
 }
 \usetikzlibrary{calc}
+\usetikzlibrary{intersections,petri,positioning,arrows}
 
 % Pour les subfig
 \usepackage{caption}
@@ -146,8 +147,8 @@
 	\textbf{``Hole Drilling''}}
 
 \author{Thanh Luan, Six Cyril, Vial Loïc \\
-			Rouby Thomas, Marriott Richard\\
-			Poupin Pierre} 
+			Rouby Thomas, Poupin Pierre\\
+			Marriott Richard} 
 
 \date{7\up{th} of November 2014}
 
@@ -242,5 +243,17 @@ Hence, the algorithm is \textbf{not} an $\alpha$-approximation.
 		\label{fig:counter-example}
 \end{figure}
 
+
+\section{Blabla}
+\begin{tikzpicture}[main node/.style={circle,fill=black!100,draw,minimum size=0.2cm,inner sep=0pt}]
+	\node[main node] (first) at (0,3.5) { };
+	\node[main node] (second) at (4,3.5) { };
+	\node[main node] (third) at (2,0) { };
+	\draw[-] (first) -- (second);
+	\draw[-] (first) -- (third);
+	\draw[-] (second) -- (third);
+	%\node[main node] (critical) [below=of waiting] at (1,0) { };
+
+\end{tikzpicture}
 \end{document}
 
