@@ -20,6 +20,7 @@
         postaction={decorate}
     }
 }
+\usetikzlibrary{calc}
 
 % Pour les subfig
 \usepackage{caption}
@@ -32,7 +33,7 @@
     {Table of Contents}%
 }
 
-\usepackage[colorlinks=true,linkcolor=red!30!black,citecolor=blue!50!black,urlcolor=blue!40!red,pdfborder={0 0 0}]{hyperref}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!30!black,urlcolor=blue!40!red,pdfborder={0 0 0}]{hyperref}
 
 %\usepackage{graphvizzz}
 
@@ -158,112 +159,87 @@
 
 \section{Introduction}
 
-\section{Blabalba}
 
-\section{blablabllablabla}
+
+\newcommand{\notalphagraph}[1] {
+	\begin{tikzpicture}[scale=0.85]
+			\def\n{#1}
+			\def\height{5}
+			\def\width{5}
+			\foreach \x in {0,\width} {
+				\foreach \y in {0,...,\n} {
+					\draw [fill] ($(\x,\y*\height/\n)$) circle [radius=0.1];
+					\draw [red,middlearrow={latex},thick] ($(0,\y*\height/\n)$) -- ($(\width,\y*\height/\n)$);
+					\ifnum \y > 0 {
+						\draw [red,middlearrow={latex},thick] ($(\width,\y*\height/\n)$) -- ($(0,\y*\height/\n - \height/\n)$);
+					} \else
+					\fi
+				}
+			}
+			\draw [blue,middlearrow={latex},thick] (0,\height) -- (0,0);
+			\draw [blue,middlearrow={latex},thick] (0,0) -- (\width,0);
+			\draw [blue,middlearrow={latex},thick] (\width,0) -- (\width,\height);
+		\end{tikzpicture}
+}
+
+\newcommand{\notAlphaGraphOnlyRed}[1] {
+	\begin{tikzpicture}[scale=0.85]
+			\def\n{#1}
+			\def\height{5}
+			\def\width{5}
+			\foreach \x in {0,\width} {
+				\foreach \y in {0,...,\n} {
+					\draw [fill] ($(\x,\y*\height/\n)$) circle [radius=0.1];
+					\draw [red,middlearrow={latex},thick] ($(0,\y*\height/\n)$) -- ($(\width,\y*\height/\n)$);
+					\ifnum \y > 0 {
+						\draw [red,middlearrow={latex},thick] ($(\width,\y*\height/\n)$) -- ($(0,\y*\height/\n - \height/\n)$);
+					} \else
+					\fi
+				}
+			}
+		\end{tikzpicture}
+}
+
+\section{Current algorithm}
+We do not have many informations about the current algorithm. We only know that it starts from the top left corner of the board, and that
+it pierces holes from top to bottom.
+
+We assume that the algorithm makes paths that go from left to right, and then from top to bottom.
+
+\begin{figure}[h!]
+	\centering
+	\notAlphaGraphOnlyRed{3}
+	\caption{Path that we would obtain with the algorithm}
+\end{figure}
+
+We may now wonder whether this algorithm is an $\alpha$-approximation or not. If this was the case, we would be able to find $\alpha$ such that
+\[
+	\forall I \in \mathcal{I}, \; \frac{{L}_{Algorithm}}{{L}_{Optimal}} \leq \alpha
+\]
+
+Let's look at the figure \ref{fig:counter-example}. The optimal solution is drawn in \textcolor{myblue}{blue}, while the algorithm's one
+is in \textcolor{myred}{red}. We can see that, in such a configuration, the number of points to drill doesn't change the length of the
+optimal path. However, the more points we have, the longer the red path will be. With an infinite number of points, the red path
+is theoretically infinite. Which means that it is impossible to define $\alpha$ for such an algorithm.
+
+Hence, the algorithm is \textbf{not} an $\alpha$-approximation.
 
 
 \begin{figure}
-	\centering
-	\begin{subfigure}[b]{0.4\textwidth}
-		\centering
-		\begin{tikzpicture}
-			\draw [red] (0,5) -- (5,5) -- (0,4) -- (5,4) -- (0,3) -- (5,3) -- (0,2) -- (5,2) -- (0,1) -- (5,1) -- (0,0) -- (5,0) -- cycle;
-			\draw [red,middlearrow={latex}] (0,5) -- (5,5);
-			\draw [red,middlearrow={latex}] (5,5) -- (0,4);
-			\draw [red,middlearrow={latex}] (0,4) -- (5,4);
-			\draw [red,middlearrow={latex}] (5,4) -- (0,3);
-			\draw [red,middlearrow={latex}] (0,3) -- (5,3);
-			\draw [red,middlearrow={latex}] (0,2) -- (5,2);
-			\draw [red,middlearrow={latex}] (5,2) -- (0,1);
-			\draw [red,middlearrow={latex}] (5,1) -- (0,0);
-			\draw [red,middlearrow={latex}] (0,0) -- (5,0);
-			\draw [red,middlearrow={latex}] (5,0) -- (0,5);
-			\draw [fill] (0,0) circle [radius=0.1];
-			\draw [fill] (5,0) circle [radius=0.1];
-			\draw [fill] (0,1) circle [radius=0.1];
-			\draw [fill] (5,1) circle [radius=0.1];
-			\draw [fill] (0,2) circle [radius=0.1];
-			\draw [fill] (5,2) circle [radius=0.1];
-			\draw [fill] (0,3) circle [radius=0.1];
-			\draw [fill] (5,3) circle [radius=0.1];
-			\draw [fill] (0,4) circle [radius=0.1];
-			\draw [fill] (5,4) circle [radius=0.1];
-			\draw [fill] (0,5) circle [radius=0.1];
-			\draw [fill] (5,5) circle [radius=0.1];
-		\end{tikzpicture}
-		\caption{Base algorithm}
-	\end{subfigure}
-	\begin{subfigure}[b]{0.4\textwidth}
-		\centering
-		\begin{tikzpicture}
-			\draw [blue] (0,5) -- (0,0) -- (5,0) -- (5,5) -- cycle;
-			\draw [blue,middlearrow={latex}] (0,5) -- (0,0);
-			\draw [blue,middlearrow={latex}] (0,0) -- (5,0);
-			\draw [blue,middlearrow={latex}] (5,0) -- (5,5);
-			\draw [blue,middlearrow={latex}] (5,5) -- (0,5);
-			\draw [fill] (0,0) circle [radius=0.1];
-			\draw [fill] (5,0) circle [radius=0.1];
-			\draw [fill] (0,1) circle [radius=0.1];
-			\draw [fill] (5,1) circle [radius=0.1];
-			\draw [fill] (0,2) circle [radius=0.1];
-			\draw [fill] (5,2) circle [radius=0.1];
-			\draw [fill] (0,3) circle [radius=0.1];
-			\draw [fill] (5,3) circle [radius=0.1];
-			\draw [fill] (0,4) circle [radius=0.1];
-			\draw [fill] (5,4) circle [radius=0.1];
-			\draw [fill] (0,5) circle [radius=0.1];
-			\draw [fill] (5,5) circle [radius=0.1];
-		\end{tikzpicture}
-		\caption{Optimal solution}
-	\end{subfigure}
+        \centering
+        \begin{subfigure}[b]{0.2\textwidth}
+				\notalphagraph{2}
+        \end{subfigure}
+		\hfill
+        \begin{subfigure}[b]{0.2\textwidth}
+				\notalphagraph{6}
+        \end{subfigure}
+		\hfill
+        \begin{subfigure}[b]{0.2\textwidth}
+				\notalphagraph{15}
+        \end{subfigure}
+        \caption{Different paths depending on the number of to-be-drilled points}
+		\label{fig:counter-example}
 \end{figure}
 
-
-
-\begin{figure}[ht]
-	\centering
-		\begin{tikzpicture}
-			\draw [red] (0,5) -- (5,5) -- (0,4) -- (5,4) -- (0,3) -- (5,3) -- (0,2) -- (5,2) -- (0,1) -- (5,1) -- (0,0) -- (5,0) ;
-			\draw [red,middlearrow={latex}] (0,5) -- (5,5);
-			\draw [red,middlearrow={latex}] (5,5) -- (0,4);
-			\draw [red,middlearrow={latex}] (0,4) -- (5,4);
-			\draw [red,middlearrow={latex}] (5,4) -- (0,3);
-			\draw [red,middlearrow={latex}] (0,3) -- (5,3);
-			\draw [red,middlearrow={latex}] (0,2) -- (5,2);
-			\draw [red,middlearrow={latex}] (5,2) -- (0,1);
-			\draw [red,middlearrow={latex}] (5,1) -- (0,0);
-			\draw [red,middlearrow={latex}] (0,0) -- (5,0);
-			\draw [blue] (0,5) -- (0,0) -- (5,0);
-			\draw [blue,middlearrow={latex}] (0,5) -- (0,0);
-			\draw [blue,middlearrow={latex}] (0,0) -- (5,0);
-			\draw [blue,middlearrow={latex}] (5,0) -- (5,5);
-			\draw [fill] (0,0) circle [radius=0.1];
-			\draw [fill] (5,0) circle [radius=0.1];
-			\draw [fill] (0,1) circle [radius=0.1];
-			\draw [fill] (5,1) circle [radius=0.1];
-			\draw [fill] (0,2) circle [radius=0.1];
-			\draw [fill] (5,2) circle [radius=0.1];
-			\draw [fill] (0,3) circle [radius=0.1];
-			\draw [fill] (5,3) circle [radius=0.1];
-			\draw [fill] (0,4) circle [radius=0.1];
-			\draw [fill] (5,4) circle [radius=0.1];
-			\draw [fill] (0,5) circle [radius=0.1];
-			\draw [fill] (5,5) circle [radius=0.1];
-		\end{tikzpicture}
-	\caption{sdqdsf}
-\end{figure}
-
-\def\n{5}
-\begin{figure}[ht]
-	\centering
-	\begin{tikzpicture}
-		\foreach \x in {0,\n} {
-			\foreach \y in {0,...,\n} {
-				\draw [fill] (\x,\y) circle [radius=0.1];
-			}
-		}
-	\end{tikzpicture}
-	\caption{sdqdsf}
-\end{figure}
 \end{document}
