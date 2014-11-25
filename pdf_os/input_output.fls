@@ -80,8 +80,3 @@ INPUT architecture_device.png
 INPUT ./architecture_device.png
 OUTPUT input_output.pdf
 INPUT ./architecture_device.png
-INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
-INPUT input_output.aux
-INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
-INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
-INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb

@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1416923012 "input_output.tex" "input_output.pdf" "input_output" 1416923012
+["pdflatex"] 1416923225 "input_output.tex" "input_output.pdf" "input_output" 1416923225
   "/etc/texmf/web2c/texmf.cnf" 1404943445 1101 af7716885e081ab43982cab7b4672c1a ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
@@ -13,9 +13,6 @@
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm" 1136768653 1124 6c73e740cf17375f03eec0ee63599741 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm" 1136768653 1116 933a60c408fc0a863a92debe84b2d294 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm" 1136768653 1120 8b7d695260f3cff42e636090a8002094 ""
-  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb" 1248133631 32080 340ef9bf63678554ee606688e7b5339d ""
-  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1248133631 35752 024fb6c41858982481f6968b5fc26508 ""
-  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb" 1248133631 32722 d7379af29a190c3f453aba36302ff5a9 ""
   "/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii" 1337017135 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "/usr/share/texlive/texmf-dist/tex/generic/oberdiek/etexcmds.sty" 1335995445 7612 c47308d923ec19888707b0f1792b326a ""
   "/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifluatex.sty" 1303254447 7324 11d14f318d865f420e692d4e6c9c18c3 ""
@@ -45,12 +42,12 @@
   "/usr/share/texlive/texmf-dist/tex/latex/tools/indentfirst.sty" 1399675188 1405 812cce861a226d5e8105ac55fcb2cbe8 ""
   "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1411824129 31088 8e088e958dd0258cc5414842768a3a00 ""
   "/usr/share/texmf/web2c/texmf.cnf" 1411824129 31088 8e088e958dd0258cc5414842768a3a00 ""
-  "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1413448356 1453099 7a5491577a99ee4ad86e41d1572285e3 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1413448314 3836167 7c5c777acd7747f1efb2349aeb8d0bdb ""
   "architecture_device.png" 1416922921 42058 31ac0b3b704996522dadf74f35ebc098 ""
-  "input_output.aux" 1416923012 211 1c1400e04adc5a413e799605cf489c54 ""
-  "input_output.tex" 1416923011 1285 f91e9a3a3c0b7a1e8545ce452185c23d ""
+  "computer_layout.png" 0 -1 0 ""
+  "input_output.aux" 1416923225 8 a94a2480d3289e625eea47cd1b285758 ""
+  "input_output.tex" 1416923225 1466 60439d5f5a780a04d65596e66cfa3669 ""
   (generated)
-  "input_output.log"
   "input_output.aux"
+  "input_output.log"
   "input_output.pdf"
