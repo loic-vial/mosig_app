@@ -98,8 +98,79 @@ The OS would rather handle generic periphericals: for instance, a storage device
 
 Along with two properties :
 \begin{itemize}
-  \item 
+  \item read(int num_block, void *result);
+  \item write(int num_block, void *result);
 \end{itemize}
+
+A driver is a piece of the OS that provides that kind of abstraction for a specific device type.
+
+\textbf{Example:}
+
+An IDE driver, writing to the disk looks like :
+\begin{itemize}
+  \item loop waiting for disk availability.
+  \item write the block number (28 bits) and the drive number into 4 controls registers.
+  \item wait for device availability for data transfer
+  \item transfer the data :
+  \begin{itemize}
+    \item write a data piece (usually 4 bytes) to the data register
+    \item write a signal to the command register
+    \item wait for completion (polling the status register)
+  \end{itemize}
+  Repeat until all the data is transfered.
+  \item wait for the completion of the operation
+  \item report a possible error
+\end{itemize}
+
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{resources_wasted.png}
+    \label{fig:}
+  \end{center}
+\end{figure}
+
+\section{Improving resources utilization}
+Devices are usually much slower than CPU, We can improve resources utilization, by avoiding active wait.
+
+\subsection{Poll on a regular basis}
+
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{poll.png}
+    \label{fig:}
+  \end{center}
+\end{figure}
+
+Issues :
+
+\begin{itemize}
+  \item Several polls to the device
+  \item The device is not used between the completion of the request and the next poll.
+\end{itemize}
+
+\subsection{Use Interrupts}
+
+Now the device has the capacity to raise an interrupt (typically at request completion).
+
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{interrupts.png}
+    \label{fig:}
+  \end{center}
+\end{figure}
+
+Issues : The CPU is not used efficiently during the copy.
+
+\subsection{Use DMA}
+
+DMA stands for Direct Memory Access, it has to be handled both by :
+\begin{itemize}
+  \item the memory controller
+  \item the device
+\end{itemize}
+
+It let a device exchange data blocks with the memory without the need of the CPU
+
 
 
 \end{document}
