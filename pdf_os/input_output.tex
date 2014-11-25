@@ -49,20 +49,57 @@ Architecture of a typical device :
 
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{architecture_device.png}
-    \caption{}
+    \includegraphics[width=0.8\textwidth]{architecture_device.png}
     \label{Architecture of a typical device}
   \end{center}
 \end{figure}
-
 This general scheme applies to : hard drives, printers, mouses...
 
+
+Computer layout :
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{computer_layout.png}
-    \caption{}
+    \includegraphics[width=0.8\textwidth]{computer_layout.png}
     \label{fig:}
   \end{center}
 \end{figure}
+
+To access to periphericals, one has to issue either :
+
+\begin{itemize}
+  \item special instructions to write to one of the I/O registers of periphericals.
+  A port is provided which is the target device.
+  
+  \item memory access ... . The address space is divided into :
+  \begin{itemize}
+    \item  main memory
+    \item 16 registers of periphericals
+  \end{itemize}
+\end{itemize}
+
+Basic exchange with a peripherical :
+
+\begin{verbatim}
+  while(read(status) == busy) 
+  {}
+  write(data,some_data);
+  write(control,some_command);
+  while(read(status)==busy) 
+  {}
+\end{verbatim}
+
+
+
+\section{Device Driver}
+
+The OS would rather handle generic periphericals: for instance, a storage device should look like a sequence of data block
+
+%place table here
+
+Along with two properties :
+\begin{itemize}
+  \item 
+\end{itemize}
+
 
 \end{document}
