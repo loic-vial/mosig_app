@@ -1,0 +1,441 @@
+\documentclass[a4paper,10pt]{article}
+
+%%%% PRATIQUE POUR LES ALINEAS CHIANTS
+\usepackage{indentfirst}
+
+%%%% POUR L'OPTION LABEL= %%%
+\usepackage{enumitem}
+
+\setlength{\parindent}{30pt}
+\setlength{\parskip}{1ex}
+\setlength{\textwidth}{15cm}
+\setlength{\textheight}{24cm}
+\setlength{\oddsidemargin}{0.2cm}
+\setlength{\evensidemargin}{-.7cm}
+\setlength{\topmargin}{-.5in}
+
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage{listings}
+\lstset{%
+  basicstyle=\scriptsize\sffamily,%
+  commentstyle=\footnotesize\ttfamily,%
+  frameround=trBL,
+  frame=single,
+  breaklines=true,
+  showstringspaces=false,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=10pt,
+  keywordstyle=\bf
+}
+\newcommand{\subtitle}[1]{%
+  \posttitle{%
+    \par\end{center}
+    \begin{center}\large#1\end{center}
+    \vskip0.5em}%
+}
+\title{\textbf{Threads}}
+\subtitle{M1 MoSIG : Operating Systems}
+\author{Poupin Pierre \and Rouby Thomas}
+\date{04/11/2014}
+
+\begin{document}
+\maketitle
+%\begin{abstract}
+%This document is our report of the first practical session. It contains our design choices along with the results of our implementation.	
+%\end{abstract}
+
+
+\section{Introduction}
+
+A thread is an execution context that belong to a process.
+A process might contain several threads which share some resources : 
+
+\begin{itemize}
+\item memory
+\item file descriptors
+\end{itemize}
+
+Sometimes called lightweight process.
+
+\vspace{0.2cm}
+\begin{minipage}{0.4\textwidth}
+    \begin{center}
+        process with single thread
+        \begin{tabular}{|c|c|c|}
+            \hline
+            code & data & files \\
+            \hline
+            register & & stack \\
+            & \vdots & \\
+            & \vdots & \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+    \begin{center}
+        process with multiple threads
+        \begin{tabular}{|c|c|c|}
+            \hline
+            code & data & files \\
+            \hline
+            registers & registers & registers \\
+            stack& stack & stack \\
+            \vdots & \vdots & \vdots \\
+            \vdots & \vdots & \vdots \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{minipage}
+\vspace{0.2cm}
+
+\subsubsection*{Advantages}
+\begin{enumerate}[label=-]
+	\item Lighter management (especially context switch)
+	\item Take advantage of concurrency within a process ( eg can perform a computation during a blocking system call in another thread).
+	\item Communication between threads is easier/more efficient than IPC (Inter-Process Communication).
+\end{enumerate}
+
+\subsubsection*{Example : Webserver}
+The main thread can listen for connexions while other threads handle requests.
+Accesses to Webserver data can be performed concurrently and overlapped with computations
+
+\section{Thread Models}
+
+Threads might be :
+\begin{itemize}
+\item Preemptive : threads might be interrupted asynchronously to switch to another thread. 
+\item Cooperative : the thread itself release the CPU to let another thread be scheduled.
+\end{itemize}
+
+\subsubsection*{Advantages / Drawbacks}
+
+\begin{itemize}
+ \item For preemptive :
+\begin{itemize} 
+\item Insensitive to misbehaving threads.
+\item Can take advantage of multiple CPUs.
+\item higher cost (context switch) 
+\end{itemize}
+
+\item For cooperative :
+ \begin{itemize}
+ 
+\item easier to program and debug  because not sensitive to data races ( will be explained later) 
+\item can only take advantage of a single CPU 
+\item more efficient
+\end{itemize}
+\end{itemize}
+
+\section{Implementation}
+
+The implementation can be performed by using the kernel, in that case the implementation
+is similar to processes implementation :
+
+\begin{itemize}
+\item the kernel itself performs threads scheduling.
+\item threads management : creation, destruction and preemption managed by the kernel.
+\item can be implemented almost like processes, eg in Linux :
+\begin{itemize}
+\item processes and threads are tasks.
+\item they have different attributes, memory is shared between threads.
+\item scheduled using the same scheduler
+\end{itemize}
+\end{itemize}
+
+The implementation might also be completely in a user-level process under the form of a library :
+
+\begin{itemize}
+\item creation, destruction are just functions of the library (which manages an internal list of threads)
+\item context switch :
+\begin{itemize}
+\item preemptive model : rely on preemption mechanism provided by  the kernel such as signals (setitimer/sigalarm)
+\item cooperative model : rely on a function 'yield' provided by the library and called by the thread itself
+\item both cases : most blocking functions are redefined to put blocking thread in a waiting queue and let the scheduler decide on another thread to execute. This includes : read, write, accept, connect, ....
+\end{itemize}
+\end{itemize}
+
+\vspace{3cm}
+
+\section{Mixed models}
+
+Another possibility is to use $n$ user threads mapped to $m$ kernel threads.
+
+\begin{tabular}{cccccccc}
+	user threads & \vdots & \vdots & \vdots & \vdots & \vdots & n
+\end{tabular}
+
+\begin{flushright}
+	user level library that maps user
+	\\
+	level threads on kernel threads
+\end{flushright}
+
+\begin{tabular}{cccccc}
+	kernel threads & \vdots & \vdots & \vdots & m
+\end{tabular}
+
+
+
+\textbf{Idea :} 
+
+Take advantage of any number of threads to express parallel work or to overlap computation with communications, limit the number of resources (Cores, CPUs) to limit the cost of context switches between them.
+
+The library is more diffucult to implement as it implies synchronization between kernel threads
+
+\section{Memory \& Execution issues related to threads}
+
+Threads share the same memory space :
+ 
+\begin{centering}
+Shared variable
+
+Count 
+
+\begin{tabular}{c|c}
+\hline
+	Thread 1 & Thread 2\\
+
+	count++ & count- -\\
+\hline
+\end{tabular}
+ 
+\end{centering}
+
+\textbf{Example :}
+
+\begin{verbatim}
+int count;
+void *t1 (void *ignored) {
+     count ++;
+}
+
+void *t2 (void *ignored) {
+     count --;
+}
+
+int main() {
+     thread_create(t1,0);
+     t2();
+}
+	
+\end{verbatim}
+
+
+\textbf{Example :}
+
+\begin{verbatim}
+int flag1 = 0, int flag2 =0;
+
+void *p1 (void *ignored){
+     flag1=1;
+     if (!flag2) { function_1(); }
+}
+
+void *p2 (void *ignored){
+     flag2=1;
+     if (!flag1) { function_2(); }
+}
+
+int main() {
+	. . . 
+	create_thread(p1,NULL);
+	p2();
+}
+
+\end{verbatim}
+
+Which function 1 and 2 are executed ?
+\begin{itemize}
+\item none ?
+\item one of them ?
+\item both ?
+\end{itemize}
+
+All these 3 choices are possible, it depends on the hardware :
+\begin {itemize}
+\item CPUs can reorder operations especially memory operations.
+\begin{itemize}
+\item concurrent independant writes
+\item pre-fetching
+\item ...
+\end{itemize}
+\item compiler can reorder operations 
+\begin{itemize}
+\item register promotion
+\item common sub-expressions elimination
+\item loop blocking
+\item ...
+\end{itemize}
+\end{itemize}
+
+
+\textbf{Definition : Sequential consistency (SC)}
+
+The execution of the program has the same result at is if the execution has been performed according to some sequential order and the order of instructions on each processor will be the same as the order in the program.
+
+From the hardware point of view :
+\begin{itemize}
+\item atomic instructions and locked instructions
+\item memory barriers : special instruction to complete pending memory operations
+\end{itemize}
+
+The programmer can use them to avoid data races : the program will then have SC.\\
+
+\textbf{Definition : } There is a \textbf{data race} if :
+\begin{itemize}
+\item two threads are accessing the same memory location
+\item one of them is a write
+\item none are related to synchronization operations
+\end{itemize}
+
+\vspace{5cm}
+
+\textbf{Example :}
+
+\begin{verbatim}
+
+int Money_Transfer(int amount, account from, account to) {
+	int  bol;
+	atomic {bol = from_balance}
+	if (bol < amount) return ERROR;
+	- - if there is another money transfer here, problems !
+	atomic {from_balance -= amount}
+	atomic {to_balance += amount}
+}
+
+\end{verbatim}
+
+Imagine that two threads perform transfers to/from the same account : A problem could happen in the balance variable if we transfer from and to the account at the same time.
+
+Here atomic means: completely executed without the possibility for other threads to access the same memory locations.
+
+The fix is make everything atomic :
+
+\begin{verbatim}
+
+int Money_Transfer(int amount, account from, account to) {
+	int  bol;
+     atomic{
+            bol = from_balance;
+            if (bol < amount) return ERROR;
+            from_balance -= amount;
+            to_balance += amount;
+          }
+}
+
+\end{verbatim}
+
+
+\textbf{Race Condition :}
+
+A flaw in the program that makes the correctness of the result depends on the ordering of external events.
+
+External events :
+\begin{itemize}
+\item context switches
+\item signals
+\item interrupts
+\item memory writes from other processors
+\item ...
+\end{itemize}
+
+\section{Critical sections}
+
+A critical setion is a part of a program that might be the source of a race condition with critical sections in other threads.
+
+The critical section problem :
+\begin{itemize}
+\item ensure mutual exclusion between critical sections
+\item ensure progression : if some threads wait to enter their critical section and no thread is execution its critical section, one of them should be allowed to enter in a finite time.
+\item bounded waiting : if some thread wants to enter its critical section, the number of threads that enter before him should be bounded. 
+\end{itemize}
+
+\subsection{Software solution}
+
+Assuming :
+
+\begin{itemize}
+\item sequential consitancy
+\item threads loop over :
+\begin{itemize}
+\item critical section
+\item remaining of the program
+\end{itemize}
+\end{itemize}
+
+Here is the Petterson solution :
+
+\begin{centering}
+flag[1]= false ; flag[2] = false
+
+turn= 1 or 2
+
+\begin{tabular}{|cc|}
+\hline
+	flag[1] = true & flag[2] = true\\
+	Thread 1 & Thread 2 \\
+	turn =2 & turn =1 \\
+	while(turn !=1) \&\& flag[2]\{\} & while(turn!=2) \&\& flag[1]\{\}\\
+	critical section & critical section\\
+	flag[1] = false & flag[2] = false\\
+	remaining & remaining\\
+\hline
+\end{tabular}
+
+\end{centering}
+
+It can be extended to N threads but it is not efficient in practice (because of SC and the number of operations)
+
+\subsection{Hardware support}
+
+\begin{centering}
+
+lock = 0
+
+\begin{tabular}{|cc|}
+\hline
+	Thread 1 & Thread 2 \\
+	while(test\_and\_set(\&lock,1))\{\} & while(test\_and\_set(\&lock,1))\{\}\\
+	lock = 1; & lock = 1; \\
+	critical section & critical section\\
+	lock = 0; & lock = 0; \\
+	remaining & remaining\\
+\hline
+\end{tabular}
+
+Spinlock
+
+\end{centering}
+
+New Instruction :
+
+\begin{verbatim}
+int test_and_set(int *adress, int value) {
+     atomic {
+          int result;
+          result = *adress;
+          *adress = value;
+          return result;
+     }
+}
+\end{verbatim}
+
+Other possibilities : Compare\_and\_swap, or swap.
+ 
+Works with any number of threads.
+
+Costly :
+
+\begin{itemize}
+\item such an atomic instruction locks the memory bus for its duration
+\item active wait : a loop that does nothing while waiting for the lock
+\end{itemize}
+
+Is it used ?
+\begin{itemize}
+\item in the kernel, on multiprocessor systems, to synchronize accesses to shared memory
+\end{itemize}
+ \end{document}
