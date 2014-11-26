@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2014.10.16)  25 NOV 2014 14:58
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2014.10.16)  26 NOV 2014 14:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -98,7 +98,23 @@ File: listings.cfg 2014/09/06 1.5e listings configuration
 ))
 Package: listings 2014/09/06 1.5e (Carsten Heinz)
 
-(./input_output.aux)
+(./input_output.aux
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+)
 \openout1 = `input_output.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 43.
@@ -113,8 +129,7 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 43.
 LaTeX Font Info:    ... okay on input line 43.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 43.
 LaTeX Font Info:    ... okay on input line 43.
-
-(/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
+ (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count97
 \scratchdimen=\dimen110
@@ -206,26 +221,68 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./architecture_device.png>
- <./computer_layout.png>] [2] (./input_output.aux) ) 
+ <./computer_layout.png>]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 98.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 98.
+ <resources_wasted.png, id=14, 642.4pt x 481.8pt>
+File: resources_wasted.png Graphic file (type png)
+
+<use resources_wasted.png>
+Package pdftex.def Info: resources_wasted.png used on input line 133.
+(pdftex.def)             Requested size: 341.43436pt x 256.0806pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<poll.png, id=15, 642.4pt x 481.8pt>
+File: poll.png Graphic file (type png)
+ <use poll.png>
+Package pdftex.def Info: poll.png used on input line 145.
+(pdftex.def)             Requested size: 341.43436pt x 256.0806pt.
+ [2] [3 <./resources_wasted.png> <./poll.png>] <interrupt.png, id=27, 642.4pt x
+ 481.8pt>
+File: interrupt.png Graphic file (type png)
+
+<use interrupt.png>
+Package pdftex.def Info: interrupt.png used on input line 163.
+(pdftex.def)             Requested size: 341.43436pt x 256.0806pt.
+ <dma.png, id=28, 642.4pt x 481.8pt>
+File: dma.png Graphic file (type png)
+ <use dma.png>
+Package pdftex.def Info: dma.png used on input line 174.
+(pdftex.def)             Requested size: 277.41176pt x 208.05951pt.
+ [4 <./interrupt.png> <./dma.png>]
+<user_interface.png, id=34, 983.17313pt x 459.96844pt>
+File: user_interface.png Graphic file (type png)
+
+<use user_interface.png>
+Package pdftex.def Info: user_interface.png used on input line 201.
+(pdftex.def)             Requested size: 426.79134pt x 199.67056pt.
+ [5 <./user_interface.png>] (./input_output.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 3049 strings out of 493103
- 45070 string characters out of 6136911
- 106183 words of memory out of 5000000
- 6494 multiletter control sequences out of 15000+600000
- 8063 words of font info for 29 fonts, out of 8000000 for 9000
+ 3079 strings out of 493103
+ 45562 string characters out of 6136911
+ 110222 words of memory out of 5000000
+ 6519 multiletter control sequences out of 15000+600000
+ 8370 words of font info for 30 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,6n,32p,244b,296s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmtt10.pfb>
-Output written on input_output.pdf (2 pages, 108705 bytes).
+ 38i,8n,32p,244b,296s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on input_output.pdf (5 pages, 230642 bytes).
 PDF statistics:
- 40 PDF objects out of 1000 (max. 8388607)
- 25 compressed objects within 1 object stream
+ 59 PDF objects out of 1000 (max. 8388607)
+ 31 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
 

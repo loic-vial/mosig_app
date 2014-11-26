@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1416923925 "input_output.tex" "input_output.pdf" "input_output" 1416923926
+["pdflatex"] 1417009220 "input_output.tex" "input_output.pdf" "input_output" 1417009221
   "/etc/texmf/web2c/texmf.cnf" 1404943445 1101 af7716885e081ab43982cab7b4672c1a ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1136768653 1328 c834bbb027764024c09d3d2bf908b5f0 ""
@@ -55,8 +55,13 @@
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1413448314 3836167 7c5c777acd7747f1efb2349aeb8d0bdb ""
   "architecture_device.png" 1416922921 42058 31ac0b3b704996522dadf74f35ebc098 ""
   "computer_layout.png" 1416923231 14358 b8098b55b812e1eb75bf63cf17e377b2 ""
-  "input_output.aux" 1416923926 233 23a0fabdbe7d6d97f1cf3ed9a29dbc79 ""
-  "input_output.tex" 1416923925 2187 7592be028e873abcecedfd003f1fb4b3 ""
+  "dma.png" 1416927583 21162 381d32769014c46d327ca1fe657275ef ""
+  "input_output.aux" 1417009221 861 06acc60315f175f8aaf4837195045f21 ""
+  "input_output.tex" 1417009220 5267 b7b89d6e1dc54ea977848d63020f45fe ""
+  "interrupt.png" 1416925796 23016 dcef54b9e9e77befd5a0b84278a4f185 ""
+  "poll.png" 1416925770 20072 d83be7664d1593c45434664f422428ef ""
+  "resources_wasted.png" 1416925770 25155 6e0d6081841fbf3a43d010158635d0f4 ""
+  "user_interface.png" 1416927444 78541 f943f7e39f78d3aaf330b079b87a215b ""
   (generated)
   "input_output.log"
   "input_output.pdf"

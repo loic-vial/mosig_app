@@ -104,8 +104,8 @@ The OS would rather handle generic periphericals: for instance, a storage device
 
 Along with two properties :
 \begin{itemize}
-  \item read(int num_block, void *result);
-  \item write(int num_block, void *result);
+  \item read(int num\_block, void *result);
+  \item write(int num\_block, void *result);
 \end{itemize}
 
 A driver is a piece of the OS that provides that kind of abstraction for a specific device type.
@@ -160,7 +160,7 @@ Now the device has the capacity to raise an interrupt (typically at request comp
 
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{interrupts.png}
+    \includegraphics[width=0.8\textwidth]{interrupt.png}
     \label{fig:}
   \end{center}
 \end{figure}
@@ -169,14 +169,38 @@ Issues : The CPU is not used efficiently during the copy.
 
 \subsection{Use DMA}
 
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.65\textwidth]{dma.png}
+    \caption{DMA}
+    \label{fig:}
+  \end{center}
+\end{figure}
+
 DMA stands for Direct Memory Access, it has to be handled both by :
 \begin{itemize}
   \item the memory controller
   \item the device
 \end{itemize}
 
-It let a device exchange data blocks with the memory without the need of the CPU
+It let a device exchange data blocks with the memory without the need of the CPU.
+The CPU just has to initiate the access.
 
 
+DMA is used for fast devices :
+\begin{itemize}
+  \item hard disks
+  \item CD Roms
+  \item graphic accelerator
+\end{itemize}
+
+\section{Up to the user interface}
+
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=\textwidth]{user_interface.png}
+    \label{fig:}
+  \end{center}
+\end{figure}
 
 \end{document}
