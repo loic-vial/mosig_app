@@ -296,13 +296,79 @@ Consider the length of the optimal solution : We chose to
 
 \subsection{Depth First Search of the tree}
 
-\begin{tikzpicture}[auto,main node/.style={circle,draw=blue!80,minimum size=0.4cm,inner sep=0pt,thick}]
-	\node[main node] (first) at (0,3.5) { };
-	\node[main node] (second) at (4,3.5) { }
-	edge node [above] {c} (first);
-	\node[main node] (third) at (2,0) { }
-	edge node [left] {a} (first) 	
-	edge node [right] {b} (second) ;
 
-\end{tikzpicture}
+
+
+\subsection{RICHARD}
+
+The optimal solution:
+
+The weights of the edges of our graph are distances. For any 3 nodes there is 
+always a direct route between the 2\up{nd} and 3\up{rd} nodes that is inferior or equal to the path 2-1-3. E.g. on figures
+\ref{fig:gencase} and \ref{fig:worstcase}.
+
+\begin{figure}[ht]
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\centering
+		\begin{tikzpicture}[auto,main node/.style={circle,draw=blue!80,minimum size=0.4cm,inner sep=0pt,thick}]
+			\node[main node,label=left:2] (first) at (0,3.5) { };
+			\node[main node,label=right:3] (second) at (4,3.5) { }
+			edge node [above] {c} (first);
+			\node[main node,label=below:1] (third) at (2,0) { }
+			edge node [left] {a} (first) 	
+			edge node [right] {b} (second) ;
+		\end{tikzpicture}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.4\textwidth}
+		$
+		c^2 = a^2 + b^2 -2ab\cos(\theta) < (a + b)^2
+		$
+		\vspace{2cm}
+	\end{subfigure}
+	\caption{General Case}
+	\label{fig:gencase}
+\end{figure}
+
+
+\begin{figure}[ht]
+	\centering
+	\begin{tabular}{m{7cm}m{4cm}}
+		\begin{tikzpicture}[auto,main node/.style={circle,draw=blue!80,minimum size=0.4cm,inner sep=0pt,thick}]
+			\node[main node,label=left:2] (first) at (0,0) { };
+			\node[main node,label=below:3] (second) at (2,0) { }
+			edge node [above] {a} (first);
+			\node[main node,label=right:1] (third) at (4,0) { }
+			edge node [above] {b} (second) ;
+		\end{tikzpicture}
+		&
+		$c = a + b$
+	\end{tabular}
+		\caption{Worst Case}
+	\label{fig:worstcase}
+\end{figure}
+
+Therefore, the optimal route will never use edges twice.
+(For the worst case of aligned nodes, it could, but we may as well just propose a 
+direct path be 2 and 3.) The optimal route will use the (n-1) shortest edges to visit n nodes. \label{ref1}
+
+\subsubsection{Proof that a pure MST-based solution is a 2-approximation}
+In general, to visit all nodes of a tree, parent nodes will have to be visited more that once: once for each child node. This means that the parent-child edges will each have to be traversed twice: once on the way down and once on the way back to the parent node (unless you start at or below the child node).
+
+\begin{enumerate}[label=•]
+	\item The best case is to start at a leaf node such that the first branch need only be traversed once - on the way up. (The final branch will also only need to be traversed once - on the way down.)
+
+	\item The worst case is to start at the root node. In this case, all branches will need to be traversed twice except for the final branch.
+\end{enumerate}
+
+For a tree where each node has at least two children, the final branch will only be of length one. In this case, starting at the root node will lead to a depth-wise search of the tree taking ($2n-1$) moves.
+
+From \ref{ref1} we know that, in the optimal case, visiting each node would take ($n-1$) moves.
+
+Therefore
+\begin{equation}
+	\alpha = \frac{C}{C^*} \leq \frac{2n-1}{n-1} = 2 + \frac{1}{n-1} \underset{n\to\infty}{\longrightarrow} 2
+	\label{eq:1}
+\end{equation}
+
 \end{document}

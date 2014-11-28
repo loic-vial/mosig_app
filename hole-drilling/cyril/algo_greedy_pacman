@@ -1,0 +1,37 @@
+/**
+ * Let's suppose :
+ *	the starting point is (x0, y0)
+ *	there are N holes to drill, their positions denoted by (xi, yi) 
+ *	There is no need to go back to the starting point.
+ *	The starting point is modelised by a node
+ */
+
+struct Node is:
+	int x, y
+	bool visited
+
+holes : array of Nodes
+
+/* The head is initially at (x0, y0) */
+hole_drilling() is:
+	current = holes[0] // start with the starting point
+	nb_drilled = 0
+	while (nb_drilled != len(holes)-1) do:
+		current.visited = true
+		min_distance = +infinite
+		for i in 0..len(holes) do:
+			if holes[i].visited:
+				continue
+
+			d = distance(current, holes[i])
+			if d < min_distance:
+				min_distance = d
+				next_node = holes[i]
+		done
+
+		move head from current to next_node
+		current = next_node
+		drill current
+		nb_drilled++
+	done
+end
