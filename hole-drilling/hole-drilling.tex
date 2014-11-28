@@ -280,15 +280,13 @@ We have two differents, greedy algorithms that allow us to compute the MST : Pri
 
 \subsection{Depth First Search of the tree}
 
-\begin{tikzpicture}[main node/.style={circle,fill=black!100,draw,minimum size=0.2cm,inner sep=0pt}]
+\begin{tikzpicture}[auto,main node/.style={circle,draw=blue!80,minimum size=0.4cm,inner sep=0pt,thick}]
 	\node[main node] (first) at (0,3.5) { };
-	\node[main node] (second) at (4,3.5) { };
-	\node[main node] (third) at (2,0) { };
-	\draw[-] (first) -- (second);
-	\draw[-] (first) -- (third);
-	\draw[-] (second) -- (third);
-	%\node[main node] (critical) [below=of waiting] at (1,0) { };
-
+	\node[main node] (second) at (4,3.5) { }
+	edge node [above] {c} (first);
+	\node[main node] (third) at (2,0) { }
+	edge node [left] {a} (first) 	
+	edge node [right] {b} (second) ;
 
 \end{tikzpicture}
 \end{document}
