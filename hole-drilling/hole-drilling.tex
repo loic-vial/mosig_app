@@ -264,9 +264,15 @@ We have two differents, greedy algorithms that allow us to compute the MST : Pri
 
 Then, We have our MST : Since it is a tree, we can decide that the closest vertex to the drill is the tree's root.
 Now, we can compute a Depth-First Search in this tree, where we will visit first the most left child, then the second most... .
-During this search, we mark the nodes as visited and we add their coordinates in a linked list.
+During this search, we mark the nodes as visited and we add their coordinates in a linked list. If we visit a node twice (when we reach a leaf and we go back to the parent for instance), the node is marked, so we don't add the node in the list twice.
+
+Finally, Since all the nodes will be visited with the Depth First Search, all holes will be added to the linked list, and the Drill will just have to follow the coordinates inside the list.
 
 \subsubsection{Proof that it is a 2-approximation}
+
+Let's first show that the optimal solution is greater than the sum of all the edges' lengths of the MST :
+
+Consider the length of the optimal solution : We chose to
 
 
 \subsection{Luan's algorithm}

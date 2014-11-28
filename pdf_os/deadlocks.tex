@@ -244,6 +244,13 @@ So now we get again :
 
 Running time of the safe state algorithm is $n^2*m$ where n is the number of threads and m the number of resource types $=>$ Costly, repeated for each allocation request.
 
+
+Global method : you compare the available vector with the needs vectors.
+If there is any need vector which is lower than available, the threads order will start with this one, and will release his allocated resources.
+Therefore, Thread order += Thread X and Available += Allocation of X
+Then, you repeat until all threads are ordered or when you are stuck.
+All states will be safe or one won't be.
+
 \section{Detecting Deadlocks vs Preventing them}
 
 Let run the system without doing anything and look for a deadlock periodically.
