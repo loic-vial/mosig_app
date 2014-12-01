@@ -1,10 +1,13 @@
-Let's consider the following graph : (starting point is S)
-
-S   O   O   O   O (N nodes, each seperated by a distance d)
- 
- 
- 
-O (1 nodes, seperated from the top by a distance h > d)
+Let's consider the following graph :
+	Starting point is S
+	O are other nodes
+-------------------------------------------------------------
+|S   O   O   O   O (N nodes, each seperated by a distance d)|
+|                                                           |
+|                                                           |
+|                                                           |
+|O (1 node, seperated from the top by a distance h > d)     |
+-------------------------------------------------------------
 
 Greedy algorithm : distance_greedy = N*d + sqrt(N^2*d^2 + h^2)
 
