@@ -350,6 +350,20 @@ end
 \end{lstlisting}
 
 \subsection{Proof that Pac-Man is not optimal}
+Let's consider the following example :\\
+\textbf{Some figure needed}\\
+
+The distance obtained with the Greedy algorithm (in red) would be :
+$d_{greedy} = Nd + \sqrt{N^2 d^2 + h^2}$.\\
+On the other hand, another path (in blue) would give the distance :
+$d_{path} = h + \sqrt{h^2 + d^2} + (N-1) d$\\
+The difference of the two is :
+$d_{greedy} - d_{path} = d + \sqrt{N^2 d^2 + h^2} - h - \sqrt{h^2 + d^2}$\\
+
+Let's take the following values : $N = 10$, $d = 1$, and $h = 3$.
+Then the value of the difference is : $d_{greedy} - d_{path} \simeq 5.28 > 0$, 
+so there exists a path shorter than the greedy path.
+Thus, Pac-Man is not optimal.
 
 \section{Minimal spanning tree algorithm}
 
