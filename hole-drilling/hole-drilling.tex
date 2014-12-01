@@ -349,13 +349,57 @@ hole_drilling() is:
 end
 \end{lstlisting}
 
+\newpage
 \subsection{Proof that Pac-Man is not optimal}
-Let's consider the following example :\\
-\textbf{Some figure needed}\\
+Let's consider the following example : ($h > d$)\\
+\begin{figure}[ht]
+	\centering
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\begin{tikzpicture}[auto,
+							main node/.style={circle,draw=blue!80,minimum size=0.4cm,inner sep=0pt,thick},
+							start node/.style={circle,draw=red!80,minimum size=0.4cm,inner sep=0pt,thick}]
+			\node[main node] (h) at (0,0) { };
+			\node[start node,label=left:Start] (n1) at (0,2) { };
+			\node[main node] (n2) at (1,2) { }
+			edge node {d} (n1);
+			\node[main node] (n3) at (2,2) { }
+			edge node {} (n2);
+			\node[main node] (n4) at (3,2) { }
+			edge node {} (n3);
+			\node[main node] (n5) at (4,2) { }
+			edge node {} (n4);
+			\node[main node] (n6) at (5,2) { }
+			edge node {} (n5)
+			edge node {} (h);
+		\end{tikzpicture}
+	\end{subfigure}
+	\hspace{0.05\textwidth}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\begin{tikzpicture}[auto,
+							main node/.style={circle,draw=blue!80,minimum size=0.4cm,inner sep=0pt,thick},
+							start node/.style={circle,draw=red!80,minimum size=0.4cm,inner sep=0pt,thick}]
+			\node[main node] (h) at (0,0) { };
+			\node[start node,label=left:Start] (n1) at (0,2) { }
+			edge node [left] {h} (h);
+			\node[main node] (n2) at (1,2) { }
+			edge node {} (h);
+			\node[main node] (n3) at (2,2) { }
+			edge node {d} (n2);
+			\node[main node] (n4) at (3,2) { }
+			edge node {} (n3);
+			\node[main node] (n5) at (4,2) { }
+			edge node {} (n4);
+			\node[main node] (n6) at (5,2) { }
+			edge node {} (n5);
+		\end{tikzpicture}
+	\end{subfigure}
+\end{figure}
 
-The distance obtained with the Greedy algorithm (in red) would be :
+The distance obtained with the Greedy algorithm (on the left) would be :
 $d_{greedy} = Nd + \sqrt{N^2 d^2 + h^2}$.\\
-On the other hand, another path (in blue) would give the distance :
+On the other hand, another path (on the right) would give the distance :
 $d_{path} = h + \sqrt{h^2 + d^2} + (N-1) d$\\
 The difference of the two is :
 $d_{greedy} - d_{path} = d + \sqrt{N^2 d^2 + h^2} - h - \sqrt{h^2 + d^2}$\\
@@ -513,53 +557,5 @@ Therefore
 	\label{eq:1}
 \end{equation}
 
-
-
-\subsubsection{FOR CYRIL}
-
-\begin{figure}[ht]
-	\centering
-	\begin{subfigure}[b]{0.4\textwidth}
-		\centering
-		\begin{tikzpicture}[auto,
-							main node/.style={circle,draw=blue!80,minimum size=0.4cm,inner sep=0pt,thick},
-							start node/.style={circle,draw=red!80,minimum size=0.4cm,inner sep=0pt,thick}]
-			\node[main node] (h) at (0,0) { };
-			\node[start node,label=left:Start] (n1) at (0,2) { };
-			\node[main node] (n2) at (1,2) { }
-			edge node {d} (n1);
-			\node[main node] (n3) at (2,2) { }
-			edge node {} (n2);
-			\node[main node] (n4) at (3,2) { }
-			edge node {} (n3);
-			\node[main node] (n5) at (4,2) { }
-			edge node {} (n4);
-			\node[main node] (n6) at (5,2) { }
-			edge node {} (n5)
-			edge node {} (h);
-		\end{tikzpicture}
-	\end{subfigure}
-	\hspace{0.05\textwidth}
-	\begin{subfigure}[b]{0.4\textwidth}
-		\centering
-		\begin{tikzpicture}[auto,
-							main node/.style={circle,draw=blue!80,minimum size=0.4cm,inner sep=0pt,thick},
-							start node/.style={circle,draw=red!80,minimum size=0.4cm,inner sep=0pt,thick}]
-			\node[main node] (h) at (0,0) { };
-			\node[start node,label=left:Start] (n1) at (0,2) { }
-			edge node [left] {h} (h);
-			\node[main node] (n2) at (1,2) { }
-			edge node {} (h);
-			\node[main node] (n3) at (2,2) { }
-			edge node {d} (n2);
-			\node[main node] (n4) at (3,2) { }
-			edge node {} (n3);
-			\node[main node] (n5) at (4,2) { }
-			edge node {} (n4);
-			\node[main node] (n6) at (5,2) { }
-			edge node {} (n5);
-		\end{tikzpicture}
-	\end{subfigure}
-\end{figure}
 
 \end{document}
