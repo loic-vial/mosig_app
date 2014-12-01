@@ -426,6 +426,63 @@ During this search, we mark the nodes as visited and we add their coordinates in
 
 Finally, Since all the nodes will be visited with the Depth First Search, all holes will be added to the linked list, and the Drill will just have to follow the coordinates inside the list.
 
+\subsubsection{Computing the Minimum Spanning Tree}
+
+Here is Prim's algorithm in pseudo-code :
+
+\begin{lstlisting}
+  Given a graph, G, with edges E of the form (v1, v2) and vertices V
+
+dist : array of distances from the source to each vertex
+edges: array indicating, for a given vertex, which vertex in the tree it 
+       is closest to
+i    : loop index
+F    : list of finished vertices
+U    : list or heap unfinished vertices
+
+/* Initialization: set every distance to INFINITY until we discover a way to
+link a vertex to the spanning tree */
+for i = 0 to |V| - 1
+    dist[i] = INFINITY
+    edge[i] = NULL
+end
+
+pick a vertex, s, to be the seed for the minimum spanning tree
+
+/* Since no edge is needed to add s to the minimum spanning tree, its distance
+from the tree is 0 */
+dist[s] = 0
+
+
+while(F is missing a vertex)
+   pick the vertex, v, in U with the shortest edge to the group of vertices in
+       the spanning tree add v to F
+
+   /* this loop looks through every neighbor of v and checks to see if that
+    * neighbor could reach the minimum spanning tree more cheaply through v
+    * than by linking through a previous vertex */
+   for each edge of v, (v1, v2)
+        if(length(v1, v2) < dist[v2])
+            dist[v2] = length(v1, v2)
+            edges[v2] = v1
+            possibly update U, depending on implementation
+        end if
+    end for
+end while
+
+\end{lstlisting}
+This pseudo-code was taken from www.cprogramming.com
+
+Now, let's proove that this algorithm always compute the Minimum Spanning Tree :
+
+
+Let P be a connected, weighted graph. At every iteration of Prim's algorithm, an edge must be found that connects a vertex in a subgraph to a vertex outside the subgraph. Since P is connected, there will always be a path to every vertex. The output Y of Prim's algorithm is a tree, because the edge and vertex added to tree Y are connected. Let Y1 be a minimum spanning tree of graph P. If Y1=Y then Y is a minimum spanning tree. Otherwise, let e be the first edge added during the construction of tree Y that is not in tree Y1, and V be the set of vertices connected by the edges added before edge e. Then one endpoint of edge e is in set V and the other is not. Since tree Y1 is a spanning tree of graph P, there is a path in tree Y1 joining the two endpoints. As one travels along the path, one must encounter an edge f joining a vertex in set V to one that is not in set V. Now, at the iteration when edge e was added to tree Y, edge f could also have been added and it would be added instead of edge e if its weight was less than e, and since edge f was not added, we conclude that
+
+    $w(f) \ge w(e).$
+
+Let tree Y2 be the graph obtained by removing edge f from and adding edge e to tree Y1. It is easy to show that tree Y2 is connected, has the same number of edges as tree Y1, and the total weights of its edges is not larger than that of tree Y1, therefore it is also a minimum spanning tree of graph P and it contains edge e and all the edges added before it during the construction of set V. Repeat the steps above and we will eventually obtain a minimum spanning tree of graph P that is identical to tree Y. This shows Y is a minimum spanning tree.
+
+This proof was taken from the wikipedia page of Prim's Algorithm.
 \subsubsection{Proof that it is a 2-approximation}
 
 Consider first a basic solution, easier than our previous beautiful algorithm:
