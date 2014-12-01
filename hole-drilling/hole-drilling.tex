@@ -420,7 +420,7 @@ Thus, Pac-Man is not optimal.
 
 \subsubsection{Basics}
 We cannot prove that the previous greedy algorithm is a two-approximation or not. Therefore, we consider another way of solving the problem, based on a minimum-spanning tree. With this method, we will be able to have a two-approximation and then assure that our solution is at most twice the optimal.
-\subsubsection{How does it works}
+\subsubsection{How does it work}
 
 The minimum spanning tree is the tree which covers all nodes of the graph and by minimizing the total weight of the tree.
 We have two different greedy algorithms that allow us to compute the MST : Prim's algorithm and Kruskal's algorithm. We chose Prim's Algorithm since it is easier to implement, and has the same complexity as Kruskal's, provided we choose the right structures to store the graph and the tree.
@@ -445,6 +445,9 @@ Let's first show that the optimal solution is greater than the sum of all the ed
 
 Consider the optimal solution : it must go through all the nodes, so it is an hamiltonian path. But it is also a spanning tree, since it covers all the nodes of the graph.
 But we computed the minimal spanning tree, so obviously, the total weight of the optimal solution is greater than the weight of the MST.
+\[
+	\text{Weight}_{Optimal} > \text{Weight}_{MST}
+\]
 
 Let's now prove that our basic solution is not greater than twice the optimal solution, by showing that it is not greater than twice the weight of the MST : we will get the final result thanks to the previous point.
 
@@ -452,15 +455,22 @@ The idea of our basic solution is to compute a Depth First Search in the MST.
 In general, to visit all nodes of a tree, parent nodes will have to be visited more that once: once for each child node. This means that the parent-child edges will each have to be traversed twice: once on the way down and once on the way back to the parent node (unless you start at or below the child node).
 
 In the worst case, you visit all the edges of the MST twice. so  our solution has a upper bound equals to twice the weight of the MST.
+\[
+	\text{Weight}_{Basic \; Algorithm} \leq 2 \times \text{Weight}_{MST}
+\]
+
 Since the weight of the MST is lower than the optimal solution, we have the following result :
 \[
-	\text{The basic algorithm is a 2-approximation of the optimal solution.}
+	\text{Weight}_{Basic \; Algorithm} \leq 2 \times \text{Weight}_{Optimal} \iff \boxed{\frac{\text{Weight}_{Basic \; Algorithm}}{\text{Weight}_{Optimal}} \leq 2}
+\]
+\[
+	\implies \text{The basic algorithm \textbf{is a 2-approximation} of the optimal solution.}
 \]
 
 
 Let's now show that our beautiful algorithm has a lower cost than the basic one. Instead of going up to the parent node and going to the next child as the basic algorithm does, the beautiful one goes directly to the following unvisited node.
 Thanks to the triangular inequality (provided we use the euclidian distance in a euclidian space, which is the case...), we know that the path taken by the beautiful algorithm is shorter than the one taken by the basic one.
-"the shortest path between two points is following the line which goest through those two points".
+``The shortest path between two points is following the line which goes through those two points''.
 
 So, the beautiful algorithm is better than a 2-approximation algorithm, so it is also a 2-approximation of the optimal solution.
 
