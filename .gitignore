@@ -4,3 +4,10 @@
 *.aux
 *.fls
 *.fdb_latexmk
+*.pdf
+*.dot
+*.svg
+*.toc
+*.dSYM
+*.out
+maze
