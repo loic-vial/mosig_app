@@ -165,12 +165,10 @@
 \tableofcontents
 
 \section{Introduction}
-\subsection{The Problem}
-
-\subsection{The assumed algorithm}
 
 
 
+\section{Proof that the currently used algorithm is not an $\alpha$-approximation}
 %%%% DO NOT COPY THIS %%%%%
 %%%% WORST CODE EVER %%%%%%
 \newcommand{\notalphagraph}[1] {
@@ -247,8 +245,6 @@
 			}
 		\end{tikzpicture}
 }
-
-\section{Proof that the currently used algorithm is not an $\alpha$-approximation}
 %%% THIS ONE IS NOT THE BEST TOP TO BOTTOM
 We do not have many informations about the current algorithm. We only know that it starts from the top left corner of the board, and that
 it pierces holes from top to bottom.
@@ -287,7 +283,7 @@ naive algorithm, which means it will be for any naive algorithm.
 Hence, the algorithm is \textbf{not} an $\alpha$-approximation.
 
 
-\begin{figure}
+\begin{figure}[hb]
         \centering
         \begin{subfigure}[b]{0.2\textwidth}
 				\notalphagraph{2}
@@ -309,6 +305,7 @@ Hence, the algorithm is \textbf{not} an $\alpha$-approximation.
 \subsection{Algorithm itself}
 It consists in taking at each iteration the shortest path to an unvisited node.
 
+\begin{minipage}{\linewidth}
 \begin{lstlisting}
 /**
  * Let's suppose :
@@ -348,8 +345,8 @@ hole_drilling() is:
 	done
 end
 \end{lstlisting}
+\end{minipage}
 
-\newpage
 \subsection{Proof that Pac-Man is not optimal}
 Let's consider the following example : ($h > d$)\\
 \begin{figure}[ht]
@@ -398,33 +395,41 @@ Let's consider the following example : ($h > d$)\\
 \end{figure}
 
 The distance obtained with the Greedy algorithm (on the left) would be :
-$d_{greedy} = Nd + \sqrt{N^2 d^2 + h^2}$.\\
+\[
+	d_{greedy} = Nd + \sqrt{N^2 d^2 + h^2}
+\]
+
 On the other hand, another path (on the right) would give the distance :
-$d_{path} = h + \sqrt{h^2 + d^2} + (N-1) d$\\
+\[
+	d_{path} = h + \sqrt{h^2 + d^2} + (N-1) d
+\]
+
 The difference of the two is :
-$d_{greedy} - d_{path} = d + \sqrt{N^2 d^2 + h^2} - h - \sqrt{h^2 + d^2}$\\
+\[
+	d_{greedy} - d_{path} = d + \sqrt{N^2 d^2 + h^2} - h - \sqrt{h^2 + d^2}
+\]
 
 Let's take the following values : $N = 10$, $d = 1$, and $h = 3$.
 Then the value of the difference is : $d_{greedy} - d_{path} \simeq 5.28 > 0$, 
 so there exists a path shorter than the greedy path.
 Thus, Pac-Man is not optimal.
 
-\section{Minimal spanning tree algorithm}
+\section{Minimal spanning tree (MST) algorithm}
 
 \subsection{The Beautiful Algorithm}
 
 \subsubsection{Basics}
 We cannot prove that the previous greedy algorithm is a two-approximation or not. Therefore, we consider another way of solving the problem, based on a minimum-spanning tree. With this method, we will be able to have a two-approximation and then assure that our solution is at most twice the optimal.
-\subsubsection{How does it works}
+\subsubsection{How does it work}
 
-The minimum spanning tree is the tree which covers all nodes of the graph and by minimising the total weigth of the tree.
-We have two differents, greedy algorithms that allow us to compute the MST : Prim's algorithm and Kruskal's algorithm. We chose Prim's Algorithm since it is easier to implement, and has the same complexity as Kruskal's, provided we choose the right structures to store the graph and the tree.
+The minimum spanning tree is the tree which covers all nodes of the graph and by minimizing the total weight of the tree.
+We have two different greedy algorithms that allow us to compute the MST : Prim's algorithm and Kruskal's algorithm. We chose Prim's Algorithm since it is easier to implement, and has the same complexity as Kruskal's, provided we choose the right structures to store the graph and the tree.
 
-Then, We have our MST : Since it is a tree, we can decide that the closest vertex to the drill is the tree's root.
-Now, we can compute a Depth-First Search in this tree, where we will visit first the most left child, then the second most... .
+Then, we have our MST. Since it is a tree, we can decide that the closest vertex to the drill is the tree's root.
+Now, we can compute a Depth-First Search in this tree, where we will visit first the most left child, then the second most \dots 
 During this search, we mark the nodes as visited and we add their coordinates in a linked list. If we visit a node twice (when we reach a leaf and we go back to the parent for instance), the node is marked, so we don't add the node in the list twice.
 
-Finally, Since all the nodes will be visited with the Depth First Search, all holes will be added to the linked list, and the Drill will just have to follow the coordinates inside the list.
+Finally, since all the nodes will be visited with the Depth First Search, all holes will be added to the linked list, and the Drill will just have to follow the coordinates inside the list.
 
 \subsubsection{Computing the Minimum Spanning Tree}
 
@@ -485,60 +490,53 @@ Let tree Y2 be the graph obtained by removing edge f from and adding edge e to t
 This proof was taken from the wikipedia page of Prim's Algorithm.
 \subsubsection{Proof that it is a 2-approximation}
 
-Consider first a basic solution, easier than our previous beautiful algorithm:
-We no longer mark the nodes, we simply compute the path by following which nodes are visited by the Depth First Search. Each time you visit a leaf, you no longer go to the next marked node (the next leaf if it exists), but you go back to the parent node and then you go to the first child.
-We follow the stack of recursive calls in the Depth First Search basically.
+Consider first a basic solution, easier than our previous beautiful algorithm : we no longer mark the nodes, 
+we simply compute the path by following which nodes are visited by the Depth First Search. Each time you visit a leaf, 
+you no longer go to the next marked node (the next leaf if it exists), but you go back to the parent node and then you 
+go to the first child. We follow the stack of recursive calls in the Depth First Search basically.
 
-We will show that this algorithm is a 2-approximation, to proove that the beautiful algorithm is also a 2-approximation, since it is better than the basic one.
+We will show that this algorithm is a 2-approximation, to prove that the beautiful algorithm 
+is also a 2-approximation, since it is better than the basic one.
 
-Let's first show that the optimal solution is greater than the sum of all the edges' lengths of the MST :
+Let's first show that the optimal solution is greater than the sum of all the edges' lengths of the MST.
 
-Consider the optimal solution : It must go through all the nodes, so it is an hamiltonian path. But it is also a spanning tree, since it covers all the nodes of the graph.
-But we computed the minimal spanning tree, so obviously, the total weigth of the optimal solution is greater than the weight of the MST.
+Consider the optimal solution : it must go through all the nodes, so it is an hamiltonian path. But it is also a spanning tree, since it covers all the nodes of the graph.
+But we computed the minimal spanning tree, so obviously, the total weight of the optimal solution is greater than the weight of the MST.
+\[
+	\text{Weight}_{Optimal} > \text{Weight}_{MST}
+\]
 
-Let's now proove that our basic solution is not greater than twice the optimal solution, by showing that it is not greater than twice the weight of the MST : we will get the final result thanks to the previous point.
+Let's now prove that our basic solution is not greater than twice the optimal solution, by showing that it is not greater than twice the weight of the MST : we will get the final result thanks to the previous point.
 
-The idea of our basic solution is to compute a Depth First Search in the MST :
+The idea of our basic solution is to compute a Depth First Search in the MST.
 In general, to visit all nodes of a tree, parent nodes will have to be visited more that once: once for each child node. This means that the parent-child edges will each have to be traversed twice: once on the way down and once on the way back to the parent node (unless you start at or below the child node).
 
 In the worst case, you visit all the edges of the MST twice. so  our solution has a upper bound equals to twice the weight of the MST.
+\[
+	\text{Weight}_{Basic \; Algorithm} \leq 2 \times \text{Weight}_{MST}
+\]
+
 Since the weight of the MST is lower than the optimal solution, we have the following result :
+\[
+	\text{Weight}_{Basic \; Algorithm} \leq 2 \times \text{Weight}_{Optimal} \iff \boxed{\frac{\text{Weight}_{Basic \; Algorithm}}{\text{Weight}_{Optimal}} \leq 2}
+\]
+\[
+	\implies \text{The basic algorithm \textbf{is a 2-approximation} of the optimal solution.}
+\]
 
-The basic algorithm is a 2-approximation of the optimal solution.
 
-
-Let's now show that our beautiful algorithm has a lower cost than the basic one :
-
-Instead of going up to the parent node and going to the next child as the basic algorithm does, the beautiful one goes directly to the following unvisited node.
+Let's now show that our beautiful algorithm has a lower cost than the basic one. Instead of going up to the parent node and going to the next child as the basic algorithm does, the beautiful one goes directly to the following unvisited node.
 Thanks to the triangular inequality (provided we use the euclidian distance in a euclidian space, which is the case...), we know that the path taken by the beautiful algorithm is shorter than the one taken by the basic one.
-"the shortest path between two points is following the line which goest through those two points".
+``The shortest path between two points is following the line which goes through those two points''.
 
 So, the beautiful algorithm is better than a 2-approximation algorithm, so it is also a 2-approximation of the optimal solution.
 
 
 
 
-\subsection{Luan's algorithm}
-
-\subsubsection{Proof that Luan's algorithm is a 2-approximation}
-
-
-\subsection{Re-visiting the greedy algorithm}
-% argue that Lua's algorithm is the same as the greedy algorithm
-% and that, therefore, the greedy algo is a 2-approx
-
-% propose the new greedy algo
 
 
 \section{Conclusion}
-
-
-
-\subsection{Computing the Minimum Spanning Tree}
-
-
-\subsection{Depth First Search of the tree}
-
 
 
 
