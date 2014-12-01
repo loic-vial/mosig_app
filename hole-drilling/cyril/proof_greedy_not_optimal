@@ -1,0 +1,30 @@
+Let's consider the following graph : (starting point is S)
+
+S   O   O   O   O (N nodes, each seperated by a distance d)
+ 
+ 
+ 
+O (1 nodes, seperated from the top by a distance h > d)
+
+Greedy algorithm : distance_greedy = N*d + sqrt(N^2*d^2 + h^2)
+
+O---O---O---O---O
+               /
+  -------------
+ /
+O
+
+Optimal algorithm : distance_opt = h + sqrt(h^2 + d^2) + (N-1) * d
+
+O   O---O---O---O
+|  /
+| /
+|/
+O
+
+distance_greedy - distance_opt = d - h + sqrt(N^2 * d^2 + h^2) - sqrt(h^2 + d^2)
+
+Let's take the following example : d = 1, h = 3, N = 10.
+Then : d_greedy - d_opt ~= 5.28 > 0
+
+So in this particular example, greedy is not optimal. So greedy is not optimal.
