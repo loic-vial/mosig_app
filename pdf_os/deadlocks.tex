@@ -72,7 +72,7 @@ In general, a deadlock is a situation in which each thread in a set of threads h
 It is only possible if :
 \begin{itemize}
   \item mutual exclusion : a resource held by a thread cannot be acquired by another.
-  \item no premption : a resource cannot be taken, even temporarily, from a thread which holds it.
+  \item no preemption : a resource cannot be taken, even temporarily, from a thread which holds it.
   \item hold and wait : all the threads in the set hold at least one resource and wait for another one.
   \item circular wait : t1 waits for t2 to release its resources. t2 waits for t3, t3 waits for t4... tn waits for t1 .
 \end{itemize}
@@ -103,7 +103,7 @@ Model : resources \& threads are vertices of a graph.
 \end{figure}
 
 There is a circular wait in the system if there is a cycle in this graph.
-$=>$ Detecting a deadlock is easy using this graph ( using, for instance, a bellman-ford algorithm).
+$=>$ Detecting a deadlock is easy using this graph (using, for instance, a bellman-ford algorithm).
 
 Another way to use this graph is to perform a cycle detection for each new request and to decide to refuse it if this induces a cycle in the graph.
 This model is not suited if resources are divided into types and if threads ask for one instance of a given resource.
@@ -128,7 +128,7 @@ At first we assume that we know :
   \item a vector Available such that : Available[i] = number of instances of resources i that are available.
   \item a matrix Allocation such that : Allocation[i][j] = number of resources of type i allocated to thread j.
   \item a matrix Max such that : Max[i][j] = maximal number of resources of type i the thread j will need.
-  \item a matrix Need such that : Nedd[i][j] = Max[i][j] - Allocation[i][j]
+  \item a matrix Need such that : Need[i][j] = Max[i][j] - Allocation[i][j]
 \end{itemize}
 
 We will try to find if there is an order that make the execution of all threads possible :
@@ -136,7 +136,7 @@ We will try to find if there is an order that make the execution of all threads 
 \begin{enumerate}
   \item Work = Available
   \item Finished[j] = false for all threads.
-  \item while there is some thread j such that : \\ Finished[j] = false \&\& Noeud[i][j] $\leq$ Work[i] $\forall$, \\then : Work[i] += Allocation[i][j] $\forall$ i ; \\Finished[j] =true;
+  \item while there is some thread j such that : \\ Finished[j] = false \&\& Need[i][j] $\leq$ Work[i] $\forall$ i, \\then : Work[i] += Allocation[i][j] $\forall$ i ; \\Finished[j] =true;
   \item if there is a j such that Finished[j] = false, the system is not in a safe state.
 \end{enumerate}
 
