@@ -197,9 +197,9 @@
 					\draw [fill] ($(\x,\y*\height/\n)$) circle [radius=0.1];
 				}
 			}
-			\draw [blue,middlearrow2={latex},thick] (0,\height) -- (0,0);
-			\draw [blue,middlearrow2={latex},thick] (0,0) -- (\width,0);
-			\draw [blue,middlearrow2={latex},thick] (\width,0) -- (\width,\height);
+			\draw [blue,middlearrow2={latex},thick] (0.05,\height+0.05) -- (0.05,0.05);
+			\draw [blue,middlearrow2={latex},thick] (0.05,0.05) -- (\width+0.05,0.05);
+			\draw [blue,middlearrow2={latex},thick] (\width+0.05,0.05) -- (\width+0.05,\height+0.05);
 		\end{tikzpicture}
 }
 
@@ -221,17 +221,56 @@
 		\end{tikzpicture}
 }
 
+\newcommand{\NotAlphaGraphOnlyRedTwo}[1] {
+	\begin{tikzpicture}[scale=0.7]
+			\def\n{#1}
+			\def\height{6}
+			\def\width{6}
+			\foreach \x in {0,\width} {
+				\foreach \y in {0,2,...,\n} {
+					\draw [fill] ($(\x,\y*\height/\n)$) circle [radius=0.1];
+					\draw [red,middlearrow1={latex},thick] ($(0,\y*\height/\n)$) -- ($(\width,\y*\height/\n)$);
+					\ifnum \y > 0 {
+						\draw [red,middlearrow1={latex},thick] ($(\width,\y*\height/\n)$) -- ($(\width,\y*\height/\n - \height/\n)$);
+						\draw [red,middlearrow1={latex},thick] ($(\width,\y*\height/\n - \height/\n)$) -- ($(0,\y*\height/\n - \height/\n)$);
+						\draw [red,middlearrow1={latex},thick] ($(0,\y*\height/\n - \height/\n)$) -- ($(0,\y*\height/\n - \height/\n - \height/\n)$);
+					} \else
+					\fi
+				}
+			}
+			\draw [red,middlearrow1={latex},thick] (0,0) -- (\width,0);
+
+			\foreach \x in {0,\width} {
+				\foreach \y in {0,...,\n} {
+					\draw [fill] ($(\x,\y*\height/\n)$) circle [radius=0.1];
+				}
+			}
+		\end{tikzpicture}
+}
+
 \section{Proof that the currently used algorithm is not an $\alpha$-approximation}
 %%% THIS ONE IS NOT THE BEST TOP TO BOTTOM
 We do not have many informations about the current algorithm. We only know that it starts from the top left corner of the board, and that
 it pierces holes from top to bottom.
 
-We assume that the algorithm makes paths that go from left to right, and then from top to bottom.
+Many algorithms could do that, but as we can see on the
+figures \ref{fig:naive} and \ref{fig:bestnaive}, some are better than others. We will use the latter one.
 
 \begin{figure}[h!]
 	\centering
-	\notAlphaGraphOnlyRed{3}
-	\caption{Path that we would obtain with the algorithm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\notAlphaGraphOnlyRed{4}
+		\caption{Path that we would obtain with a naive algorithm}
+		\label{fig:naive}
+	\end{subfigure}
+	\hspace{0.05\textwidth}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\NotAlphaGraphOnlyRedTwo{4}
+		\caption{Path that we would obtain with the best naive algorithm}
+		\label{fig:bestnaive}
+	\end{subfigure}
 \end{figure}
 
 We may now wonder whether this algorithm is an $\alpha$-approximation or not. If this was the case, we would be able to find $\alpha$ such that
@@ -242,7 +281,8 @@ We may now wonder whether this algorithm is an $\alpha$-approximation or not. If
 Let's look at the figure \ref{fig:counter-example}. The optimal solution is drawn in \textcolor{myblue}{blue}, while the algorithm's one
 is in \textcolor{myred}{red}. We can see that, in such a configuration, the number of points to drill doesn't change the length of the
 optimal path. However, the more points we have, the longer the red path will be. With an infinite number of points, the red path
-is theoretically infinite. Which means that it is impossible to define $\alpha$ for such an algorithm.
+is theoretically infinite. Which means that it is impossible to define $\alpha$ for such an algorithm. Besides, this is the case for the best
+naive algorithm, which means it will be for any naive algorithm.
 
 Hence, the algorithm is \textbf{not} an $\alpha$-approximation.
 
