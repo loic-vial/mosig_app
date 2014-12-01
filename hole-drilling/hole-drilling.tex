@@ -270,9 +270,37 @@ Finally, Since all the nodes will be visited with the Depth First Search, all ho
 
 \subsubsection{Proof that it is a 2-approximation}
 
+Consider first a basic solution, easier than our previous beautiful algorithm:
+We no longer mark the nodes, we simply compute the path by following which nodes are visited by the Depth First Search. Each time you visit a leaf, you no longer go to the next marked node (the next leaf if it exists), but you go back to the parent node and then you go to the first child.
+We follow the stack of recursive calls in the Depth First Search basically.
+
+We will show that this algorithm is a 2-approximation, to proove that the beautiful algorithm is also a 2-approximation, since it is better than the basic one.
+
 Let's first show that the optimal solution is greater than the sum of all the edges' lengths of the MST :
 
-Consider the length of the optimal solution : We chose to
+Consider the optimal solution : It must goes through all the nodes, so it is an hamiltonian path. But it is also a spanning tree, since it covers all the nodes of the graph.
+But we computed the minimal spanning tree, so obviously, the total weigth of the optimal solution is greater than the weight of the MST.
+
+Let's now proove that our basic solution is not greater than twice the optimal solution, by showing that it is not greater than twice the weight of the MST : we will get the final result thanks to the previous point.
+
+The idea of our basic solution is to compute a Depth First Search in the MST :
+In general, to visit all nodes of a tree, parent nodes will have to be visited more that once: once for each child node. This means that the parent-child edges will each have to be traversed twice: once on the way down and once on the way back to the parent node (unless you start at or below the child node).
+
+In the worst case, you visit all the edges of the MST twice. so  our solution has a upper bound equals to twice the weight of the MST.
+Since the weight of the MST is lower than the optimal solution, we have the following result :
+
+The basic algorithm is a 2-approximation of the optimal solution.
+
+
+Let's now show that our beautiful algorithm has a lower cost than the basic one :
+
+Instead of going up to the parent node and going to the next child as the basic algorithm does, the beautiful one goes directly to the following unvisited node.
+Thanks to the triangular inequality (provided we use the euclidian distance in a euclidian space, which is the case...), we know that the path taken by the beautiful algorithm is shorter than the one taken by the basic one.
+"the shortest path between two points is following the line which goest through those two points".
+
+So, the beautiful algorithm is better than a 2-approximation algorithm, so it is also a 2-approximation of the optimal solution.
+
+
 
 
 \subsection{Luan's algorithm}
