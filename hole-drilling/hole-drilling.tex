@@ -165,8 +165,43 @@
 \tableofcontents
 
 \section{Introduction}
+\subsection{The Problem}
+Let's consider some plane material, on which holes have to be drilled. For this
+purpose, a hole driller can be used: it can move on both x and y axis: the
+problem is to design an algorithm that will lead the hole driller to every holes
+following a path.
 
+For this study, it's assumed that the hole driller starts at a random location,
+and thus it does not have to go back again to the starting point after it has
+finished drilling.
 
+Let's associate to each hole their 2D coordinates; the starting point also
+has 2D coordinates $(x_0, y_0)$.
+This problem can then be modelised by a graph $G = (V, E)$, where:
+\begin{itemize}
+	\item $V = \{holes\} \cup \{(x_0, y_0)\}$
+	\item $E = \{(v_i, v_j)$ s.t. $v_i, v_j \in V\}$
+\end{itemize}
+
+To each edge $e_{ij}$, let's associate a weight: $w_{ij} = d(V_i, V_j)$, where
+$d$ is the 2D euclidian distance. As a result, thanks to the properties of the
+euclidian distance, it is known that:
+\begin{itemize}
+	\item $\forall i, j~w_{ij} \geq 0$
+	\item $\forall i, j$ if $w_{ij} = 0$ then $v_i$ and $v_j$ are in the same
+		location.
+	\item $\forall i, j, k~w_{ij} + w_{jk} \geq w_{ik}$.
+\end{itemize}
+
+In particular, the last inequality, known as the triangular inequality, will be
+useful later.
+
+\subsection{The assumed algorithm}
+Fortunately (or not?) we do not start from scratch. An internship has already
+designed an algorithm, but he forgot to give us his code. What is sure, is that
+the hole driller always go from top to bottom.
+
+This algorithm will be referred later as the `naive' algorithm.
 
 \section{Proof that the currently used algorithm is not an $\alpha$-approximation}
 %%%% DO NOT COPY THIS %%%%%
