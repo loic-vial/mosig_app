@@ -373,7 +373,7 @@ flag[1]= false ; flag[2] = false
 
 turn= 1 or 2
 
-\begin{tabular}{|cc|}
+\begin{tabular}{|ll|}
 \hline
 	flag[1] = true & flag[2] = true\\
 	Thread 1 & Thread 2 \\
@@ -395,7 +395,7 @@ It can be extended to N threads but it is not efficient in practice (because of 
 
 lock = 0
 
-\begin{tabular}{|cc|}
+\begin{tabular}{|ll|}
 \hline
 	Thread 1 & Thread 2 \\
 	while(test\_and\_set(\&lock,1))\{\} & while(test\_and\_set(\&lock,1))\{\}\\
