@@ -73,8 +73,9 @@ Other solutions :
   \begin{center}
 size\\buffer\\head
 
-      \begin{tabular}{c|c}
+      \begin{tabular}{l|l}
         Producer & Consumer\\
+		\hline
         while(size==N) {} & while(size==0) {}\\
         buffer[(head+size)\%N]= object & result = buffer[head]\\
          & head=(head+1)\%N \\        
@@ -94,8 +95,9 @@ So we get :
 \begin{center}
 tail\\buffer\\head
 
-      \begin{tabular}{c|c}
+      \begin{tabular}{l|l}
         Producer & Consumer\\
+		\hline
         while((tail+1)\%N==head) {} & while(head==tail) {}\\
         buffer[tail]= object & result = buffer[head]\\
         tail = (tail+1)\%N & head=(head+1)\%N \\        
