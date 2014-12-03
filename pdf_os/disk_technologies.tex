@@ -75,12 +75,53 @@
 
 \begin{document}
 \maketitle
-\tableofcontents
-\include{threads}
-\include{synchronization}
-\include{deadlocks}
-\include{synchronization_without_locks}
-\include{input_output}
-\include{io_scheduling}
+
+%\chapter{Disk Technologies & their impact on OS}
+
+\section{RAID}
+
+Redundant Array of Inexpensive Disks is made of several ordinary disks assembled into one logical larger disk. The objective might be to improve :
+\begin{itemize}
+  \item performances
+  \item reliability
+  \item both
+\end{itemize}
+
+\subsection{RAID 0}
+
+Also called striping, aims at improving performances.
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{raid_0.png}
+    \caption{}
+  \end{center}
+\end{figure}
+
+A logical disk in which block n is the block $(n/#disks)$ of disk $(n % #disks)$
+
+Actually the logical disk is divided into chunks which might be larger than the physical block
+
+Also called striping, aims at improving performances.
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{raid_0_chunks.png}
+    \caption{}
+  \end{center}
+\end{figure}
+
+Advantages :
+
+\begin{itemize}
+  \item for large sequential accesses, requests can be issued in parallel on all the disks
+  \item some random accesses might be issued in parallel, if they are related to chunks on different disks.
+  \item $=>$ Increased Bandwith.
+\end{itemize}
+
+Drawbacks :
+
+\begin{itemize}
+  \item latency is not improved and might even be degraded
+  \item more prone to failure: the probability of failure of the array is larger than the probability of failure of one of the disk
+\end{itemize}
 
 \end{document}
