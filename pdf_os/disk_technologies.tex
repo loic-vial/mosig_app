@@ -194,7 +194,7 @@ pX contains the parity information computed from chunks X*n, X*n+1, ... , X*n + 
 
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{raid_4.png}
+    \includegraphics[width=0.8\textwidth]{parity_disk.png}
     \caption{}
   \end{center}
 \end{figure}
@@ -219,5 +219,83 @@ Advantages :
   \item in the case of a failure, the failing disk has to be replaced and the array rebuild (long operation)
 \end{itemize}
 
+Drawbacks :
+Small writes : two independant writes to two chunks on different disks cannot be performed in parallel because of the parity disk.
+
+\subsection{RAID 5}
+
+Like RAID 4, except that the parity chunk is stored in a cyclic manner on all the disks.
+
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{raid_5.png}
+    \caption{}
+  \end{center}
+\end{figure}
+
+The parity information for stripe X is stored on disk $(X/n)\%n$.
+So for chunk C, it is stored on disk $(X/n(n-1))\%n$.
+
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{parity_disk_raid_5.png}
+    \caption{}
+  \end{center}
+\end{figure}
+
+Advantages :
+
+\begin{itemize}
+  \item identical to the ones of RAID 4.
+  \item the small writes issue is lessened because some independant write can be issued in parallel.
+\end{itemize}
+
+Exemple:
+
+\begin{itemize}
+  \item write
+      \begin{tabular}{|cccc|}
+      \hline
+         1&1&0&0 \\
+         1&0&0&1 \\
+    line
+      \end{tabular}
+to chunk 1. new parity = old data XOR data XOR old parity.
+
+\item write
+      \begin{tabular}{|cccc|}
+      \hline
+         0&0&0&1 \\
+         1&1&1&0 \\
+      \hline
+      \end{tabular}
+to chunk 5. 
+\end{itemize}
+
+\subsection{RAID 6}
+
+Additional redundant information to tolerate the failure of two disks (computed from a polynomial in Gallois' Field).
+
+Drawbacks: Computationally intensive, has to be hardware accelerated.
+
+\subsection{Relationship with the OS}
+
+There is a software implementation of levels 0 to 5 in Linux.
+Built on top of the device mapper.
+
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{relationship_os.png}
+    \caption{}
+  \end{center}
+\end{figure}
+
+As efficient as hardware solution on a regular desktop machine.
+Other implementations are:
+
+\begin{itemize}
+  \item fully in hardware (dedicated cards)
+  \item partially in hardware (eg parity information computed by the processor with intel chipsets)
+\end{itemize}
 
 \end{document}
