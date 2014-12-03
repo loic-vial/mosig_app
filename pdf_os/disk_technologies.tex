@@ -109,7 +109,7 @@ Also called striping, aims at improving performances.
   \end{center}
 \end{figure}
 
-Advantages :
+Advantages:
 
 \begin{itemize}
   \item for large sequential accesses, requests can be issued in parallel on all the disks
@@ -117,7 +117,7 @@ Advantages :
   \item $=>$ Increased Bandwith.
 \end{itemize}
 
-Drawbacks :
+Drawbacks:
 
 \begin{itemize}
   \item latency is not improved and might even be degraded
@@ -128,6 +128,49 @@ Drawbacks :
 
 Also called mirroring, aims at improving reliability and might improve performances.
 
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{raid_1.png}
+    \caption{}
+  \end{center}
+\end{figure}
 
+\begin{itemize}
+  \item Read accesses can be issued to any of the disks
+  \item write accesses are broadcasted in parallel to all the disks
+\end{itemize}
+
+Advantages:
+
+\begin{itemize}
+  \item performance is improved if read accesses are dispatched on several disks (not always implemented)
+  \item can tolerate a number of disks failures of (n-1) (where n is the number of disks)
+\end{itemize}
+
+Drawbacks:
+
+\begin{itemize}
+  \item n*disks capacity results in a logical disk which has the capacity of a single disk. 
+\end{itemize}
+
+\subsection{Hybrid Setups : 0+1, 1+0}
+
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{hybrid_setup.png}
+    \caption{}
+  \end{center}
+\end{figure}
+
+\subsection{RAID 4}
+
+Combines performance and reliability without loosing too much capacity.
+
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{raid_4.png}
+    \caption{}
+  \end{center}
+\end{figure}
 
 \end{document}
