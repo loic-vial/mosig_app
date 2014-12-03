@@ -1,53 +1,4 @@
-\documentclass[a4paper,10pt]{article}
-
-%%%% PRATIQUE POUR LES ALINEAS CHIANTS
-\usepackage{indentfirst}
-
-%%%% POUR L'OPTION LABEL= %%%
-\usepackage{enumitem}
-
-\setlength{\parindent}{30pt}
-\setlength{\parskip}{1ex}
-\setlength{\textwidth}{15cm}
-\setlength{\textheight}{24cm}
-\setlength{\oddsidemargin}{0.2cm}
-\setlength{\evensidemargin}{-.7cm}
-\setlength{\topmargin}{-.5in}
-
-\usepackage{graphicx}
-\usepackage{titling}
-\usepackage{listings}
-\lstset{%
-  basicstyle=\scriptsize\sffamily,%
-  commentstyle=\footnotesize\ttfamily,%
-  frameround=trBL,
-  frame=single,
-  breaklines=true,
-  showstringspaces=false,
-  numbers=left,
-  numberstyle=\tiny,
-  numbersep=10pt,
-  keywordstyle=\bf
-}
-\newcommand{\subtitle}[1]{%
-  \posttitle{%
-    \par\end{center}
-    \begin{center}\large#1\end{center}
-    \vskip0.5em}%
-}
-\title{\textbf{Synchronization}}
-\subtitle{M1 MoSIG : Operating Systems}
-\author{Poupin Pierre \and Rouby Thomas}
-\date{04/11/2014}
-
-\begin{document}
-\maketitle
-%\begin{abstract}
-%This document is our report of the first practical session. It contains our design choices along with the results of our implementation.	
-%\end{abstract}
-
-
-
+\chapter{Synchronization}
 \section{Semaphores}
 
 Proposed by Dijkstra, Semaphores are special counters on which 2 operations are defined :
@@ -242,4 +193,3 @@ Thr monitors support two operations :
 \subsection{Implementation}
 
 Similar to semaphores. Notice that both models are equivalent. It is possible to implement one of them using the other.
-\end{document}
