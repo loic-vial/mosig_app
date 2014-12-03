@@ -1,51 +1,4 @@
-\documentclass[a4paper,10pt]{article}
-
-%%%% PRATIQUE POUR LES ALINEAS CHIANTS
-\usepackage{indentfirst}
-
-%%%% POUR L'OPTION LABEL= %%%
-\usepackage{enumitem}
-
-\setlength{\parindent}{30pt}
-\setlength{\parskip}{1ex}
-\setlength{\textwidth}{15cm}
-\setlength{\textheight}{24cm}
-\setlength{\oddsidemargin}{0.2cm}
-\setlength{\evensidemargin}{-.7cm}
-\setlength{\topmargin}{-.5in}
-
-\usepackage{graphicx}
-\usepackage{titling}
-\usepackage{listings}
-\lstset{%
-  basicstyle=\scriptsize\sffamily,%
-  commentstyle=\footnotesize\ttfamily,%
-  frameround=trBL,
-  frame=single,
-  breaklines=true,
-  showstringspaces=false,
-  numbers=left,
-  numberstyle=\tiny,
-  numbersep=10pt,
-  keywordstyle=\bf
-}
-\newcommand{\subtitle}[1]{%
-  \posttitle{%
-    \par\end{center}
-    \begin{center}\large#1\end{center}
-    \vskip0.5em}%
-}
-\title{\textbf{Threads}}
-\subtitle{M1 MoSIG : Operating Systems}
-\author{Poupin Pierre \and Rouby Thomas}
-\date{04/11/2014}
-
-\begin{document}
-\maketitle
-%\begin{abstract}
-%This document is our report of the first practical session. It contains our design choices along with the results of our implementation.	
-%\end{abstract}
-
+\chapter{Threads}
 
 \section{Introduction}
 
@@ -349,7 +302,7 @@ A critical setion is a part of a program that might be the source of a race cond
 The critical section problem :
 \begin{itemize}
 \item ensure mutual exclusion between critical sections
-\item ensure progression : if some threads wait to enter their critical section and no thread is execution its critical section, one of them should be allowed to enter in a finite time.
+\item ensure progression : if some threads wait to enter their critical section and no thread is executing its critical section, one of them should be allowed to enter in a finite time.
 \item bounded waiting : if some thread wants to enter its critical section, the number of threads that enter before him should be bounded. 
 \end{itemize}
 
@@ -373,7 +326,7 @@ flag[1]= false ; flag[2] = false
 
 turn= 1 or 2
 
-\begin{tabular}{|cc|}
+\begin{tabular}{|ll|}
 \hline
 	flag[1] = true & flag[2] = true\\
 	Thread 1 & Thread 2 \\
@@ -395,7 +348,7 @@ It can be extended to N threads but it is not efficient in practice (because of 
 
 lock = 0
 
-\begin{tabular}{|cc|}
+\begin{tabular}{|ll|}
 \hline
 	Thread 1 & Thread 2 \\
 	while(test\_and\_set(\&lock,1))\{\} & while(test\_and\_set(\&lock,1))\{\}\\
@@ -438,4 +391,3 @@ Is it used ?
 \begin{itemize}
 \item in the kernel, on multiprocessor systems, to synchronize accesses to shared memory
 \end{itemize}
- \end{document}

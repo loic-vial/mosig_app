@@ -165,8 +165,43 @@
 \tableofcontents
 
 \section{Introduction}
+\subsection{The Problem}
+Let's consider some plane material, on which holes have to be drilled. For this
+purpose, a hole driller can be used: it can move on both x and y axis. The
+problem is to design an algorithm that will lead the hole driller to every holes
+following a path.
 
+For this study, it's assumed that the hole driller starts at a random location,
+and thus it does not have to go back again to the starting point after it has
+finished drilling.
 
+Let's associate to each hole their 2D coordinates; the starting point also
+has 2D coordinates $(x_0, y_0)$.
+This problem can then be modeled by a graph $G = (V, E)$, where:
+\begin{itemize}
+	\item $V = \{holes\} \cup \{(x_0, y_0)\}$
+	\item $E = \{(v_i, v_j)$ s.t. $v_i, v_j \in V\}$
+\end{itemize}
+
+To each edge $e_{ij}$, let's associate a weight: $w_{ij} = d(V_i, V_j)$, where
+$d$ is the 2D euclidian distance. As a result, thanks to the properties of the
+euclidian distance, it is known that:
+\begin{itemize}
+	\item $\forall i, j~w_{ij} \geq 0$
+	\item $\forall i, j$ if $w_{ij} = 0$ then $v_i$ and $v_j$ are in the same
+		location.
+	\item $\forall i, j, k~w_{ij} + w_{jk} \geq w_{ik}$.
+\end{itemize}
+
+In particular, the last inequality, known as the triangular inequality, will be
+useful later.
+
+\subsection{The assumed algorithm}
+Fortunately (or not?) we do not start from scratch. An internship has already
+designed an algorithm, but he forgot to give us his code. What is sure, is that
+the hole driller always go from top to bottom.
+
+This algorithm will be referred later as the `naive' algorithm.
 
 \section{Proof that the currently used algorithm is not an $\alpha$-approximation}
 %%%% DO NOT COPY THIS %%%%%
@@ -433,7 +468,7 @@ Finally, since all the nodes will be visited with the Depth First Search, all ho
 
 \subsubsection{Computing the Minimum Spanning Tree}
 
-Here is Prim's algorithm in pseudo-code :
+Here is Prim's algorithm in pseudo-code (taken from www.cprogramming.com) :
 
 \begin{lstlisting}
   Given a graph, G, with edges E of the form (v1, v2) and vertices V
@@ -476,18 +511,34 @@ while(F is missing a vertex)
 end while
 
 \end{lstlisting}
-This pseudo-code was taken from www.cprogramming.com
 
-Now, let's proove that this algorithm always compute the Minimum Spanning Tree :
-
-
-Let P be a connected, weighted graph. At every iteration of Prim's algorithm, an edge must be found that connects a vertex in a subgraph to a vertex outside the subgraph. Since P is connected, there will always be a path to every vertex. The output Y of Prim's algorithm is a tree, because the edge and vertex added to tree Y are connected. Let Y1 be a minimum spanning tree of graph P. If Y1=Y then Y is a minimum spanning tree. Otherwise, let e be the first edge added during the construction of tree Y that is not in tree Y1, and V be the set of vertices connected by the edges added before edge e. Then one endpoint of edge e is in set V and the other is not. Since tree Y1 is a spanning tree of graph P, there is a path in tree Y1 joining the two endpoints. As one travels along the path, one must encounter an edge f joining a vertex in set V to one that is not in set V. Now, at the iteration when edge e was added to tree Y, edge f could also have been added and it would be added instead of edge e if its weight was less than e, and since edge f was not added, we conclude that
-
-    $w(f) \ge w(e).$
-
-Let tree Y2 be the graph obtained by removing edge f from and adding edge e to tree Y1. It is easy to show that tree Y2 is connected, has the same number of edges as tree Y1, and the total weights of its edges is not larger than that of tree Y1, therefore it is also a minimum spanning tree of graph P and it contains edge e and all the edges added before it during the construction of set V. Repeat the steps above and we will eventually obtain a minimum spanning tree of graph P that is identical to tree Y. This shows Y is a minimum spanning tree.
-
+Now, let's prove that this algorithm always compute the Minimum Spanning Tree.
 This proof was taken from the wikipedia page of Prim's Algorithm.
+
+Let $P$ be a connected, weighted graph. At every iteration of Prim's algorithm, an edge must be found that connects a vertex in a subgraph to a 
+vertex outside the subgraph. Since $P$ is connected, there will always be a path to every vertex. The output $Y$ of Prim's algorithm 
+is a tree, because the edge and vertex added to tree $Y$ are connected. 
+
+Let $Y_1$ be a minimum spanning tree of graph $P$. If $Y_1=Y$ then $Y$
+is a minimum spanning tree. Otherwise, let $e$ be the first edge added during the construction of tree $Y$ that is not in tree $Y_1$, 
+and $V$ be the set of vertices connected by the edges added before edge $e$. Then one endpoint of edge $e$ is in set $V$ and the other is not. 
+
+Since tree $Y_1$ is a spanning tree of graph $P$, there is a path in tree $Y_1$ joining the two endpoints. As one travels along the path, 
+one must encounter an edge $f$ joining a vertex in set $V$ to one that is not in set $V$. Now, at the iteration when edge $e$ was added to tree $Y$, 
+edge $f$ could also have been added and it would be added instead of edge $e$ if its weight was less than $e$, and since edge $f$ was 
+not added, we conclude that
+\[
+	w(f) \ge w(e)
+\]
+
+Let tree $Y_2$ be the graph obtained by removing edge $f$ from and adding edge $e$ to tree $Y_1$. It is easy to show that tree $Y_2$ 
+is connected, has the same number of edges as tree $Y_1$, and the total weights of its edges is not larger than that of tree $Y_1$, 
+therefore it is also a minimum spanning tree of graph $P$ and it contains edge $e$ and all the edges added before it during the 
+construction of set $V$. 
+
+Repeat the steps above and we will eventually obtain a minimum spanning tree of graph $P$ that is identical to tree $Y$. 
+This shows $Y$ is a minimum spanning tree.
+
 \subsubsection{Proof that it is a 2-approximation}
 
 Consider first a basic solution, easier than our previous beautiful algorithm : we no longer mark the nodes, 
@@ -538,79 +589,8 @@ So, the beautiful algorithm is better than a 2-approximation algorithm, so it is
 
 \section{Conclusion}
 
+During the development of an efficient algorithm we gradually progressed form a greedy algorithm, to an algorithm that was a two-approximation (a depth-first search of a minimum spanning tree), and then improved upon that two-approximation. We proved via counter example that the greedy algorithm was not optimal. However, we were not able to show that it was an $\alpha$-approximation in all cases. To guarantee the quality of our solution, the basic minimum spanning tree algorithm was devised. Unlike the greedy algorithm, we were able to prove that this was a two-approximation. Whilst we then had guarantees about the quality of the solution, it was again easy to show that improvements could be made. By taking advantage of the triangle inequality we were able to adapt the basic MST algorithm such that it produces a path that must be better than the basic ``depth-first search'' solution.
 
-
-\subsection{RICHARD}
-
-The optimal solution:
-
-The weights of the edges of our graph are distances. For any 3 nodes there is 
-always a direct route between the 2\up{nd} and 3\up{rd} nodes that is inferior or equal to the path 2-1-3. E.g. on figures
-\ref{fig:gencase} and \ref{fig:worstcase}.
-
-\begin{figure}[ht]
-	\centering
-	\begin{subfigure}[b]{0.3\textwidth}
-		\centering
-		\begin{tikzpicture}[auto,main node/.style={circle,draw=blue!80,minimum size=0.4cm,inner sep=0pt,thick}]
-			\node[main node,label=left:2] (first) at (0,3.5) { };
-			\node[main node,label=right:3] (second) at (4,3.5) { }
-			edge node [above] {c} (first);
-			\node[main node,label=below:1] (third) at (2,0) { }
-			edge node [left] {a} (first) 	
-			edge node [right] {b} (second) ;
-		\end{tikzpicture}
-	\end{subfigure}
-	\begin{subfigure}[b]{0.4\textwidth}
-		$
-		c^2 = a^2 + b^2 -2ab\cos(\theta) < (a + b)^2
-		$
-		\vspace{2cm}
-	\end{subfigure}
-	\caption{General Case}
-	\label{fig:gencase}
-\end{figure}
-
-
-\begin{figure}[ht]
-	\centering
-	\begin{tabular}{m{7cm}m{4cm}}
-		\begin{tikzpicture}[auto,main node/.style={circle,draw=blue!80,minimum size=0.4cm,inner sep=0pt,thick}]
-			\node[main node,label=left:2] (first) at (0,0) { };
-			\node[main node,label=below:3] (second) at (2,0) { }
-			edge node [above] {a} (first);
-			\node[main node,label=right:1] (third) at (4,0) { }
-			edge node [above] {b} (second) ;
-		\end{tikzpicture}
-		&
-		$c = a + b$
-	\end{tabular}
-		\caption{Worst Case}
-	\label{fig:worstcase}
-\end{figure}
-
-Therefore, the optimal route will never use edges twice.
-(For the worst case of aligned nodes, it could, but we may as well just propose a 
-direct path be 2 and 3.) The optimal route will use the (n-1) shortest edges to visit n nodes. \label{ref1}
-
-\subsubsection{Proof that a pure MST-based solution is a 2-approximation}
-In general, to visit all nodes of a tree, parent nodes will have to be visited more that once: once for each child node. This means that the parent-child edges will each have to be traversed twice: once on the way down and once on the way back to the parent node (unless you start at or below the child node).
-
-\begin{enumerate}[label=•]
-	\item The best case is to start at a leaf node such that the first branch need only be traversed once - on the way up. (The final branch will also only need to be traversed once - on the way down.)
-
-	\item The worst case is to start at the root node. In this case, all branches will need to be traversed twice except for the final branch.
-\end{enumerate}
-
-For a tree where each node has at least two children, the final branch will only be of length one. In this case, starting at the root node will lead to a depth-wise search of the tree taking ($2n-1$) moves.
-
-From \ref{ref1} we know that, in the optimal case, visiting each node would take ($n-1$) moves.
-
-Therefore
-\begin{equation}
-	\alpha = \frac{C}{C^*} \leq \frac{2n-1}{n-1} = 2 + \frac{1}{n-1} \underset{n\to\infty}{\longrightarrow} 2
-	\label{eq:1}
-\end{equation}
-
+Increasing the time spent searching for a solution, for example searching the entire solution space, would usually result in a better solution than that produced by the simplified, approximate algorithms. However, the complexity of an algorithm searching for the optimal solution would grow exponentially with the number of nodes. Within the bounds of reasonable complexity, the algorithms developed here are guaranteed to produce solutions of known quality. Even if there are better solutions, they could not perform significantly better.
 
 \end{document}
