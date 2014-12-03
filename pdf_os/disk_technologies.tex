@@ -154,13 +154,29 @@ Drawbacks:
 \end{itemize}
 
 \subsection{Hybrid Setups : 0+1, 1+0}
-
+%mettre ça en subfigure,
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{hybrid_setup.png}
+    \includegraphics[width=0.4\textwidth]{0_plus_1.png}
     \caption{}
   \end{center}
 \end{figure}
+
+Characteristics of the 0+1 setup:
+\begin{itemize}
+  \item More efficient than a single disk
+  \item tolerate 1 failure in the worst case
+  \item loss of capacity depends on the number of mirrored disks
+\end{itemize}
+
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.4\textwidth]{1_plus_0.png}
+    \caption{}
+  \end{center}
+\end{figure}
+Characteristics of the 1+0 setup:
+Same as the previous one. 
 
 \subsection{RAID 4}
 
@@ -172,5 +188,36 @@ Combines performance and reliability without loosing too much capacity.
     \caption{}
   \end{center}
 \end{figure}
+
+pO contains the parity information computed from chunks 0,1 and 2.
+pX contains the parity information computed from chunks X*n, X*n+1, ... , X*n + n-1.
+
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{raid_4.png}
+    \caption{}
+  \end{center}
+\end{figure}
+
+Advantages :
+
+\begin{itemize}
+  \item improved bandwith, similar to a RAID 0 setup with n-1 disks.
+  \item tolerates the failure of one disk :
+  \begin{itemize}
+    \item if this is the parity disk :
+    \begin{itemize}
+      \item $=>$ no data loss
+      \item $=>$ performance remains the same
+    \end{itemize}
+    \item otherwise :
+    \begin{itemize}
+      \item lost data can be recomputed : read to all the disk and XOR the results.
+      \item large loss of performance.
+    \end{itemize}
+  \end{itemize}
+  \item in the case of a failure, the failing disk has to be replaced and the array rebuild (long operation)
+\end{itemize}
+
 
 \end{document}
