@@ -228,10 +228,21 @@ Like RAID 4, except that the parity chunk is stored in a cyclic manner on all th
 
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{raid_5.png}
+    %\includegraphics[width=0.8\textwidth]{raid_5.png}
     \caption{}
   \end{center}
 \end{figure}
+
+\begin{table}[h]
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\cline{1-1} \cline{3-3} \cline{5-5} \cline{7-7}
+$P_0$ &  & 0  &  & 1  &  & 2  \\ \cline{1-1} \cline{3-3} \cline{5-5} \cline{7-7} 
+3  &  & $P_1$ &  & 4  &  & 5  \\ \cline{1-1} \cline{3-3} \cline{5-5} \cline{7-7} 
+6  &  & 7  &  & $P_2$ &  & 8  \\ \cline{1-1} \cline{3-3} \cline{5-5} \cline{7-7} 
+9  &  & 10 &  & 11 &  & $P_3$
+\end{tabular}
+\end{table}
+
 
 The parity information for stripe X is stored on disk $(X/n)\%n$.
 So for chunk C, it is stored on disk $(X/n(n-1))\%n$.
@@ -242,6 +253,7 @@ So for chunk C, it is stored on disk $(X/n(n-1))\%n$.
     \caption{}
   \end{center}
 \end{figure}
+
 
 Advantages :
 
