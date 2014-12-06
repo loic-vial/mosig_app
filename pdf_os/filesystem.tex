@@ -1,11 +1,11 @@
-\chapter{File systems}
+\chapter{Filesystems}
 
 \section{Introduction}
 
 The filesystem bridges the gap between :
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{filesystem.png}
+    \includegraphics[width=0.6\textwidth]{filesystem.png}
   \end{center}
 \end{figure}
 
@@ -25,7 +25,7 @@ Is made of :
   \end{center}
 \end{figure}
   
-  Notice : the interface is madi ine a way that prevents cycles (the FS is a tree).
+  Notice : the interface is made in a way that prevents cycles (the FS is a tree).
   
   The user can access to the FS using system calls:
 
@@ -93,15 +93,15 @@ Normal use:
 
 $=>$ File Allocation Table (FAT)
 
- \begin{figure}[h!]
+Still, there are several accesses when randomly accessing to a large file.
+
+$=>$ usually the whole table is cached into memory.
+
+\begin{figure}[h!]
   \begin{center}
     \includegraphics[width=0.8\textwidth]{fat_2.jpg}
   \end{center}
 \end{figure}
-
-Still, there are several accesses when randomly accessing to a large file.
-
-$=>$ usually the whole table is cached into memory.
 
 \subsection{Inodes and allocation tables}
 
@@ -111,7 +111,7 @@ The inode combines:
   \item index of data blocks of the file
 \end{itemize}
 
-Stored on a single block, the size of the index is limited, ex: 12 entries in inodes in ext2
+Stored on a single block, the size of the index is limited, ex: 12 entries in inodes in ext2.
 
 \begin{figure}[h!]
   \begin{center}
@@ -170,22 +170,20 @@ Thus a compromise:
   \item large chunks to limit seeks
   \item file divided into chunks to keep flexibility and avoid eventual fragmentation
 \end{itemize}
-
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{fragmentation_2.jpg}
+    \includegraphics[width=\textwidth]{fragmentation_2.jpg}
   \end{center}
 \end{figure}
-
 These optimization are mainly common sense but they work very well in practice.
 
-\section{Filesystem updates & failures}
+\section{Filesystem updates \& failures}
 
 Ex: to append a block to a file (ex: /var/log/syslog)
-
+\vspace{1cm}
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{update_failures.jpg}
+    \includegraphics[width=0.8\textwidth]{fs_updates_failures.png}
   \end{center}
 \end{figure}
 
@@ -209,4 +207,3 @@ If there is a power loss, cached writes might be:
       \item incorrect data blocks
     \end{itemize}
 \end{itemize}
-

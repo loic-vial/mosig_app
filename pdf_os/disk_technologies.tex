@@ -1,4 +1,4 @@
-\chapter{Disk Technologies & their impact on OS}
+\chapter{Disk Technologies and their impact on OS}
 
 \section{RAID}
 
@@ -14,8 +14,7 @@ Redundant Array of Inexpensive Disks is made of several ordinary disks assembled
 Also called striping, aims at improving performances.
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{raid_0.png}
-    \caption{}
+    \includegraphics[width=0.6\textwidth]{raid_0.png}
   \end{center}
 \end{figure}
 
@@ -27,7 +26,6 @@ Also called striping, aims at improving performances.
 \begin{figure}[h!]
   \begin{center}
     \includegraphics[width=0.8\textwidth]{raid_0_chunks.png}
-    \caption{}
   \end{center}
 \end{figure}
 
@@ -52,8 +50,7 @@ Also called mirroring, aims at improving reliability and might improve performan
 
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{raid_1.png}
-    \caption{}
+    \includegraphics[width=0.7\textwidth]{raid_1.png}
   \end{center}
 \end{figure}
 
@@ -76,12 +73,17 @@ Drawbacks:
 \end{itemize}
 
 \subsection{Hybrid Setups : 0+1, 1+0}
-%mettre ça en subfigure,
+
 \begin{figure}[h!]
-  \begin{center}
-    \includegraphics[width=0.4\textwidth]{0_plus_1.png}
-    \caption{}
-  \end{center}
+\centering
+        \begin{subfigure}[b]{0.3\textwidth}
+                \includegraphics[width=\textwidth]{0_plus_1.png}
+                \caption{0+1 setup}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.3\textwidth}
+                \includegraphics[width=\textwidth]{1_plus_0.png}
+                \caption{1+0 setup}
+        \end{subfigure}
 \end{figure}
 
 Characteristics of the 0+1 setup:
@@ -90,34 +92,25 @@ Characteristics of the 0+1 setup:
   \item tolerate 1 failure in the worst case
   \item loss of capacity depends on the number of mirrored disks
 \end{itemize}
-
-\begin{figure}[h!]
-  \begin{center}
-    \includegraphics[width=0.4\textwidth]{1_plus_0.png}
-    \caption{}
-  \end{center}
-\end{figure}
 Characteristics of the 1+0 setup:
 Same as the previous one. 
 
 \subsection{RAID 4}
-
 Combines performance and reliability without loosing too much capacity.
-
+\vspace{0.5cm}
 \begin{figure}[h!]
   \begin{center}
     \includegraphics[width=0.8\textwidth]{raid_4.png}
-    \caption{}
   \end{center}
 \end{figure}
 
 pO contains the parity information computed from chunks 0,1 and 2.
+
 pX contains the parity information computed from chunks X*n, X*n+1, ... , X*n + n-1.
 
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{parity_disk.png}
-    \caption{}
+    \includegraphics[width=0.5\textwidth]{parity_disk.png}
   \end{center}
 \end{figure}
 
@@ -147,14 +140,7 @@ Small writes : two independant writes to two chunks on different disks cannot be
 \subsection{RAID 5}
 
 Like RAID 4, except that the parity chunk is stored in a cyclic manner on all the disks.
-
-\begin{figure}[h!]
-  \begin{center}
-    %\includegraphics[width=0.8\textwidth]{raid_5.png}
-    \caption{}
-  \end{center}
-\end{figure}
-
+\begin{center}
 \begin{table}[h]
 \begin{tabular}{|l|l|l|l|l|l|l|}
 \cline{1-1} \cline{3-3} \cline{5-5} \cline{7-7}
@@ -164,21 +150,19 @@ $P_0$ &  & 0  &  & 1  &  & 2  \\ \cline{1-1} \cline{3-3} \cline{5-5} \cline{7-7}
 9  &  & 10 &  & 11 &  & $P_3$
 \end{tabular}
 \end{table}
-
+\end{center}
 
 The parity information for stripe X is stored on disk $(X/n)\%n$.
 So for chunk C, it is stored on disk $(X/n(n-1))\%n$.
 
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{parity_disk_raid_5.png}
-    \caption{}
+    \includegraphics[width=0.5\textwidth]{parity_disk_2.png}
   \end{center}
 \end{figure}
-
+\vspace{0.5cm}
 
 Advantages :
-
 \begin{itemize}
   \item identical to the ones of RAID 4.
   \item the small writes issue is lessened because some independant write can be issued in parallel.
@@ -192,7 +176,6 @@ Exemple:
       \hline
          1&1&0&0 \\
          1&0&0&1 \\
-    line
       \end{tabular}
 to chunk 1. new parity = old data XOR data XOR old parity.
 
@@ -219,8 +202,7 @@ Built on top of the device mapper.
 
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{relationship_os.png}
-    \caption{}
+    \includegraphics[width=0.6\textwidth]{device_mapper.png}
   \end{center}
 \end{figure}
 
@@ -233,14 +215,3 @@ Other implementations are:
 \end{itemize}
 
 
-
-%%%%%%%%%%%%%%%
-%\begin{table}[h]
-%\begin{tabular}{|l|l|l|l|l|l|l|}
-%\cline{1-1} \cline{3-3} \cline{5-5} \cline{7-7}
-%$P_0$ &  & 0  &  & 1  &  & 2  \\ \cline{1-1} \cline{3-3} \cline{5-5} \cline{7-7} 
-%3  &  & $P_1$ &  & 4  &  & 5  \\ \cline{1-1} \cline{3-3} \cline{5-5} \cline{7-7} 
-%6  &  & 7  &  & $P_2$ &  & 8  \\ \cline{1-1} \cline{3-3} \cline{5-5} \cline{7-7} 
-%9  &  & 10 &  & 11 &  & $P_3$
-%\end{tabular}
-%\end{table}
